@@ -1,0 +1,224 @@
+/* Critter Daily: the home page for the three games, in their storybook look. */
+
+:root {
+  color-scheme: light;
+  --sky: #cfeaff;
+  --ink: #2e2a3b;
+  --ink-2: #3e3a52;
+  --card: #ffffff;
+  --card-edge: #9cc8ea;
+  --sun: #ffb938;
+  --sun-edge: #d68a00;
+  --link: #1f5f99;
+  --display: Fredoka, Nunito, system-ui, sans-serif;
+  font: 16px/1.5 Nunito, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--sky);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--link);
+}
+
+:focus-visible {
+  outline: 3px solid var(--link);
+  outline-offset: 3px;
+}
+
+.hero,
+.games,
+.foot,
+.page {
+  width: min(560px, 100%);
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.hero {
+  padding-top: 40px;
+  text-align: center;
+}
+
+.hero h1 {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(38px, 11vw, 52px);
+  line-height: 1.05;
+}
+
+.hero p {
+  margin: 10px 0 0;
+  font-size: 18px;
+  color: var(--ink-2);
+}
+
+.games {
+  display: grid;
+  gap: 16px;
+  margin-top: 28px;
+  margin-bottom: 28px;
+}
+
+.game {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  align-items: center;
+  gap: 4px 14px;
+  padding: 16px;
+  border-radius: 22px;
+  background: var(--card);
+  box-shadow: 0 5px 0 var(--card-edge);
+  color: var(--ink);
+  text-decoration: none;
+  transition: transform 0.12s, box-shadow 0.12s;
+}
+
+.game:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 0 var(--card-edge);
+}
+
+.mascot {
+  grid-row: 1 / span 2;
+  width: 84px;
+  height: 84px;
+}
+
+.game-text {
+  display: grid;
+  gap: 2px;
+}
+
+.game-name {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1.1;
+}
+
+.game-what {
+  font-size: 15px;
+  color: var(--ink-2);
+}
+
+.play {
+  justify-self: start;
+  padding: 6px 18px;
+  border-radius: 14px;
+  background: var(--sun);
+  box-shadow: 0 3px 0 var(--sun-edge);
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 17px;
+}
+
+.foot {
+  margin-top: auto;
+  padding-bottom: 24px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.foot p {
+  margin: 4px 0;
+}
+
+.page {
+  padding-top: 32px;
+  padding-bottom: 32px;
+}
+
+.page h1 {
+  font-family: var(--display);
+  font-weight: 700;
+}
+
+.page section {
+  padding: 16px 18px;
+  margin-bottom: 14px;
+  border-radius: 20px;
+  background: var(--card);
+  box-shadow: 0 4px 0 var(--card-edge);
+}
+
+.page h2 {
+  margin: 0 0 6px;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 20px;
+}
+
+.page p {
+  margin: 0;
+}
+
+.wave {
+  transform-box: fill-box;
+  transform-origin: 30% 100%;
+  animation: wave 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes wave {
+  from {
+    transform: rotate(-25deg);
+  }
+  to {
+    transform: rotate(15deg);
+  }
+}
+
+.hop {
+  animation: hop 1.6s ease-in-out infinite;
+}
+
+@keyframes hop {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+  }
+  70% {
+    transform: translateY(-6px);
+  }
+}
+
+.tail {
+  transform-box: fill-box;
+  transform-origin: 80% 95%;
+  animation: swish 1.8s ease-in-out infinite alternate;
+}
+
+@keyframes swish {
+  from {
+    transform: rotate(-6deg);
+  }
+  to {
+    transform: rotate(6deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+.muted {
+  color: var(--ink-2);
+}
