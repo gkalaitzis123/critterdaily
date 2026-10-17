@@ -2,9 +2,10 @@
 // Node and shared by the question builder and the game.
 //
 // Each day has ten questions whose answer is a number ("How tall is Mount
-// Everest, in meters?"). A guess earns up to 10 acorns: a quantity by how many
-// times too big or too small it is, a year by how far off it is for how long
-// ago it was (a decade off matters more for 1969 than for 1066).
+// Everest, in meters?"). A guess earns up to 10 acorns, fewer the further off
+// it is. How far off is too far depends on the question: a film's running
+// time has to be within minutes, a country's population within a factor of a
+// few, and a year within a few years if it's recent, more if it's centuries ago.
 
 export const QUESTIONS_PER_DAY = 10;
 export const MAX_POINTS = 10;
@@ -50,33 +51,72 @@ export function parseGuess(text, unit = "count") {
   return Number.isFinite(value) ? value : null;
 }
 
-/** Acorns for a guess, 0 to 10. `q` is { unit, answer } in the answer's own unit. */
+/**
+ * How much room a quantity has: the factor at which a guess earns nothing.
+ * 1.4 for a film's running time (100 minutes for a 140-minute film earns
+ * nothing), 2 for heights and lengths, and 4 for populations and areas, which
+ * few people know to within double. Kinds whose answers sit close together get
+ * less room, so a guess at the typical value doesn't score well on its own: US
+ * cities (most have 200,000 to a million people), states, and deserts. Moons
+ * range from 10 km to 5,000, so they get as much room as areas.
+ */
+const FACTORS = { minutes: 1.4, m: 2, km: 2, km2: 4, people: 4, count: 4 };
+const KIND_FACTORS = { "moon-size": 4, "city-people": 2.5, "state-people": 2.5, "state-area": 2.5, "desert-area": 3 };
+export const factorFor = (q) => KIND_FACTORS[q.kind] ?? FACTORS[q.unit] ?? 4;
+
+/** How much room a year has: 10 years for something recent, a little more for every 8 years ago (31 for 1856, 60 for 1626). */
+export const yearRoom = (answer) => 10 + Math.max(0, REFERENCE_YEAR - answer) / 8;
+
+/** How far off a guess is, as a share of its room: 0 is spot on, 1 or more earns nothing. */
+export function offBy(guess, q) {
+  if (q.unit === "year") return Math.abs(guess - q.answer) / yearRoom(q.answer);
+  if (!(guess > 0)) return Infinity;
+  return Math.abs(Math.log(guess / q.answer)) / Math.log(factorFor(q));
+}
+
+/** Acorns for a guess, 0 to 10, falling evenly to 0 at the edge of its room. `q` is { kind, unit, answer }. */
 export function points(guess, q) {
   if (guess === null || guess === undefined || !Number.isFinite(guess)) return 0;
-  if (q.unit === "year") {
-    const span = Math.max(10, REFERENCE_YEAR - q.answer);
-    return Math.round(MAX_POINTS * Math.max(0, 1 - (2 * Math.abs(guess - q.answer)) / span));
-  }
-  if (guess <= 0) return 0;
-  // 10 for spot on, 7 for twice (or half) the answer, 0 at eight times off.
-  const timesOff = Math.abs(Math.log10(guess / q.answer));
-  return Math.round(MAX_POINTS * Math.max(0, 1 - timesOff / Math.log10(8)));
+  return Math.round(MAX_POINTS * Math.max(0, 1 - offBy(guess, q)));
+}
+
+/**
+ * Where guesses earn something, for the number line: `zero` is the range past
+ * which they earn nothing, `good` where they earn 7 acorns or more.
+ */
+export function ranges(q) {
+  const at = (share) => {
+    if (q.unit === "year") {
+      const room = yearRoom(q.answer) * share;
+      return [q.answer - room, q.answer + room];
+    }
+    const f = factorFor(q) ** share;
+    return [q.answer / f, q.answer * f];
+  };
+  return { zero: at(1), good: at(0.35) };
 }
 
 const times = (r) => (r < 10 ? r.toFixed(1).replace(/\.0$/, "") : Math.round(r).toLocaleString("en-US"));
+const plural = (n, word) => `${n.toLocaleString("en-US")} ${word}${n === 1 ? "" : "s"}`;
 
-/** How far off a guess was, in words: "2.5× too high", "4% too low", "12 years too early". */
+/** How far off a guess was, in words: "12 years too early", "9 minutes too long", "25% too high", "3× too low". */
 export function howClose(guess, q) {
   if (q.unit === "year") {
     const off = guess - q.answer;
     if (off === 0) return "Exactly right!";
-    return `${Math.abs(off)} year${Math.abs(off) === 1 ? "" : "s"} too ${off > 0 ? "late" : "early"}`;
+    return `${plural(Math.abs(off), "year")} too ${off > 0 ? "late" : "early"}`;
   }
   if (!(guess > 0)) return "Way off";
+  if (q.unit === "minutes") {
+    const off = Math.round(guess - q.answer);
+    return off === 0 ? "Exactly right!" : `${plural(Math.abs(off), "minute")} too ${off > 0 ? "long" : "short"}`;
+  }
   const ratio = guess / q.answer;
   if (Math.abs(ratio - 1) < 0.005) return "Exactly right!";
-  if (ratio > 1) return ratio < 1.1 ? `${Math.max(1, Math.round((ratio - 1) * 100))}% too high` : `${times(ratio)}× too high`;
-  return 1 / ratio < 1.1 ? `${Math.max(1, Math.round((1 - ratio) * 100))}% too low` : `${times(1 / ratio)}× too low`;
+  if (ratio >= 2) return `${times(ratio)}× too high`;
+  if (ratio > 1) return `${Math.max(1, Math.round((ratio - 1) * 100))}% too high`;
+  if (ratio > 0.5) return `${Math.max(1, Math.round((1 - ratio) * 100))}% too low`;
+  return `${times(1 / ratio)}× too low`;
 }
 
 /** A word for a score. */

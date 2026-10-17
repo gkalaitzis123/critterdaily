@@ -1,7 +1,7 @@
 // Ten Numbers in the browser: today's ten questions, guessing in metric or US
 // units, Nutmeg's acorns and jar, the results, sharing, stats and practice
 // rounds. The rules live in game.js.
-import { MAX_POINTS, QUESTIONS_PER_DAY, REFERENCE_YEAR, TIERS, UNITS, dayNumber, formatAmount, formatNumber, howClose, parseGuess, points, questionsFor, shareText, stats, tierFor, verdict } from "./game.js";
+import { MAX_POINTS, QUESTIONS_PER_DAY, TIERS, UNITS, dayNumber, formatAmount, formatNumber, howClose, parseGuess, points, questionsFor, ranges, shareText, stats, tierFor, verdict } from "./game.js";
 
 const $ = (sel) => document.querySelector(sel);
 const STORE = "tennumbers-v1";
@@ -108,23 +108,13 @@ const showOther = (value, q) => (hasAlt(q) ? `(${formatAmount(value, q.unit, { a
 function numberLine(q, guess) {
   const L = 22;
   const W = 296;
-  let lo;
-  let hi;
-  let pos;
-  let band;
-  let ends;
-  if (q.unit === "year") {
-    const reach = Math.max(10, REFERENCE_YEAR - q.answer) / 2; // past this, no acorns
-    [lo, hi] = [q.answer - reach, q.answer + reach];
-    pos = (v) => L + (W * (v - lo)) / (hi - lo);
-    band = [q.answer - 0.3 * reach, q.answer + 0.3 * reach];
-    ends = [formatAmount(Math.round(lo), "year"), formatAmount(Math.round(hi), "year")];
-  } else {
-    [lo, hi] = [q.answer / 8, q.answer * 8];
-    pos = (v) => L + (W * (Math.log10(v) - Math.log10(lo))) / (Math.log10(hi) - Math.log10(lo));
-    band = [q.answer / 2, q.answer * 2];
-    ends = ["8× less", "8× more"];
-  }
+  // The line runs out where guesses stop earning acorns; the green band earns 7 or more.
+  const { zero, good } = ranges(q);
+  const [lo, hi] = zero;
+  const year = q.unit === "year";
+  const pos = year ? (v) => L + (W * (v - lo)) / (hi - lo) : (v) => L + (W * (Math.log10(v) - Math.log10(lo))) / (Math.log10(hi) - Math.log10(lo));
+  const band = good;
+  const ends = year ? [formatAmount(Math.ceil(lo), "year"), formatAmount(Math.floor(hi), "year")] : [show(lo, q), show(hi, q)];
   const clamp = (x) => Math.min(L + W, Math.max(L, x));
   const ax = pos(q.answer);
   const [b1, b2] = band.map((v) => clamp(pos(Math.max(v, 1e-9))));
@@ -189,8 +179,8 @@ async function init() {
 
 function showIntro() {
   // A worked example, scored by the real rules.
-  const everest = { unit: "m", answer: 8849 };
-  const tries = [9000, 5000, 30000].map((g) => ({ g, p: points(g, everest) }));
+  const everest = { kind: "height", unit: "m", answer: 8849 };
+  const tries = [9000, 7000, 12000].map((g) => ({ g, p: points(g, everest) }));
   $("#example").innerHTML = `<p class="muted small">For example: how high is Mount Everest? (${esc(show(8849, everest))})</p>${tries
     .map(({ g, p }) => `<div class="example-row"><span>${esc(show(g, everest))} <span class="muted">${esc(howClose(g, everest))}</span></span><b>${p}</b>${acorn("", "width:18px;height:22px")}</div>`)
     .join("")}`;
