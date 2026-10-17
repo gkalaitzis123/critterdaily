@@ -1,8 +1,8 @@
 // Ten Numbers' rules, with no page or network code, so they're unit-tested in
 // Node and shared by the question builder and the game.
 //
-// Each day has ten questions whose answer is a number ("How tall is Mount
-// Everest, in meters?"). A guess earns up to 10 acorns, fewer the further off
+// Each day has ten questions whose answer is a number ("How many species of
+// beetle are known?", "In what year was the Battle of Hastings fought?"). A guess earns up to 10 acorns, fewer the further off
 // it is. How far off is too far depends on the question: a film's running
 // time has to be within minutes, a country's population within a factor of a
 // few, and a year within a few years if it's recent, more if it's centuries ago.
@@ -19,12 +19,13 @@ export const UNITS = {
   count: { label: "" },
   year: { label: "" },
   minutes: { label: "minutes" },
+  years: { label: "years" },
   m: { label: "m", alt: { label: "ft", factor: 3.28084 } },
   km: { label: "km", alt: { label: "mi", factor: 0.621371 } },
   km2: { label: "km²", alt: { label: "sq mi", factor: 0.386102 } },
 };
 
-const SCALES = { k: 1e3, thousand: 1e3, m: 1e6, mn: 1e6, mil: 1e6, million: 1e6, b: 1e9, bn: 1e9, billion: 1e9, t: 1e12, tn: 1e12, trillion: 1e12 };
+const SCALES = { k: 1e3, thousand: 1e3, m: 1e6, mn: 1e6, mil: 1e6, million: 1e6, b: 1e9, bn: 1e9, billion: 1e9, t: 1e12, tn: 1e12, trillion: 1e12, quadrillion: 1e15 };
 
 /**
  * The number a player typed, or null. Understands "15,000,000", "15 million",
@@ -54,18 +55,19 @@ export function parseGuess(text, unit = "count") {
 /**
  * How much room a quantity has: the factor at which a guess earns nothing.
  * 1.4 for a film's running time (100 minutes for a 140-minute film earns
- * nothing), 2 for heights and lengths, and 4 for populations and areas, which
- * few people know to within double. Kinds whose answers sit close together get
- * less room, so a guess at the typical value doesn't score well on its own: US
- * cities (most have 200,000 to a million people), states, and deserts. Moons
- * range from 10 km to 5,000, so they get as much room as areas.
+ * nothing), 1.6 for record lifespans (most are 15 to 40 years), 2 for lengths,
+ * and 4 for populations, areas and counts like how many species a group has,
+ * which few people know to within double. Kinds whose answers sit close
+ * together get less room, so a guess at the typical value doesn't score well
+ * on its own: US cities (most have 200,000 to a million people) and states.
+ * Death tolls and the human body (206 bones) are better known, so they get 3.
  */
-const FACTORS = { minutes: 1.4, m: 2, km: 2, km2: 4, people: 4, count: 4 };
-const KIND_FACTORS = { "moon-size": 4, "city-people": 2.5, "state-people": 2.5, "state-area": 2.5, "desert-area": 3 };
+const FACTORS = { minutes: 1.4, years: 1.6, m: 2, km: 2, km2: 4, people: 4, count: 4 };
+const KIND_FACTORS = { "city-people": 2.5, "state-people": 2.5, deaths: 3, body: 3 };
 export const factorFor = (q) => KIND_FACTORS[q.kind] ?? FACTORS[q.unit] ?? 4;
 
-/** How much room a year has: 10 years for something recent, a little more for every 8 years ago (31 for 1856, 60 for 1626). */
-export const yearRoom = (answer) => 10 + Math.max(0, REFERENCE_YEAR - answer) / 8;
+/** How much room a year has: 10 years for something recent, a year more for every 8 years ago (31 for 1856, 60 for 1626), and at most 80, even for ancient history. */
+export const yearRoom = (answer) => Math.min(80, 10 + Math.max(0, REFERENCE_YEAR - answer) / 8);
 
 /** How far off a guess is, as a share of its room: 0 is spot on, 1 or more earns nothing. */
 export function offBy(guess, q) {
@@ -128,15 +130,16 @@ export function verdict(pts) {
 export function formatNumber(n) {
   const a = Math.abs(n);
   const short = (v, word) => `${(v >= 100 ? Math.round(v) : Number(v.toPrecision(3))).toLocaleString("en-US")} ${word}`;
+  if (a >= 1e15) return short(n / 1e15, "quadrillion");
   if (a >= 1e12) return short(n / 1e12, "trillion");
   if (a >= 1e9) return short(n / 1e9, "billion");
   if (a >= 1e6) return short(n / 1e6, "million");
   return (a < 10 ? Number(n.toFixed(1)) : Math.round(n)).toLocaleString("en-US");
 }
 
-/** A value with its unit: "8,849 m", "29,032 ft" (alt), "44 BC", "1.4 billion people". */
+/** A value with its unit: "8,849 m", "29,032 ft" (alt), "44 BC", "AD 80", "1.4 billion people". */
 export function formatAmount(value, unit, { alt = false } = {}) {
-  if (unit === "year") return value < 0 ? `${-value} BC` : String(value);
+  if (unit === "year") return value < 0 ? `${-value} BC` : value < 1000 ? `AD ${value}` : String(value);
   const u = UNITS[unit];
   const shown = alt && u.alt ? value * u.alt.factor : value;
   const label = alt && u.alt ? u.alt.label : u.label;

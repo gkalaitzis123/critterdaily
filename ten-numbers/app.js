@@ -303,7 +303,7 @@ function showReveal(q, r) {
   $("#reveal-verdict").textContent = r.guess === null ? "Skipped" : verdict(r.points);
   $("#reveal-points").textContent = "0";
   $("#acorns").innerHTML = Array.from({ length: MAX_POINTS }, (_, i) => (i < r.points ? acorn("won", `animation-delay:${0.7 + i * 0.08}s`) : acorn("empty"))).join("");
-  $("#reveal-source").innerHTML = `${esc(q.subject)}: ${esc(show(q.answer, q))}${q.asOf ? ` (${q.asOf})` : ""}, from Wikidata. <a href="https://en.wikipedia.org/wiki/${encodeURIComponent(q.wiki)}" target="_blank" rel="noopener">Read about it on Wikipedia</a>`;
+  $("#reveal-source").innerHTML = `${esc(q.subject)}: ${esc(show(q.answer, q))}${q.asOf ? ` (${q.asOf})` : ""}, from ${q.source ?? "Wikidata"}. <a href="https://en.wikipedia.org/wiki/${encodeURIComponent(q.wiki)}" target="_blank" rel="noopener">Read about it on Wikipedia</a>`;
   $("#next").textContent = run.index >= run.ids.length ? "See your acorns" : "Next question";
   showScreen("reveal");
   countUp($("#reveal-points"), r.points, 900, 0, 700);
