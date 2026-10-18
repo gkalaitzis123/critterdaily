@@ -2,6 +2,7 @@
 // on this device, Digby's dig back through Earth's history, the results and
 // the stats. The rules live in game.js.
 import { PERIODS, PROMPTS_PER_DAY, SECONDS_PER_PROMPT, compact, dayNumber, match, nearest, normalize, periodFor, promptsFor, shareText, stats } from "./game.js";
+import { settingsButton } from "./settings.js";
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -322,6 +323,7 @@ function wire() {
   $("#back-today").addEventListener("click", () => location.reload()); // today's game is saved
   $("#help-button").addEventListener("click", () => $("#help").showModal());
   $("#stats-button").addEventListener("click", showStats);
+  settingsButton($("#settings-button"));
   document.addEventListener("keydown", (e) => {
     if (e.key === "Enter" && !$("#reveal").hidden && document.activeElement?.tagName !== "BUTTON") next();
   });

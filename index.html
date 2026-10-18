@@ -3,6 +3,14 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <script>
+      // Light or dark, and less motion, before the page draws (settings.js keeps them up to date).
+      try {
+        var cd = JSON.parse(localStorage.getItem("critter-daily-settings")) || {};
+        document.documentElement.dataset.theme = cd.theme === "light" || cd.theme === "dark" ? cd.theme : matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        if (cd.motion === "less") document.documentElement.dataset.motion = "less";
+      } catch (e) {}
+    </script>
     <title>Critter Daily: three little games, new every day</title>
     <meta name="description" content="Three free daily games with storybook critters: Deep Cut, a science and history game about the Wikipedia pages nobody reads; Mother Tongue, a language family-tree puzzle; and Ten Numbers, an estimation game." />
     <meta property="og:type" content="website" />
@@ -26,6 +34,9 @@
   </head>
   <body>
     <header class="hero">
+      <button id="settings-button" class="icon-button corner" type="button" aria-label="Settings">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" /><circle cx="15" cy="7" r="2.4" /><circle cx="9" cy="17" r="2.4" /></svg>
+      </button>
       <h1>Critter Daily</h1>
       <p>Three little games, new every midnight. Free to play, with nothing to sign up for.</p>
     </header>
@@ -107,5 +118,9 @@
       <p>Puzzles are built from <a href="https://www.wikidata.org/" target="_blank" rel="noopener">Wikidata</a> and Wikipedia page views (public domain), and <a href="https://glottolog.org" target="_blank" rel="noopener">Glottolog</a> (CC BY 4.0).</p>
       <p><a href="privacy.html">Privacy</a></p>
     </footer>
+    <script type="module">
+      import { settingsButton } from "./settings.js";
+      settingsButton(document.getElementById("settings-button"));
+    </script>
   </body>
 </html>

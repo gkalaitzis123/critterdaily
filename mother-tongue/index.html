@@ -3,6 +3,14 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <script>
+      // Light or dark, and less motion, before the page draws (settings.js keeps them up to date).
+      try {
+        var cd = JSON.parse(localStorage.getItem("critter-daily-settings")) || {};
+        document.documentElement.dataset.theme = cd.theme === "light" || cd.theme === "dark" ? cd.theme : matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        if (cd.motion === "less") document.documentElement.dataset.motion = "less";
+      } catch (e) {}
+    </script>
     <title>Mother Tongue: the daily language family game</title>
     <meta name="description" content="Guess today's mystery language. Every guess shows how closely it's related on the family tree of the world's languages, and how far away it's spoken." />
     <meta property="og:type" content="website" />
@@ -31,9 +39,14 @@
         <h1>Mother Tongue</h1>
         <p id="day-label" class="day-label"></p>
       </div>
-      <button id="stats-button" class="icon-button" type="button" aria-label="Your stats">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V11M12 20V4M19 20v-6" /></svg>
-      </button>
+      <div class="top-end">
+        <button id="stats-button" class="icon-button" type="button" aria-label="Your stats">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V11M12 20V4M19 20v-6" /></svg>
+        </button>
+        <button id="settings-button" class="icon-button" type="button" aria-label="Settings">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" /><circle cx="15" cy="7" r="2.4" /><circle cx="9" cy="17" r="2.4" /></svg>
+        </button>
+      </div>
     </header>
 
     <main>

@@ -4,9 +4,12 @@
   color-scheme: light;
   --sky: #cfeaff;
   --ink: #2e2a3b;
+  --on-sun: #2e2a3b; /* text on sunny buttons and wooden signs, dark in both themes */
   --ink-2: #3e3a52;
   --card: #ffffff;
   --card-edge: #9cc8ea;
+  --muted: #5b5670;
+  --track: #eaf4ff;
   --sun: #ffb938;
   --sun-edge: #d68a00;
   --link: #1f5f99;
@@ -134,6 +137,7 @@ a {
   padding: 6px 18px;
   border-radius: 14px;
   background: var(--sun);
+  color: var(--on-sun);
   box-shadow: 0 3px 0 var(--sun-edge);
   font-family: var(--display);
   font-weight: 600;
@@ -272,4 +276,192 @@ a {
     justify-self: center;
     margin-top: 6px;
   }
+}
+
+
+/* The settings button, in the corner, and its sheet (settings.js) */
+
+.hero {
+  position: relative;
+}
+
+.icon-button {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--card);
+  box-shadow: 0 3px 0 var(--card-edge);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.icon-button svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+}
+
+.corner {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+}
+
+.sheet {
+  width: min(460px, calc(100% - 32px));
+  padding: 20px;
+  border: 0;
+  border-radius: 24px;
+  background: var(--card);
+  color: var(--ink);
+  box-shadow: 0 6px 0 var(--card-edge);
+}
+
+.sheet::backdrop {
+  background: rgba(46, 42, 59, 0.45);
+}
+
+.sheet h2 {
+  margin: 0 0 12px;
+  font-family: var(--display);
+  font-weight: 700;
+}
+
+.sheet h2:focus {
+  outline: none;
+}
+
+.primary {
+  width: 100%;
+  min-height: 54px;
+  padding: 12px 20px;
+  border: 0;
+  border-radius: 18px;
+  background: var(--sun);
+  box-shadow: 0 4px 0 var(--sun-edge);
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 19px;
+  color: var(--on-sun);
+  cursor: pointer;
+}
+
+.primary:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--sun-edge);
+}
+
+.setting {
+  margin: 0 0 18px;
+  padding: 0;
+  border: 0;
+}
+
+.setting legend,
+.toggle > span:first-of-type {
+  padding: 0;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 17px;
+}
+
+.segmented {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.segmented label {
+  position: relative;
+}
+
+.segmented input {
+  position: absolute;
+  opacity: 0;
+}
+
+.segmented span {
+  display: grid;
+  place-items: center;
+  min-height: 46px;
+  padding: 6px 8px;
+  border-radius: 14px;
+  background: var(--track);
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.2;
+  text-align: center;
+  cursor: pointer;
+}
+
+.segmented input:checked + span {
+  background: var(--sun);
+  box-shadow: 0 3px 0 var(--sun-edge);
+  color: var(--on-sun);
+}
+
+.segmented input:focus-visible + span {
+  outline: 3px solid var(--link);
+  outline-offset: 2px;
+}
+
+.toggle {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 12px;
+  align-items: center;
+  margin: 0 0 16px;
+  cursor: pointer;
+}
+
+.toggle input {
+  grid-row: span 2;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  accent-color: var(--sun-edge);
+}
+
+.toggle-note,
+.setting-note {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.setting-note {
+  margin: 0 0 14px;
+}
+
+/* Dark colors, chosen in Settings or by the device (settings.js sets data-theme).
+   The art keeps its own colors; text on sunny buttons and wooden signs stays dark. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --sky: #141a2b;
+  --ink: #f3f0fb;
+  --ink-2: #d6d0e8;
+  --muted: #a8a2c0;
+  --card: #1f2638;
+  --card-edge: #0a0e18;
+  --track: #2b3449;
+  --error: #ff8f80;
+  --good: #7ed98b;
+  --link: #93c8ff;
+  --glass: rgba(31, 38, 56, 0.92);
+  --glass-soft: rgba(31, 38, 56, 0.6);
+}
+
+/* Less motion, chosen in Settings (the device's own setting is handled above) */
+:root[data-motion="less"] *,
+:root[data-motion="less"] *::before,
+:root[data-motion="less"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
 }

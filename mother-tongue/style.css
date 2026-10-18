@@ -6,6 +6,7 @@
   color-scheme: light;
   --sky: #cfeaff;
   --ink: #2e2a3b;
+  --on-sun: #2e2a3b; /* text on sunny buttons and wooden signs, dark in both themes */
   --ink-2: #3e3a52;
   --muted: #5b5670;
   --card: #ffffff;
@@ -178,7 +179,7 @@ main {
   font-family: var(--display);
   font-weight: 600;
   font-size: 19px;
-  color: var(--ink);
+  color: var(--on-sun);
   cursor: pointer;
   transition: transform 0.08s, box-shadow 0.08s;
 }
@@ -258,6 +259,7 @@ main {
 
 .seeds span.used {
   background: var(--coral);
+  color: var(--on-sun);
 }
 
 .counter {
@@ -577,6 +579,7 @@ main {
   border: 2px solid var(--plaque-edge);
   border-radius: 9px;
   background: var(--plaque);
+  color: var(--on-sun);
   font-family: var(--display);
   font-weight: 600;
   font-size: 14.5px;
@@ -593,6 +596,7 @@ main {
 
 .branch.deepest .plaque {
   background: var(--sun);
+  color: var(--on-sun);
 }
 
 .fruits {
@@ -619,11 +623,13 @@ main {
   height: 12px;
   border-radius: 50%;
   background: var(--coral);
+  color: var(--on-sun);
   box-shadow: inset -2px -2px 0 rgba(0, 0, 0, 0.12);
 }
 
 .fruit.new::before {
   background: var(--sun);
+  color: var(--on-sun);
 }
 
 /* Pip hops 8 units, which lifts his crest past the top of his box: let it show. */
@@ -865,6 +871,7 @@ main {
 .tier.now {
   min-height: 40px;
   background: var(--sun);
+  color: var(--on-sun);
 }
 
 .tier.now span {
@@ -1032,6 +1039,7 @@ main {
 }
 
 .zzz {
+  fill: var(--ink-2);
   animation: zzz 2.4s ease-in-out infinite;
 }
 
@@ -1146,4 +1154,142 @@ main {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* The header: help on the left, stats and settings on the right, the name centered */
+
+.top {
+  grid-template-columns: 1fr auto 1fr;
+}
+
+.top > .icon-button {
+  justify-self: start;
+}
+
+.top-end {
+  display: flex;
+  gap: 6px;
+  justify-self: end;
+}
+
+@media (max-width: 400px) {
+  .top .icon-button {
+    width: 38px;
+    height: 38px;
+  }
+
+  .wordmark h1 {
+    font-size: 23px;
+  }
+}
+
+/* The settings sheet (settings.js) */
+
+.setting {
+  margin: 0 0 18px;
+  padding: 0;
+  border: 0;
+}
+
+.setting legend,
+.toggle > span:first-of-type {
+  padding: 0;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 17px;
+}
+
+.segmented {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.segmented label {
+  position: relative;
+}
+
+.segmented input {
+  position: absolute;
+  opacity: 0;
+}
+
+.segmented span {
+  display: grid;
+  place-items: center;
+  min-height: 46px;
+  padding: 6px 8px;
+  border-radius: 14px;
+  background: var(--track);
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.2;
+  text-align: center;
+  cursor: pointer;
+}
+
+.segmented input:checked + span {
+  background: var(--sun);
+  box-shadow: 0 3px 0 var(--sun-edge);
+  color: var(--on-sun);
+}
+
+.segmented input:focus-visible + span {
+  outline: 3px solid var(--link);
+  outline-offset: 2px;
+}
+
+.toggle {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 12px;
+  align-items: center;
+  margin: 0 0 16px;
+  cursor: pointer;
+}
+
+.toggle input {
+  grid-row: span 2;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  accent-color: var(--sun-edge);
+}
+
+.toggle-note,
+.setting-note {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.setting-note {
+  margin: 0 0 14px;
+}
+
+/* Dark colors, chosen in Settings or by the device (settings.js sets data-theme).
+   The art keeps its own colors; text on sunny buttons and wooden signs stays dark. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --sky: #141a2b;
+  --ink: #f3f0fb;
+  --ink-2: #d6d0e8;
+  --muted: #a8a2c0;
+  --card: #1f2638;
+  --card-edge: #0a0e18;
+  --track: #2b3449;
+  --error: #ff8f80;
+  --good: #7ed98b;
+  --link: #93c8ff;
+  --glass: rgba(31, 38, 56, 0.92);
+  --glass-soft: rgba(31, 38, 56, 0.6);
+}
+
+/* Less motion, chosen in Settings (the device's own setting is handled above) */
+:root[data-motion="less"] *,
+:root[data-motion="less"] *::before,
+:root[data-motion="less"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
 }

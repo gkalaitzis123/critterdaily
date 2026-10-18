@@ -2,6 +2,7 @@
 // units, Nutmeg's acorns and jar, the results, sharing, stats and practice
 // rounds. The rules live in game.js.
 import { MAX_POINTS, MAX_YEARS, QUESTIONS_PER_DAY, SIZES, TIERS, UNITS, dayNumber, formatAmount, formatNumber, hasEra, hasSize, howClose, parseGuess, points, questionsFor, ranges, shareText, sizeOf, stats, tierFor, verdict } from "./game.js";
+import { settingsButton } from "./settings.js";
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -92,7 +93,7 @@ function jar(id, share) {
       <pattern id="${id}-nuts" width="16" height="16" patternUnits="userSpaceOnUse"><rect width="16" height="16" fill="#e8b27a"/><ellipse cx="8" cy="10" rx="5" ry="5.5" fill="#c98b5b"/><path d="M3 7Q8 1 13 7Q8 9 3 7Z" fill="#7a4e2e"/></pattern></defs>
     <path d="${GLASS}" fill="#ffffff" fill-opacity=".55"/>
     <g clip-path="url(#${id}-glass)"><g class="jar-fill" style="transform:translateY(${(90 * (1 - share)).toFixed(1)}px)"><rect x="22" y="26" width="56" height="90" fill="url(#${id}-nuts)"/></g></g>
-    <path d="${GLASS}" fill="none" stroke="#2e2a3b" stroke-width="3"/>
+    <path class="jar-glass" d="${GLASS}" fill="none" stroke="#2e2a3b" stroke-width="3"/>
     <path d="M31 42V98" stroke="#ffffff" stroke-width="4" stroke-linecap="round" opacity=".7"/>
     <rect x="25" y="14" width="50" height="12" rx="4" fill="#a8743f"/><rect x="25" y="22" width="50" height="4" fill="#7a4e2e"/>`;
 }
@@ -143,12 +144,12 @@ function numberLine(q, guess) {
       <text class="nl-mark" x="${Math.min(L + W - 40, Math.max(L + 40, gx)).toFixed(1)}" y="122" text-anchor="middle">${esc(label)}</text>`;
   }
   return `<svg viewBox="0 0 340 132" role="img" aria-label="The answer is ${esc(show(q.answer, q))}${guess !== null ? `; you guessed ${esc(show(guess, q))}` : ""}.">
-    <rect x="${b1.toFixed(1)}" y="64" width="${(b2 - b1).toFixed(1)}" height="28" rx="8" fill="#dff3d9"/>
+    <rect x="${b1.toFixed(1)}" y="64" width="${(b2 - b1).toFixed(1)}" height="28" rx="8" class="nl-band" fill="#dff3d9"/>
     <text class="nl-label" x="${((b1 + b2) / 2).toFixed(1)}" y="101" text-anchor="middle">7+ acorns</text>
-    <path d="M${L} 82H${L + W}" stroke="#2e2a3b" stroke-width="3" stroke-linecap="round"/>
+    <path class="nl-axis" d="M${L} 82H${L + W}" stroke="#2e2a3b" stroke-width="3" stroke-linecap="round"/>
     <text class="nl-label" x="${L}" y="101" text-anchor="start">${esc(ends[0])}</text>
     <text class="nl-label" x="${L + W}" y="101" text-anchor="end">${esc(ends[1])}</text>
-    <g class="nl-flag"><path d="M${ax.toFixed(1)} 82V30" stroke="#7a4e2e" stroke-width="3" stroke-linecap="round"/><path d="M${(ax + 1).toFixed(1)} 31l22 7l-22 7Z" fill="#ff6f61"/></g>
+    <g class="nl-flag"><path class="nl-pole" d="M${ax.toFixed(1)} 82V30" stroke="#7a4e2e" stroke-width="3" stroke-linecap="round"/><path d="M${(ax + 1).toFixed(1)} 31l22 7l-22 7Z" fill="#ff6f61"/></g>
     <text class="nl-mark" x="${Math.min(L + W - 44, Math.max(L + 44, ax)).toFixed(1)}" y="20" text-anchor="middle">${esc(show(q.answer, q))}</text>
     ${marker}
   </svg>`;
@@ -225,6 +226,7 @@ function wire() {
   $("#back-today").addEventListener("click", () => location.reload()); // today's game is saved
   $("#help-button").addEventListener("click", () => $("#help").showModal());
   $("#stats-button").addEventListener("click", showStats);
+  settingsButton($("#settings-button"));
   $("#unit-metric").addEventListener("click", () => setUnits("metric"));
   $("#unit-us").addEventListener("click", () => setUnits("us"));
   $("#guess").addEventListener("input", showReading);

@@ -2,6 +2,7 @@
 // suggestions, Pip climbing the family tree toward the mystery's egg, hints,
 // the hatching, sharing and stats. The rules live in game.js.
 import { MAX_GUESSES, HINTS, MISSED, TIERS, branchMatch, compare, cracks, dayNumber, find, hintsFor, lineage, mysteryFor, normalize, roughly, shareText, stats, suggest, tierFor, whereShort, whereText } from "./game.js";
+import { settingsButton } from "./settings.js";
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -245,6 +246,7 @@ function wire() {
   for (const id of ["#back-today", "#back-today-game"]) $(id).addEventListener("click", () => location.reload()); // today's game is saved
   $("#help-button").addEventListener("click", () => $("#help").showModal());
   $("#stats-button").addEventListener("click", showStats);
+  settingsButton($("#settings-button"));
 }
 
 /**

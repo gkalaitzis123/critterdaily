@@ -3,6 +3,14 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      // Light or dark, and less motion, before the page draws (settings.js keeps them up to date).
+      try {
+        var cd = JSON.parse(localStorage.getItem("critter-daily-settings")) || {};
+        document.documentElement.dataset.theme = cd.theme === "light" || cd.theme === "dark" ? cd.theme : matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        if (cd.motion === "less") document.documentElement.dataset.motion = "less";
+      } catch (e) {}
+    </script>
     <title>Privacy · Critter Daily</title>
     <meta name="theme-color" content="#cfeaff" />
     <link rel="icon" href="icon.svg" type="image/svg+xml" />
@@ -37,5 +45,6 @@
       </section>
       <p class="muted">Last updated October 18, 2026.</p>
     </main>
+    <script type="module" src="settings.js"></script>
   </body>
 </html>
