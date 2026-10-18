@@ -4,7 +4,9 @@
 // many finished, and how many got each score. One score counts per game, day
 // and connection: the connection is kept only as a scrambled code made with a
 // secret and the day, so it can't be turned back into an address or followed
-// from one day to the next.
+// from one day to the next. Running totals per score keep each "how did
+// the day go" a read of a few hundred rows at most, however many play, well
+// inside D1's free reads.
 
 const DAY_ONE = Date.UTC(2026, 9, 17); // every game's #1
 const BEST = { "deep-cut": 250, "mother-tongue": 20, "ten-numbers": 100 }; // the highest score each can send
@@ -14,9 +16,21 @@ let ready; // the tables and the secret, made on first use
 async function setUp(db) {
   await db.batch([
     db.prepare("CREATE TABLE IF NOT EXISTS scores (game TEXT NOT NULL, day INTEGER NOT NULL, who TEXT NOT NULL, score INTEGER NOT NULL, PRIMARY KEY (game, day, who))"),
+    // How many got each score: counted as each new score goes in (a repeat is ignored, so it isn't counted).
+    db.prepare("CREATE TABLE IF NOT EXISTS totals (game TEXT NOT NULL, day INTEGER NOT NULL, score INTEGER NOT NULL, n INTEGER NOT NULL, PRIMARY KEY (game, day, score))"),
+    db.prepare(
+      "CREATE TRIGGER IF NOT EXISTS count_score AFTER INSERT ON scores BEGIN INSERT INTO totals (game, day, score, n) VALUES (NEW.game, NEW.day, NEW.score, 1) ON CONFLICT (game, day, score) DO UPDATE SET n = n + 1; END",
+    ),
     db.prepare("CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT NOT NULL)"),
     db.prepare("INSERT OR IGNORE INTO meta (key, value) VALUES ('salt', ?)").bind(crypto.randomUUID()),
   ]);
+  // Scores kept before there were totals are counted, once.
+  const first = await db.prepare("INSERT OR IGNORE INTO meta (key, value) VALUES ('totals', 'counted')").run();
+  if (first?.meta?.changes) {
+    await db
+      .prepare("INSERT INTO totals (game, day, score, n) SELECT game, day, score, COUNT(*) FROM scores WHERE true GROUP BY game, day, score ON CONFLICT (game, day, score) DO UPDATE SET n = excluded.n")
+      .run();
+  }
   return db.prepare("SELECT value FROM meta WHERE key = 'salt'").first("value");
 }
 
@@ -56,7 +70,7 @@ export default {
       const game = url.searchParams.get("game");
       const day = Number(url.searchParams.get("day") || NaN);
       if (!Object.hasOwn(BEST, game) || !Number.isInteger(day) || day < 1) return json({ error: "which game and day?" }, 400);
-      const { results } = await env.DB.prepare("SELECT score, COUNT(*) AS n FROM scores WHERE game = ? AND day = ? GROUP BY score").bind(game, day).all();
+      const { results } = await env.DB.prepare("SELECT score, n FROM totals WHERE game = ? AND day = ?").bind(game, day).all();
       return json({ players: results.reduce((total, r) => total + r.n, 0), counts: Object.fromEntries(results.map((r) => [r.score, r.n])) }, 200, 30);
     }
 
