@@ -28,7 +28,7 @@ export const UNITS = {
   kg: { label: "kg", alt: { label: "lb", factor: 2.20462 } },
 };
 
-const SCALES = { k: 1e3, thousand: 1e3, m: 1e6, mn: 1e6, mil: 1e6, million: 1e6, b: 1e9, bn: 1e9, billion: 1e9, t: 1e12, tn: 1e12, trillion: 1e12, quadrillion: 1e15 };
+const SCALES = { k: 1e3, thousand: 1e3, m: 1e6, mn: 1e6, mil: 1e6, million: 1e6, b: 1e9, bn: 1e9, billion: 1e9, t: 1e12, tn: 1e12, trillion: 1e12, quadrillion: 1e15, quintillion: 1e18 };
 
 /**
  * The sizes offered as buttons under the box, by unit, for phones whose
@@ -37,7 +37,7 @@ const SCALES = { k: 1e3, thousand: 1e3, m: 1e6, mn: 1e6, mil: 1e6, million: 1e6,
  */
 export const SIZES = {
   people: ["thousand", "million", "billion"],
-  count: ["thousand", "million", "billion", "trillion", "quadrillion"],
+  count: ["thousand", "million", "billion", "trillion", "quadrillion", "quintillion"],
   km2: ["thousand", "million"],
   kg: ["thousand", "million", "billion"],
 };
@@ -186,6 +186,7 @@ export function verdict(pts) {
 export function formatNumber(n) {
   const a = Math.abs(n);
   const short = (v, word) => `${(v >= 100 ? Math.round(v) : Number(v.toPrecision(3))).toLocaleString("en-US")} ${word}`;
+  if (a >= 1e18) return short(n / 1e18, "quintillion"); // a Rubik's Cube's 43 quintillion positions
   if (a >= 1e15) return short(n / 1e15, "quadrillion");
   if (a >= 1e12) return short(n / 1e12, "trillion");
   if (a >= 1e9) return short(n / 1e9, "billion");
