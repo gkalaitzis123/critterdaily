@@ -263,7 +263,7 @@ async function showIntro() {
     const picks = named.every(Boolean) ? named : [near(10), near(18), near(30)];
     box.innerHTML = `<p class="muted small">For example: name a Roman emperor</p>${picks
       .map((a) => `<div class="example-row"><span>${esc(a.name)}</span>${oneInTag(a)}<strong>${a.depth}\u00a0m</strong><div class="example-bar"><span style="--d:${a.depth * 1.6}"></span></div></div>`)
-      .join("")}<p class="example-key">${esc(picks[0].name)}'s page gets ${fmt(picks[0].perDay)} readers a day; ${esc(picks[2].name)}'s gets ${fmt(picks[2].perDay)}. Every ten times rarer digs 10 m deeper.</p>`;
+      .join("")}<p class="example-key">${esc(picks[0].name)}'s page gets ${fmt(picks[0].perDay)} readers a day; ${esc(picks[2].name)}'s gets ${fmt(picks[2].perDay)}. The most-read emperor digs 1 m; the rarest dig 50 m.</p>`;
     box.hidden = false;
   } catch {
     box.hidden = true;

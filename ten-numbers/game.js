@@ -97,7 +97,22 @@ export function parseGuess(text, unit = "count") {
  */
 const FACTORS = { minutes: 1.4, years: 1.6, m: 2, km: 2, km2: 4, people: 4, count: 4 };
 const KIND_FACTORS = { "city-people": 2.5, "state-people": 2.5, deaths: 3, body: 3, age: 1.5, lifespan: 2 };
-export const factorFor = (q) => KIND_FACTORS[q.kind] ?? FACTORS[q.unit] ?? 4;
+/**
+ * Astronomical numbers get more room: nobody knows how many ants there are to
+ * within a factor of 4, and getting the power of ten right is the feat. Each
+ * power of ten past a billion (or, for tiny numbers, below a thousandth)
+ * multiplies the room by 10^0.3, about 2. The 20 quadrillion ants get a
+ * factor of about 600, so a guess ten times off earns 6 acorns; the 30
+ * trillion cells in a body, about 65.
+ */
+const EVERYDAY = [-3, 9]; // powers of ten
+const GROWTH = 0.3; // more powers of ten of room, per power of ten outside EVERYDAY
+export function factorFor(q) {
+  const base = KIND_FACTORS[q.kind] ?? FACTORS[q.unit] ?? 4;
+  const size = Math.log10(Math.abs(q.answer) || 1);
+  const outside = Math.max(0, size - EVERYDAY[1], EVERYDAY[0] - size);
+  return base * 10 ** (GROWTH * outside);
+}
 
 /** How much room a year has: 10 years for something recent, a year more for every 8 years ago (31 for 1856, 60 for 1626), and at most 80, even for ancient history. */
 export const yearRoom = (answer) => Math.min(80, 10 + Math.max(0, REFERENCE_YEAR - answer) / 8);

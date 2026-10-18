@@ -22,7 +22,7 @@
  {
   "id": "apes",
   "prompt": "Name an ape",
-  "answers": 130
+  "answers": 127
  },
  {
   "id": "archaeological-sites",
@@ -67,7 +67,7 @@
  {
   "id": "bach",
   "prompt": "Name a work by Bach",
-  "answers": 363
+  "answers": 361
  },
  {
   "id": "bats",
@@ -97,7 +97,7 @@
  {
   "id": "birds-of-prey",
   "prompt": "Name a bird of prey",
-  "answers": 601
+  "answers": 600
  },
  {
   "id": "birds",
@@ -207,7 +207,7 @@
  {
   "id": "cat-breeds",
   "prompt": "Name a cat breed",
-  "answers": 97
+  "answers": 95
  },
  {
   "id": "chemists",
@@ -257,7 +257,7 @@
  {
   "id": "cities-india",
   "prompt": "Name a city in India",
-  "answers": 129
+  "answers": 128
  },
  {
   "id": "cities-italy",
@@ -362,12 +362,12 @@
  {
   "id": "deer",
   "prompt": "Name a deer",
-  "answers": 66
+  "answers": 64
  },
  {
   "id": "deserts",
   "prompt": "Name a desert",
-  "answers": 159
+  "answers": 158
  },
  {
   "id": "dickens",
@@ -387,7 +387,7 @@
  {
   "id": "dog-breeds",
   "prompt": "Name a dog breed",
-  "answers": 636
+  "answers": 628
  },
  {
   "id": "ducks",
@@ -502,7 +502,7 @@
  {
   "id": "horse-breeds",
   "prompt": "Name a horse breed",
-  "answers": 471
+  "answers": 467
  },
  {
   "id": "hounds",
@@ -582,7 +582,7 @@
  {
   "id": "lemurs",
   "prompt": "Name a lemur",
-  "answers": 149
+  "answers": 148
  },
  {
   "id": "lizards",
@@ -622,7 +622,7 @@
  {
   "id": "monkeys",
   "prompt": "Name a monkey",
-  "answers": 385
+  "answers": 381
  },
  {
   "id": "moons",
@@ -647,7 +647,7 @@
  {
   "id": "mozart",
   "prompt": "Name a work by Mozart",
-  "answers": 293
+  "answers": 291
  },
  {
   "id": "muscles",
@@ -727,7 +727,7 @@
  {
   "id": "owls",
   "prompt": "Name an owl",
-  "answers": 256
+  "answers": 255
  },
  {
   "id": "pacific-war-battles",
@@ -777,7 +777,7 @@
  {
   "id": "parrots",
   "prompt": "Name a parrot",
-  "answers": 424
+  "answers": 423
  },
  {
   "id": "particles",
@@ -802,7 +802,7 @@
  {
   "id": "phobias",
   "prompt": "Name a phobia",
-  "answers": 165
+  "answers": 170
  },
  {
   "id": "physicists",
@@ -892,7 +892,7 @@
  {
   "id": "roman-gods",
   "prompt": "Name a Roman god or goddess",
-  "answers": 202
+  "answers": 204
  },
  {
   "id": "saints",
@@ -902,7 +902,7 @@
  {
   "id": "salamanders",
   "prompt": "Name a salamander or newt",
-  "answers": 366
+  "answers": 364
  },
  {
   "id": "sauropods",
@@ -937,7 +937,7 @@
  {
   "id": "sharks",
   "prompt": "Name a shark",
-  "answers": 569
+  "answers": 566
  },
  {
   "id": "ships",
@@ -992,7 +992,7 @@
  {
   "id": "terriers",
   "prompt": "Name a terrier",
-  "answers": 56
+  "answers": 55
  },
  {
   "id": "theropods",
@@ -1022,7 +1022,7 @@
  {
   "id": "units",
   "prompt": "Name a unit of measurement",
-  "answers": 500
+  "answers": 600
  },
  {
   "id": "us-cities",
@@ -1087,7 +1087,7 @@
  {
   "id": "weasel-family",
   "prompt": "Name an otter, badger, weasel or relative",
-  "answers": 78
+  "answers": 76
  },
  {
   "id": "whales",
@@ -1097,12 +1097,12 @@
  {
   "id": "wild-cats",
   "prompt": "Name a wild cat",
-  "answers": 76
+  "answers": 91
  },
  {
   "id": "wild-dogs",
   "prompt": "Name a wolf, fox or other wild dog",
-  "answers": 59
+  "answers": 58
  },
  {
   "id": "women-astronauts",
@@ -1117,7 +1117,7 @@
  {
   "id": "writing-systems",
   "prompt": "Name a writing system or alphabet",
-  "answers": 300
+  "answers": 350
  },
  {
   "id": "ww1-battles",

@@ -147,25 +147,34 @@ export function nearest(guess, answers, { strip = [], not = [] } = {}, limit = 3
     .map(([a]) => a);
 }
 
-/**
- * How deep an answer digs, from how rare it is: 10 m for every ten times
- * rarer. 1 in 10 readers is 10 m, 1 in 1,000 is 30 m, 1 in 100,000 is 50 m.
- * A right answer always digs at least 1 m.
- */
-export const depthFor = (oneIn) => Math.max(1, Math.round(10 * Math.log10(oneIn)));
+/** How deep a prompt's rarest answers dig. */
+export const MAX_DEPTH = 50;
 
 /**
  * How rare each of a list's answers is, from how often its Wikipedia article
  * is read (`views`, over the same span for all of them): of all the reads of
  * the list's articles, this one's share, as "1 in N". Returns
  * [{ oneIn, depth }], in the same order.
+ *
+ * Depth is measured within the list, so every prompt can go as deep: its
+ * most-read answer digs 1 m and its rarest few (the rarest 3%, at least one)
+ * dig MAX_DEPTH, with each ten times rarer in between digging the same
+ * distance further. Some lists are all famous pages (the countries bordering
+ * Germany) and some run to thousands of unread ones (dog breeds); either way,
+ * the rarest answers are the deep ones.
  */
 export function rarity(views) {
   const total = views.reduce((n, v) => n + v, 0);
-  return views.map((v) => {
-    const oneIn = Math.max(1, Math.round(total / Math.max(v, 1)));
-    return { oneIn, depth: depthFor(oneIn) };
-  });
+  const share = views.map((v) => Math.max(1, total / Math.max(v, 1)));
+  const oneIn = share.map((n) => Math.round(n));
+  const logs = share.map((n) => Math.log10(n));
+  const sorted = [...logs].sort((a, b) => a - b);
+  const low = sorted[0];
+  const high = sorted[sorted.length - Math.max(1, Math.ceil(sorted.length * 0.03))];
+  return oneIn.map((n, i) => ({
+    oneIn: n,
+    depth: high > low ? Math.max(1, Math.min(MAX_DEPTH, Math.round(1 + ((MAX_DEPTH - 1) * (logs[i] - low)) / (high - low)))) : 1,
+  }));
 }
 
 /** "1 in 2,769"-style numbers, short: 40, 610, 2.8k, 60k, 1.2M. */

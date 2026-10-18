@@ -427,7 +427,7 @@ main {
   color: var(--good);
 }
 
-/* The family tree: trunk at the bottom, the mystery's egg in its nest at the top */
+/* The family tree: trunk at the bottom, the mystery's egg in its nest at the top, resting on the trunk */
 
 .tree {
   position: relative;
@@ -449,6 +449,7 @@ main {
 
 .nest {
   position: relative;
+  z-index: 1; /* the nest sits over the top of the trunk */
   display: grid;
   justify-items: center;
 }
@@ -459,7 +460,9 @@ main {
 }
 
 .nest-label {
-  margin: -6px 0 0;
+  order: -1; /* over the nest, clear of the trunk */
+  position: relative;
+  margin: 0 0 -16px; /* into the room the egg's glow takes when it cracks */
   padding: 2px 12px;
   border-radius: 999px;
   background: var(--sky);
@@ -623,10 +626,11 @@ main {
   background: var(--sun);
 }
 
+/* Pip's feet are 14 of its 80 units above the bottom of its box: on the branch. */
 .pip {
   position: absolute;
   left: 50%;
-  bottom: calc(50% + 2px);
+  bottom: calc(50% - 6px);
   width: 46px;
   height: 62px;
   margin-left: -23px;
@@ -637,7 +641,7 @@ main {
 .roots-pip {
   position: absolute;
   left: 50%;
-  bottom: 6px;
+  bottom: 12px;
   width: 46px;
   height: 62px;
   margin-left: -60px;

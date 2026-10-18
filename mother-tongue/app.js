@@ -54,58 +54,77 @@ function save(fn) {
 // ---------------------------------------------------------------------------
 // Pip, the egg and the chick
 
-/** Pip the parrot, perched (or cheering), drawn around (0, 0) in a -30 -40 60 80 box. */
+/** Pip the parrot, facing us, perched (or cheering), drawn around (0, 0) in a -30 -40 60 80 box with its feet at y = 26. */
 function pip({ cheer = false } = {}) {
-  const tail = '<path d="M-4 14L-14 34L-6 32L-2 38L2 30Z" fill="#4fa3e0"/><path d="M2 14L8 36L12 28Z" fill="#ff6f61"/>';
-  const body = '<ellipse cx="0" cy="4" rx="16" ry="19" fill="#5cc86b"/><ellipse cx="1" cy="9" rx="10" ry="12" fill="#ffd45e"/>';
-  const feet = '<path d="M-4 22l-2 6M4 22l2 6" stroke="#ff8a3d" stroke-width="2.5" stroke-linecap="round"/>';
+  const tail = '<path d="M-2 12Q-8 28 -4 39Q1 31 3 14Z" fill="#4fa3e0"/><path d="M3 13Q10 26 7 36Q3 29 0 16Z" fill="#ff6f61"/>';
+  const body = '<ellipse cx="0" cy="7" rx="16" ry="18" fill="#5cc86b"/><ellipse cx="0" cy="11" rx="9.5" ry="11.5" fill="#ffd45e"/>';
+  const feet = '<ellipse cx="-6" cy="26" rx="4.6" ry="2.6" fill="#ff8a3d"/><ellipse cx="6" cy="26" rx="4.6" ry="2.6" fill="#ff8a3d"/>';
+  const head = '<circle cx="0" cy="-12" r="13" fill="#5cc86b"/><path d="M-1 -24Q-9 -31 -5 -36Q-1 -31 0 -25Q1 -35 7 -36Q8 -30 2 -24Z" fill="#ff6f61"/>';
+  const cheeks = '<circle cx="-8.5" cy="-7" r="2.6" fill="#ffb3c1"/><circle cx="8.5" cy="-7" r="2.6" fill="#ffb3c1"/>';
+  const beak = '<path d="M-3.6 -10Q0 -12.6 3.6 -10Q3.2 -5 0 -2.6Q-3.2 -5 -3.6 -10Z" fill="#ff8a3d"/>';
   if (cheer) {
-    return `<path class="flap-l" d="M-14 -2Q-34 -16 -30 -34Q-16 -18 -10 -8Z" fill="#3fa557"/><path class="flap-r" d="M14 -2Q34 -16 30 -34Q16 -18 10 -8Z" fill="#3fa557"/>${tail}${body}
-      <circle cx="0" cy="-14" r="12" fill="#5cc86b"/><path d="M-4 -25Q0 -34 4 -25" stroke="#ff6f61" fill="none" stroke-width="3" stroke-linecap="round"/>
-      <path d="M-7 -17q3-3 6 0M2 -17q3-3 6 0" stroke="#2e2a3b" fill="none" stroke-width="2" stroke-linecap="round"/><path d="M-4 -10Q0 -2 4 -10Z" fill="#ff8a3d"/>${feet}`;
+    const wings = '<path class="flap-l" d="M-13 -2Q-29 -8 -29 -27Q-17 -20 -9 -8Z" fill="#3fa557"/><path class="flap-r" d="M13 -2Q29 -8 29 -27Q17 -20 9 -8Z" fill="#3fa557"/>';
+    const eyes = '<path d="M-7.5 -13q2.6-3.2 5.2 0M2.3 -13q2.6-3.2 5.2 0" stroke="#2e2a3b" fill="none" stroke-width="2" stroke-linecap="round"/>';
+    return `${wings}${tail}${body}${feet}${head}${eyes}${cheeks}${beak}`;
   }
-  return `<g class="hop">${tail}${body}<path d="M-14 0Q-21 14 -8 22Q-6 10 -14 0Z" fill="#3fa557"/>
-    <g class="tilt"><circle cx="2" cy="-14" r="12" fill="#5cc86b"/><path d="M-2 -25Q2 -34 6 -25" stroke="#ff6f61" fill="none" stroke-width="3" stroke-linecap="round"/>
-    <circle cx="6" cy="-16" r="4.5" fill="#fff"/><circle cx="7" cy="-16" r="2.2" fill="#2e2a3b"/><path d="M12 -13Q22 -11 14 -3Q13 -8 10 -9Z" fill="#ff8a3d"/><circle cx="-3" cy="-9" r="2.6" fill="#ffb3c1"/></g>${feet}</g>`;
+  const wings = '<path d="M-14 -1Q-23 11 -13 23Q-8 11 -14 -1Z" fill="#3fa557"/><path d="M14 -1Q23 11 13 23Q8 11 14 -1Z" fill="#3fa557"/>';
+  const eyes = '<circle cx="-5" cy="-13" r="2.7" fill="#2e2a3b"/><circle cx="5" cy="-13" r="2.7" fill="#2e2a3b"/><circle cx="-4.1" cy="-14" r="0.9" fill="#fff"/><circle cx="5.9" cy="-14" r="0.9" fill="#fff"/>';
+  return `<g class="hop">${tail}${body}${wings}${feet}<g class="tilt">${head}${eyes}${cheeks}${beak}</g></g>`;
 }
 
-const CRACKS = ["M-12 -6l4 3l3-4l4 4", "M3 -16l3 3l4-3", "M-5 8l3-3l3 3l3-2", "M6 -3l3 4l4-3"];
+const CRACKS = ["M-12 -8l4 3l3-4l4 4", "M3 -18l3 3l4-3", "M-5 6l3-3l3 3l3-2", "M6 -5l3 4l4-3"];
+
+/** A woven nest's back rim and its front, around an egg at (0, 0): the bowl spans x -40..40 and ends at y = 36. */
+const NEST_BACK = '<path d="M-38 8Q0 -6 38 8" stroke="#7a4e2e" stroke-width="7" fill="none" stroke-linecap="round"/>';
+const NEST_FRONT = `<path d="M-39 7Q-38 36 0 36Q38 36 39 7Q20 19 0 19Q-20 19 -39 7Z" fill="#a8743f"/>
+  <path d="M-37 8Q0 25 37 8" stroke="#c98b5b" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M-29 22q9 5 18 4M-6 29q10 2 19-1M15 25q9-2 15-8M-33 15q4 4 9 6" stroke="#8a5a36" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  <path d="M-39 7l-7-3M39 7l7-4M-36 21l-7 1M36 20l7 2" stroke="#a8743f" stroke-width="3" stroke-linecap="round"/>`;
 
 /** The mystery's nest, in a -60 -50 120 92 box: an egg with 0–4 cracks, glowing as you get close, or an empty shell once it's found. */
 function nestArt(crackCount, hatched) {
-  const glow = crackCount ? `<circle class="glow" cx="0" cy="-2" r="${30 + crackCount * 4}" fill="#ffe07a" fill-opacity="${(0.15 + crackCount * 0.17).toFixed(2)}"/>` : "";
+  const glow = crackCount ? `<circle class="glow" cx="0" cy="-4" r="${30 + crackCount * 4}" fill="#ffe07a" fill-opacity="${(0.15 + crackCount * 0.17).toFixed(2)}"/>` : "";
   const egg = hatched
-    ? '<path d="M-18 8L-12 0L-6 8L0 0L6 8L12 0L18 8L18 16Q0 28 -18 16Z" fill="#fff4e0" stroke="#e8cba8" stroke-width="1.5"/>'
-    : `<g class="egg-wobble${crackCount >= 3 ? " fast" : ""}"><ellipse cx="0" cy="0" rx="18" ry="23" fill="#fff4e0" stroke="#e8cba8" stroke-width="2"/><circle cx="-6" cy="-10" r="3" fill="#ffc9a3"/><circle cx="7" cy="7" r="2.5" fill="#ffc9a3"/>${CRACKS.slice(0, crackCount)
+    ? '<path d="M-17 4L-11 -4L-5 4L1 -4L7 4L13 -4L17 4L17 14Q0 24 -17 14Z" fill="#fff4e0" stroke="#e8cba8" stroke-width="1.5"/>'
+    : `<g class="egg-wobble${crackCount >= 3 ? " fast" : ""}"><ellipse cx="0" cy="-2" rx="18" ry="23" fill="#fff4e0" stroke="#e8cba8" stroke-width="2"/><circle cx="-6" cy="-12" r="3" fill="#ffc9a3"/><circle cx="7" cy="5" r="2.5" fill="#ffc9a3"/>${CRACKS.slice(0, crackCount)
         .map((d) => `<path d="${d}" stroke="#9c6a3e" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`)
         .join("")}</g>`;
-  return `${glow}<path d="M-36 14Q0 38 36 14" stroke="#a8743f" stroke-width="13" fill="none" stroke-linecap="round"/>${egg}<path d="M-34 18Q0 32 34 18" stroke="#c98b5b" stroke-width="4" fill="none" stroke-linecap="round"/>`;
+  return `${glow}${NEST_BACK}${egg}${NEST_FRONT}`;
 }
 
-/** The end of the game: the chick hatches (or the egg sleeps on), with Pip beside it. */
+/** A leaf, pointing along `angle` from (x, y). */
+const leaf = (x, y, angle, fill = "#5cc86b") => `<path transform="translate(${x} ${y}) rotate(${angle})" d="M0 0Q8 -7 18 0Q8 7 0 0Z" fill="${fill}"/>`;
+
+/** The end of the game: the chick hatches (or the egg sleeps on) in its nest on a branch, with Pip beside it. */
 function hatchScene(solved) {
   const chick = `<g class="bounce">
-      <circle cx="-20" cy="18" r="30" fill="#ffe066"/>
-      <path d="M-48 14Q-58 28 -44 34" stroke="#f5c518" stroke-width="6" fill="none" stroke-linecap="round"/>
-      <circle cx="-30" cy="10" r="3.5" fill="#2e2a3b"/><circle cx="-10" cy="10" r="3.5" fill="#2e2a3b"/>
-      <circle cx="-29" cy="8.5" r="1.2" fill="#fff"/><circle cx="-9" cy="8.5" r="1.2" fill="#fff"/>
-      <path d="M-25 17L-15 17L-20 25Z" fill="#ff8a3d"/>
-      <circle cx="-38" cy="21" r="3.5" fill="#ffb3c1"/><circle cx="-2" cy="21" r="3.5" fill="#ffb3c1"/>
-      <path d="M-44 -6L-39 -15L-34 -7L-28 -17L-22 -7L-16 -16L-10 -7L-4 -13L-2 -2Q-20 -10 -44 0Z" fill="#fff4e0" stroke="#e8cba8" stroke-width="1.5"/>
-      <path d="M-52 30L-45 22L-38 30L-31 22L-24 30L-17 22L-10 30L-3 22L4 30L10 25L10 46Q-21 62 -52 46Z" fill="#fff4e0" stroke="#e8cba8" stroke-width="1.5"/>
-    </g>`;
-  const sleeping = `<g class="egg-wobble"><ellipse cx="-20" cy="20" rx="24" ry="31" fill="#fff4e0" stroke="#e8cba8" stroke-width="2"/>
-      <path d="M-31 16q3 3 6 0M-15 16q3 3 6 0" stroke="#9c6a3e" fill="none" stroke-width="2" stroke-linecap="round"/></g>
-    <text class="zzz" x="8" y="-6" fill="#3e3a52" font-family="Fredoka, sans-serif" font-weight="700" font-size="16">z</text>
-    <text class="zzz" x="16" y="-16" fill="#3e3a52" font-family="Fredoka, sans-serif" font-weight="700" font-size="12" style="animation-delay:.8s">z</text>`;
-  return `<svg viewBox="-150 -40 300 150" aria-hidden="true">
-    <path d="M-150 94C-60 82 40 86 150 74" stroke="#8a5a36" stroke-width="14" fill="none" stroke-linecap="round"/>
-    <g transform="translate(34 0)">
-      <ellipse cx="-20" cy="66" rx="56" ry="18" fill="#a8743f"/>
-      ${solved ? chick : sleeping}
-      <path d="M-72 60Q-20 82 32 60" stroke="#7a4e2e" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <circle cx="0" cy="-2" r="25" fill="#ffe066"/>
+      <path class="flap-r" d="M22 2Q36 -6 34 -18Q26 -8 18 -6Z" fill="#f5c518"/>
+      <path d="M-22 2Q-32 6 -30 16Q-24 10 -18 8Z" fill="#f5c518"/>
+      <circle cx="-9" cy="-6" r="3.6" fill="#2e2a3b"/><circle cx="9" cy="-6" r="3.6" fill="#2e2a3b"/>
+      <circle cx="-8" cy="-7.5" r="1.2" fill="#fff"/><circle cx="10" cy="-7.5" r="1.2" fill="#fff"/>
+      <path d="M-5 1L5 1L0 8Z" fill="#ff8a3d"/>
+      <circle cx="-16" cy="3" r="3.6" fill="#ffb3c1"/><circle cx="16" cy="3" r="3.6" fill="#ffb3c1"/>
+      <g transform="rotate(-14 0 -24)"><path d="M-17 -20Q-17 -40 0 -40Q17 -40 17 -20L11 -25L6 -19L0 -26L-6 -19L-11 -25Z" fill="#fff4e0" stroke="#e8cba8" stroke-width="1.5" stroke-linejoin="round"/></g>
     </g>
-    <g transform="translate(118 44)">${pip({ cheer: solved })}</g>
+    <path d="M-24 10L-17 2L-10 10L-3 2L4 10L11 2L18 10L24 4L24 20Q0 32 -24 20Z" fill="#fff4e0" stroke="#e8cba8" stroke-width="1.5" stroke-linejoin="round"/>`;
+  const sleeping = `<g class="egg-wobble"><ellipse cx="0" cy="-4" rx="22" ry="28" fill="#fff4e0" stroke="#e8cba8" stroke-width="2"/>
+      <path d="M-11 -7q3 3 6 0M5 -7q3 3 6 0" stroke="#9c6a3e" fill="none" stroke-width="2" stroke-linecap="round"/></g>
+    <text class="zzz" x="26" y="-26" fill="#3e3a52" font-family="Fredoka, sans-serif" font-weight="700" font-size="16">z</text>
+    <text class="zzz" x="36" y="-38" fill="#3e3a52" font-family="Fredoka, sans-serif" font-weight="700" font-size="12" style="animation-delay:.8s">z</text>`;
+  // The branch grows in from off the left edge, so it fades in there.
+  return `<svg viewBox="-150 -50 300 160" aria-hidden="true">
+    <defs><linearGradient id="branch-in" gradientUnits="userSpaceOnUse" x1="-150" x2="-96"><stop offset="0" stop-color="#8a5a36" stop-opacity="0"/><stop offset="1" stop-color="#8a5a36"/></linearGradient></defs>
+    <path d="M-150 90C-80 87 -10 83 60 77C92 74 118 70 140 64Q146 66 140 71C118 77 92 82 60 86C-10 94 -80 100 -150 106Z" fill="url(#branch-in)"/>
+    <path d="M-96 92C-60 90 -30 88 10 86" stroke="#a8743f" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M50 80Q60 66 74 58" stroke="#8a5a36" stroke-width="5" fill="none" stroke-linecap="round"/>
+    ${leaf(74, 58, -40)}${leaf(62, 70, -110, "#3fa557")}${leaf(-70, 95, 130, "#3fa557")}${leaf(-48, 92, 100)}${leaf(140, 67, -25, "#3fa557")}
+    <g transform="translate(-14 52) scale(1.25)">
+      ${NEST_BACK}
+      <g transform="translate(0 -4)">${solved ? chick : sleeping}</g>
+      ${NEST_FRONT}
+    </g>
+    <g transform="translate(106 47.5)">${pip({ cheer: solved })}</g>
   </svg>`;
 }
 
