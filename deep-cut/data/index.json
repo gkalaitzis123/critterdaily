@@ -387,7 +387,7 @@
  {
   "id": "empires",
   "prompt": "Name an empire",
-  "answers": 112
+  "answers": 113
  },
  {
   "id": "euro-countries",
@@ -417,7 +417,7 @@
  {
   "id": "french-monarchs",
   "prompt": "Name a king or emperor of France",
-  "answers": 108
+  "answers": 109
  },
  {
   "id": "frogs",

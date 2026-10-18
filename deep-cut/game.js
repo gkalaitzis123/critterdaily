@@ -40,35 +40,98 @@ export function normalize(text) {
     .replace(/(?<=[a-z] )([1-9]|[1-3][0-9])(?= |$)/g, (n) => ROMAN(Number(n)));
 }
 
+let rows = [new Int32Array(64), new Int32Array(64), new Int32Array(64)];
+
 /** Damerau-Levenshtein (optimal string alignment) distance, stopping early past `max`. */
 export function distance(a, b, max = 3) {
   if (Math.abs(a.length - b.length) > max) return max + 1;
-  const d = Array.from({ length: a.length + 1 }, (_, i) => [i, ...new Array(b.length).fill(0)]);
-  for (let j = 1; j <= b.length; j++) d[0][j] = j;
+  if (a === b) return 0;
+  const n = b.length;
+  if (rows[0].length <= n) rows = rows.map(() => new Int32Array(2 * n + 2));
+  let [before, prev, row] = rows; // the rows two back, one back, and this one
+  for (let j = 0; j <= n; j++) prev[j] = j;
   for (let i = 1; i <= a.length; i++) {
-    let best = Infinity;
-    for (let j = 1; j <= b.length; j++) {
-      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-      d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + cost);
-      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + 1);
-      best = Math.min(best, d[i][j]);
+    row[0] = i;
+    let best = i;
+    for (let j = 1; j <= n; j++) {
+      let d = Math.min(prev[j] + 1, row[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1] && before[j - 2] + 1 < d) d = before[j - 2] + 1;
+      row[j] = d;
+      if (d < best) best = d;
     }
     if (best > max) return max + 1;
+    [before, prev, row] = [prev, row, before];
   }
-  return d[a.length][b.length];
+  return prev[n];
 }
 
 // Words a typo mustn't change, since they make it a different answer:
 // numerals ("Elizabeth II" isn't Elizabeth I) and directions ("Northern Song").
 const KEY_WORD = /^(?:[ivx]+|north|northern|south|southern|east|eastern|west|western|upper|lower)$/;
-const keyWords = (s) => s.split(" ").filter((w) => KEY_WORD.test(w)).join(" ");
+const keyWords = (words) => words.filter((w) => KEY_WORD.test(w)).join(" ");
 
-/** How many typos a guess of this length may have. */
+/** How many typos a guess of this many letters may have: none under 5, one up to 8, two from 9. */
 export const typosAllowed = (length) => (length >= 9 ? 2 : length >= 5 ? 1 : 0);
+// ...in any one of its words: one, or two in a word of 9 letters or more.
+const typoRoom = (word) => (word >= 9 ? 2 : word >= 2 ? 1 : 0);
+// To be asked about ("Did you mean ...?"): another in long words, not so many
+// that "Apatosaurus" brings up Allosaurus.
+const nearRoom = (word) => (word >= 12 ? 3 : word >= 8 ? 2 : word >= 2 ? 1 : 0);
+
+/** A name, ready to compare: its words, its letters, and its numerals and directions. */
+function partsOf(text) {
+  const words = text.split(" ");
+  return { text, words, letters: words.join(""), keys: keyWords(words) };
+}
+
+// Each answer's names, split once (a category's answers are used again and again).
+const NAMES = new WeakMap();
+function namesOf(a) {
+  let names = NAMES.get(a);
+  if (!names) {
+    names = a.aliases.map((alias) => ({
+      ...partsOf(alias),
+      placed: a.aliases.some((other) => alias.startsWith(`${other} `)), // a name with a place after it ("amman jordan")
+    }));
+    NAMES.set(a, names);
+  }
+  return names;
+}
+
+/**
+ * How many typos turn a guess into a name, counted word by word: each word
+ * may have as many as `room` gives a word its length, and the guess no more
+ * than `most` in all. So "Thomas Gold" isn't Thomas Cole: two typos in one
+ * short word make it another word, however long the whole name is. Words run
+ * together or split apart ("spider man") are compared letter by letter, with
+ * one typo fewer. Infinity when there are too many.
+ */
+function typos(guess, name, room, most) {
+  if (Math.abs(guess.letters.length - name.letters.length) > most) return Infinity;
+  if (guess.words.length !== name.words.length) {
+    const allowed = Math.min(most - 1, room(guess.letters.length));
+    const d = distance(guess.letters, name.letters, allowed);
+    return d <= allowed ? d : Infinity;
+  }
+  let total = 0;
+  for (let i = 0; i < guess.words.length; i++) {
+    const g = guess.words[i];
+    const n = name.words[i];
+    if (g === n) continue;
+    const allowed = room(Math.max(g.length, n.length));
+    const d = distance(g, n, allowed);
+    if (d > allowed || (total += d) > most) return Infinity;
+  }
+  return total;
+}
+
+/** A guess, and the guess without words the category leaves off ("pope gregory", "gregory"). */
+const formsOf = (g, strip) => [g, ...strip.flatMap((w) => [g.startsWith(`${w} `) ? g.slice(w.length + 1) : null, g.endsWith(` ${w}`) ? g.slice(0, -w.length - 1) : null]).filter(Boolean)];
 
 /**
  * Find the answer a guess means. Exact matches on any alias win; otherwise the
- * closest alias within the typo allowance, if only one answer is that close.
+ * closest alias within the typo allowance (word by word, two at most), if only
+ * one answer is that close.
  * answers: [{ name, aliases: [normalized], ... }]. A category can also give
  * `strip`, words players add that the aliases leave off ("pope" in "Pope
  * Gregory"), and `not`, real names a typo away from an answer that must not
@@ -77,20 +140,19 @@ export const typosAllowed = (length) => (length >= 9 ? 2 : length >= 5 ? 1 : 0);
 export function match(guess, answers, { strip = [], not = [] } = {}) {
   const g = normalize(guess);
   if (!g || not.includes(g)) return null;
-  const forms = [g, ...strip.flatMap((w) => [g.startsWith(`${w} `) ? g.slice(w.length + 1) : null, g.endsWith(` ${w}`) ? g.slice(0, -w.length - 1) : null]).filter(Boolean)];
+  const forms = formsOf(g, strip);
   for (const form of forms) for (const a of answers) if (a.aliases.includes(form)) return a;
   let best = null;
   let bestDistance = Infinity;
   let tied = false;
-  for (const form of forms) {
-    const allowed = typosAllowed(form.length);
-    if (!allowed) continue;
-    const keys = keyWords(form);
+  for (const form of forms.map(partsOf)) {
+    const most = typosAllowed(form.letters.length);
+    if (!most) continue;
     for (const a of answers) {
-      for (const alias of a.aliases) {
-        if (keyWords(alias) !== keys) continue;
-        const dist = distance(form, alias, allowed);
-        if (dist > allowed) continue;
+      for (const name of namesOf(a)) {
+        if (name.keys !== form.keys) continue;
+        const dist = typos(form, name, typoRoom, most);
+        if (dist === Infinity) continue;
         if (dist < bestDistance) {
           [best, bestDistance, tied] = [a, dist, false];
         } else if (dist === bestDistance && best && best !== a) {
@@ -107,9 +169,10 @@ const LITTLE = new Set(["the", "of", "and", "a", "an"]);
 
 /**
  * The answers a guess was probably reaching for, when it's too far off to
- * count on its own, for "Did you mean ...?": a few more typos than match()
- * forgives, a name cut short ("Trebonianus Gal"), or words of a name that
- * few answers share ("Trebonianus"). Never across a numeral or a direction
+ * count on its own, for "Did you mean ...?": a typo more than match()
+ * forgives in longer words, a name cut short ("Trebonianus Gal"), or most of
+ * a name's words, if few answers share them ("Trebonianus"; but not
+ * "Hungary" for "Budapest, Hungary"). Never across a numeral or a direction
  * ("Elizabeth II" doesn't offer Elizabeth I), and never for a name ruled out
  * with `not`. Returns up to `limit` answers, the closest first, then the
  * most read.
@@ -117,29 +180,36 @@ const LITTLE = new Set(["the", "of", "and", "a", "an"]);
 export function nearest(guess, answers, { strip = [], not = [] } = {}, limit = 3) {
   const g = normalize(guess);
   if (!g || not.includes(g)) return [];
-  const forms = [g, ...strip.flatMap((w) => [g.startsWith(`${w} `) ? g.slice(w.length + 1) : null, g.endsWith(` ${w}`) ? g.slice(0, -w.length - 1) : null]).filter(Boolean)];
   const score = new Map(); // answer -> how far off (lower is closer)
   const offer = (a, s) => score.set(a, Math.min(s, score.get(a) ?? Infinity));
-  for (const form of forms) {
-    const keys = keyWords(form);
-    const room = form.length <= 4 ? 1 : form.length <= 8 ? 2 : form.length <= 14 ? 3 : 4;
+  for (const form of formsOf(g, strip).map(partsOf)) {
+    const letters = form.letters.length;
+    const most = letters < 5 ? 1 : letters < 9 ? 2 : 3;
+    // Words of a name ("Trebonianus", "Ivan Terrible"): at least half its
+    // letters, if few answers have them all. Not from a name with a place
+    // after it ("Amman, Jordan"), or a country would find its capital.
+    const words = form.words.filter((w) => !LITTLE.has(w));
+    const fits = words.map((w, i) => (x) => x === w || (w.length >= 5 && distance(w, x, 1) <= 1) || (i === words.length - 1 && w.length >= 3 && x.startsWith(w)));
+    const byWords = words.some((w) => w.length >= 4);
+    const covers = (name) => {
+      if (name.placed || !fits.every((fit) => name.words.some(fit))) return false;
+      const covered = name.words.filter((x) => fits.some((fit) => fit(x))).join("");
+      return covered.length >= 0.5 * name.letters.length;
+    };
+    const hits = [];
     for (const a of answers) {
-      for (const alias of a.aliases) {
-        if (keyWords(alias) !== keys) continue;
-        const d = distance(form, alias, room);
-        if (d <= room) offer(a, d);
+      let hit = false;
+      for (const name of namesOf(a)) {
+        if (name.keys !== form.keys) continue;
+        const d = typos(form, name, nearRoom, most);
+        if (d !== Infinity) offer(a, d);
         // Stopped typing partway: most of the name, nearly right.
-        else if (form.length >= 4 && form.length < alias.length && form.length >= 0.6 * alias.length && distance(form, alias.slice(0, form.length), 1) <= 1) offer(a, room + 1);
+        else if (form.text.length >= 4 && form.text.length < name.text.length && form.text.length >= 0.6 * name.text.length && distance(form.text, name.text.slice(0, form.text.length), 1) <= 1) offer(a, 4);
+        hit ||= byWords && covers(name);
       }
+      if (hit) hits.push(a);
     }
-    // Words of a name ("Trebonianus", "Ivan Terrible"), if few answers have them all.
-    const words = form.split(" ").filter((w) => !LITTLE.has(w));
-    if (words.some((w) => w.length >= 4)) {
-      const fits = (w, last) => (aw) => aw === w || (w.length >= 5 && distance(w, aw, 1) <= 1) || (last && w.length >= 3 && aw.startsWith(w));
-      const covers = (alias) => keyWords(alias) === keys && words.every((w, i) => alias.split(" ").some(fits(w, i === words.length - 1)));
-      const hits = answers.filter((a) => a.aliases.some(covers));
-      if (hits.length <= limit) for (const a of hits) offer(a, room + 2);
-    }
+    if (hits.length <= limit) for (const a of hits) offer(a, 5);
   }
   return [...score]
     .sort(([a, x], [b, y]) => x - y || (b.perDay ?? 0) - (a.perDay ?? 0))
