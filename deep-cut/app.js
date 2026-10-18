@@ -4,6 +4,19 @@
 import { PERIODS, PROMPTS_PER_DAY, SECONDS_PER_PROMPT, compact, dayNumber, match, nearest, normalize, periodFor, promptsFor, shareText, stats } from "./game.js";
 
 const $ = (sel) => document.querySelector(sel);
+
+/**
+ * Counts a moment of play in Critter Daily's stats (Umami, which uses no
+ * cookies and knows nothing about who you are). Umami only runs on
+ * critterdaily.com, so local copies and tests count nothing.
+ */
+const track = (event, data) => {
+  try {
+    window.umami?.track(event, data);
+  } catch {
+    // Stats are never worth breaking a game for.
+  }
+};
 const STORE = "deepcut-v1";
 const screens = ["loading", "intro", "prompt", "reveal", "results"];
 
@@ -278,6 +291,7 @@ function wire() {
   $("#start").addEventListener("click", async () => {
     mode = "daily";
     run = { day: today, ids: promptsFor(today, schedule), results: [], index: 0 };
+    track("start", { game: "deep-cut", mode, day: today });
     await showPrompt();
   });
   const input = $("#guess");
@@ -454,7 +468,11 @@ function countUp(el, to, ms = 900, from = 0) {
 }
 
 async function next() {
-  if (run.index >= run.ids.length) return showResults();
+  if (run.index >= run.ids.length) {
+    const total = totalOf(run.results);
+    track("finish", { game: "deep-cut", mode, ...(mode === "daily" ? { day: run.day } : {}), depth: total, period: periodFor(total).name, answered: run.results.filter((r) => r.answer).length });
+    return showResults();
+  }
   await showPrompt();
 }
 
@@ -520,6 +538,7 @@ function countdown() {
 }
 
 async function share() {
+  track("share", { game: "deep-cut", day: run.day });
   const text = shareText(run.day, run.results, shareUrl());
   try {
     if (navigator.share && matchMedia("(pointer: coarse)").matches) await navigator.share({ text });
@@ -551,6 +570,7 @@ function showStats() {
 
 async function startPractice() {
   mode = "practice";
+  track("start", { game: "deep-cut", mode });
   if (deck.length < PROMPTS_PER_DAY) {
     const index = await (await fetch("data/index.json")).json();
     const fresh = index.map((c) => c.id).filter((id) => !deck.includes(id));

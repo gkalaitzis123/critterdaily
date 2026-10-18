@@ -4,6 +4,19 @@
 import { MAX_POINTS, MAX_YEARS, QUESTIONS_PER_DAY, SIZES, TIERS, UNITS, dayNumber, formatAmount, formatNumber, hasEra, hasSize, howClose, parseGuess, points, questionsFor, ranges, shareText, sizeOf, stats, tierFor, verdict } from "./game.js";
 
 const $ = (sel) => document.querySelector(sel);
+
+/**
+ * Counts a moment of play in Critter Daily's stats (Umami, which uses no
+ * cookies and knows nothing about who you are). Umami only runs on
+ * critterdaily.com, so local copies and tests count nothing.
+ */
+const track = (event, data) => {
+  try {
+    window.umami?.track(event, data);
+  } catch {
+    // Stats are never worth breaking a game for.
+  }
+};
 const STORE = "tennumbers-v1";
 const screens = ["loading", "intro", "question", "reveal", "results"];
 const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -197,6 +210,7 @@ function wire() {
   $("#start").addEventListener("click", () => {
     mode = "daily";
     run = { day: today, ids: questionsFor(today, schedule), results: [], index: 0 };
+    track("start", { game: "ten-numbers", mode, day: today });
     showQuestion();
   });
   $("#guess-form").addEventListener("submit", (e) => {
@@ -386,7 +400,11 @@ function countUp(el, to, ms = 900, from = 0, delay = 0) {
 }
 
 function next() {
-  if (run.index >= run.ids.length) return showResults();
+  if (run.index >= run.ids.length) {
+    const total = totalOf(run.results);
+    track("finish", { game: "ten-numbers", mode, ...(mode === "daily" ? { day: run.day } : {}), acorns: total, tier: tierFor(total).name });
+    return showResults();
+  }
   showQuestion();
 }
 
@@ -442,6 +460,7 @@ function countdown() {
 }
 
 async function share() {
+  track("share", { game: "ten-numbers", day: run.day });
   const text = shareText(run.day, run.results, location.href.split(/[?#]/)[0]);
   try {
     if (navigator.share && matchMedia("(pointer: coarse)").matches) await navigator.share({ text });
@@ -473,6 +492,7 @@ function showStats() {
 
 function startPractice() {
   mode = "practice";
+  track("start", { game: "ten-numbers", mode });
   // Mixed like a day: ten kinds, at most five of them years. The deck is
   // shuffled once and dealt from, so rounds don't repeat questions.
   const pick = () => {

@@ -4,6 +4,19 @@
 import { MAX_GUESSES, HINTS, MISSED, TIERS, branchMatch, compare, cracks, dayNumber, find, hintsFor, lineage, mysteryFor, normalize, roughly, shareText, stats, suggest, tierFor, whereShort, whereText } from "./game.js";
 
 const $ = (sel) => document.querySelector(sel);
+
+/**
+ * Counts a moment of play in Critter Daily's stats (Umami, which uses no
+ * cookies and knows nothing about who you are). Umami only runs on
+ * critterdaily.com, so local copies and tests count nothing.
+ */
+const track = (event, data) => {
+  try {
+    window.umami?.track(event, data);
+  } catch {
+    // Stats are never worth breaking a game for.
+  }
+};
 const STORE = "mothertongue-v1";
 const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const regions = new Intl.DisplayNames(["en"], { type: "region" });
@@ -311,6 +324,7 @@ function guess(lang, typed = "") {
   }
   const result = { lang, ...compare(lang, mystery, nodes) };
   results.push(result);
+  if (results.length === 1) track("start", { game: "mother-tongue", mode, ...(mode === "daily" ? { day: today } : {}) });
   $("#guess").value = "";
   hideSuggestions();
   const where = whereText(result.where);
@@ -383,6 +397,8 @@ function render(latest = null) {
 
 function finish(outcome) {
   finished = outcome;
+  const solved = outcome === "solved";
+  track("finish", { game: "mother-tongue", mode, ...(mode === "daily" ? { day: today } : {}), solved, guesses: results.length, tier: tierFor(results.length, solved).name });
   if (mode === "daily")
     save((s) => {
       (s.days ??= {})[today] = { mystery: mystery.id, guesses: results.map((r) => r.lang.id), finished: outcome };
@@ -455,6 +471,7 @@ function countdown() {
 }
 
 async function share() {
+  track("share", { game: "mother-tongue", day: today });
   const text = shareText(today, results, finished === "solved", location.href.split(/[?#]/)[0]);
   try {
     if (navigator.share && matchMedia("(pointer: coarse)").matches) await navigator.share({ text });
