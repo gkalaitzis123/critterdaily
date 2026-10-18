@@ -131,7 +131,7 @@ function hatchScene(solved) {
     <path d="M-150 90C-80 87 -10 83 60 77C92 74 118 70 140 64Q146 66 140 71C118 77 92 82 60 86C-10 94 -80 100 -150 106Z" fill="url(#branch-in)"/>
     <path d="M-96 92C-60 90 -30 88 10 86" stroke="#a8743f" stroke-width="3" fill="none" stroke-linecap="round"/>
     <path d="M50 80Q60 66 74 58" stroke="#8a5a36" stroke-width="5" fill="none" stroke-linecap="round"/>
-    ${leaf(74, 58, -40)}${leaf(62, 70, -110, "#3fa557")}${leaf(-70, 95, 130, "#3fa557")}${leaf(-48, 92, 100)}${leaf(140, 67, -25, "#3fa557")}
+    ${leaf(74, 58, -40)}${leaf(62, 70, -110, "#3fa557")}${leaf(-70, 92, 120, "#3fa557")}${leaf(-48, 92, 100)}${leaf(126, 70, -30, "#3fa557")}
     <g transform="translate(-14 52) scale(1.25)">
       ${NEST_BACK}
       <g transform="translate(0 -4)">${solved ? chick : sleeping}</g>

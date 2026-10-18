@@ -626,6 +626,13 @@ main {
   background: var(--sun);
 }
 
+/* Pip hops 8 units, which lifts his crest past the top of his box: let it show. */
+.pip,
+.roots-pip,
+.sheet-pip {
+  overflow: visible;
+}
+
 /* Pip's feet are 14 of its 80 units above the bottom of its box: on the branch. */
 .pip {
   position: absolute;

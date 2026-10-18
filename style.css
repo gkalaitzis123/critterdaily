@@ -109,6 +109,7 @@ a {
   grid-row: 1 / span 2;
   width: 84px;
   height: 84px;
+  overflow: visible; /* hops and waves reach past the box */
 }
 
 .game-text {
