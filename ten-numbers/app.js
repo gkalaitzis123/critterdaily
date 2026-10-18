@@ -82,14 +82,14 @@ function nutmeg({ wave = false, cheer = false } = {}) {
     </g>`;
 }
 
-const ACORN = '<ellipse cx="10" cy="15" rx="7" ry="8" fill="#c98b5b"/><path d="M2 10Q10 2 18 10Q10 13 2 10Z" fill="#7a4e2e"/><rect x="9" y="1" width="2" height="4" rx="1" fill="#7a4e2e"/>';
+const ACORN = '<ellipse cx="10" cy="15" rx="7" ry="8" fill="#c98b5b"/><path d="M2 10Q10 1 18 10Q10 13 2 10Z" fill="#7a4e2e"/><rect x="9" y="1.5" width="2" height="5" rx="1" fill="#7a4e2e"/>';
 const acorn = (cls = "", style = "") => `<svg class="${cls}" viewBox="0 0 20 24" aria-hidden="true"${style ? ` style="${style}"` : ""}>${ACORN}</svg>`;
 
 const GLASS = "M22 34Q22 26 30 26H70Q78 26 78 34V104Q78 116 66 116H34Q22 116 22 104Z";
 /** Nutmeg's jar, in a 0 0 100 124 box, filled to `share` (0 to 1). `id` keeps two jars on one page apart. */
 function jar(id, share) {
   return `<defs><clipPath id="${id}-glass"><path d="${GLASS}"/></clipPath>
-      <pattern id="${id}-nuts" width="16" height="16" patternUnits="userSpaceOnUse"><rect width="16" height="16" fill="#e8b27a"/><ellipse cx="8" cy="10" rx="5" ry="5.5" fill="#c98b5b"/><path d="M3 7Q8 2 13 7Q8 9 3 7Z" fill="#7a4e2e"/></pattern></defs>
+      <pattern id="${id}-nuts" width="16" height="16" patternUnits="userSpaceOnUse"><rect width="16" height="16" fill="#e8b27a"/><ellipse cx="8" cy="10" rx="5" ry="5.5" fill="#c98b5b"/><path d="M3 7Q8 1 13 7Q8 9 3 7Z" fill="#7a4e2e"/></pattern></defs>
     <path d="${GLASS}" fill="#ffffff" fill-opacity=".55"/>
     <g clip-path="url(#${id}-glass)"><g class="jar-fill" style="transform:translateY(${(90 * (1 - share)).toFixed(1)}px)"><rect x="22" y="26" width="56" height="90" fill="url(#${id}-nuts)"/></g></g>
     <path d="${GLASS}" fill="none" stroke="#2e2a3b" stroke-width="3"/>
