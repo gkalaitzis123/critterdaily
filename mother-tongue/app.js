@@ -3,6 +3,7 @@
 // the hatching, sharing and stats. The rules live in game.js.
 import { MAX_GUESSES, HINTS, MISSED, TIERS, branchMatch, compare, cracks, dayNumber, find, hintsFor, lineage, mysteryFor, normalize, roughly, shareText, stats, suggest, tierFor, whereShort, whereText } from "./game.js";
 import { settingsButton } from "./settings.js";
+import { calendar, tierBars } from "./stats-view.js";
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -497,6 +498,17 @@ function showStats() {
     stat(s.bestStreak, "Best streak"),
     stat(s.won, "Hatched total"),
   ].join("");
+  // Each day's tier (or still in the egg), and the last five weeks in those colors.
+  const history = load().history ?? {};
+  const day = today ?? dayNumber();
+  const colors = [...TIER_COLORS, "#c9b8a6"];
+  const tierOf = (d) => tierFor(history[d].guesses, history[d].solved).index;
+  const days = Object.keys(history).map(Number);
+  $("#stats-tiers").innerHTML = tierBars(
+    [...TIERS.map((t) => t.name), MISSED].map((label, i) => ({ label, count: days.filter((d) => tierOf(d) === i).length, color: colors[i] })),
+    history[day] ? tierOf(day) : -1,
+  );
+  $("#stats-calendar").innerHTML = calendar((d) => (history[d] ? colors[tierOf(d)] : null), day);
   $("#stats").showModal();
 }
 

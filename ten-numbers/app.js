@@ -3,6 +3,7 @@
 // rounds. The rules live in game.js.
 import { MAX_POINTS, MAX_YEARS, QUESTIONS_PER_DAY, SIZES, TIERS, UNITS, dayNumber, formatAmount, formatNumber, hasEra, hasSize, howClose, parseGuess, points, questionsFor, ranges, shareText, sizeOf, stats, tierFor, verdict } from "./game.js";
 import { settingsButton } from "./settings.js";
+import { calendar, tierBars } from "./stats-view.js";
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -486,6 +487,16 @@ function showStats() {
     stat(s.bestStreak, "Best streak"),
     stat(formatNumber(Object.values(load().history ?? {}).reduce((n, t) => n + t, 0)), "Acorns ever"),
   ].join("");
+  // Each day's tier, and the last five weeks in those colors, from a pale nut to a dark one.
+  const history = load().history ?? {};
+  const shades = ["#ead2ad", "#ddb27f", "#c98b5b", "#a66b3d", "#7a4e2e"];
+  const tierOf = (d) => tierFor(history[d]).index;
+  const days = Object.keys(history).map(Number);
+  $("#stats-tiers").innerHTML = tierBars(
+    TIERS.map((t, i) => ({ label: t.name, count: days.filter((d) => tierOf(d) === i).length, color: shades[i] })),
+    history[today] !== undefined ? tierOf(today) : -1,
+  );
+  $("#stats-calendar").innerHTML = calendar((d) => (history[d] !== undefined ? shades[tierOf(d)] : null), today);
   $("#stats").showModal();
 }
 

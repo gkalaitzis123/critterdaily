@@ -120,7 +120,15 @@
     </footer>
     <script type="module">
       import { settingsButton } from "./settings.js";
+      import { homeSummary } from "./stats-view.js";
       settingsButton(document.getElementById("settings-button"));
+      // Under each game you've played: today's result, or that it's waiting, and your streak.
+      for (const [id, s] of Object.entries(homeSummary())) {
+        const line = document.createElement("span");
+        line.className = `game-today${s.today ? " done" : ""}`;
+        line.textContent = `${s.today ? `✓ Today: ${s.today}` : "Today's is waiting"}${s.streak ? ` · ${s.streak}-day streak` : ""}`;
+        document.querySelector(`a.game[href="${id}/"] .game-text`)?.append(line);
+      }
     </script>
   </body>
 </html>

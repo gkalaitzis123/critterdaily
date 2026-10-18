@@ -3,6 +3,7 @@
 // the stats. The rules live in game.js.
 import { PERIODS, PROMPTS_PER_DAY, SECONDS_PER_PROMPT, compact, dayNumber, match, nearest, normalize, periodFor, promptsFor, shareText, stats } from "./game.js";
 import { settingsButton } from "./settings.js";
+import { calendar, tierBars } from "./stats-view.js";
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -564,6 +565,15 @@ function showStats() {
     stat(`${s.average}\u00a0m`, "Average", true),
     stat(`${s.deepest}\u00a0m`, s.played ? `Deepest, in the ${periodFor(s.deepest).name}` : "Deepest", true),
   ].join("");
+  // Which period each day ended in, and the last five weeks in those colors.
+  const history = load().history ?? {};
+  const periodOf = (d) => periodFor(history[d]).index;
+  const days = Object.keys(history).map(Number);
+  $("#stats-tiers").innerHTML = tierBars(
+    PERIODS.map((p, i) => ({ label: p.name, count: days.filter((d) => periodOf(d) === i).length, color: LAYERS[i] })),
+    history[today] !== undefined ? periodOf(today) : -1,
+  );
+  $("#stats-calendar").innerHTML = calendar((d) => (history[d] !== undefined ? LAYERS[periodOf(d)] : null), today);
   $("#stats").showModal();
 }
 
