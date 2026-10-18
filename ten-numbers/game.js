@@ -190,7 +190,9 @@ export function formatNumber(n) {
   if (a >= 1e12) return short(n / 1e12, "trillion");
   if (a >= 1e9) return short(n / 1e9, "billion");
   if (a >= 1e6) return short(n / 1e6, "million");
-  return (a < 10 ? Number(n.toFixed(1)) : Math.round(n)).toLocaleString("en-US");
+  // Whole numbers from 10 up, unless rounding would be over 2% off (12.4 kg, not 12).
+  const whole = Math.round(n);
+  return (a < 10 || Math.abs(whole - n) > 0.02 * a ? Number(n.toFixed(1)) : whole).toLocaleString("en-US");
 }
 
 /** A value with its unit: "8,849 m", "29,032 ft" (alt), "44 BC", "AD 80", "1.4 billion people". */
