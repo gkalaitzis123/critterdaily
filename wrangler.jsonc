@@ -1,0 +1,23 @@
+// Cloudflare's settings for critterdaily.com, deployed from the critterdaily
+// repository. The site is the static files around this one; the Worker
+// (worker.js) runs only for /api/, where it keeps how everyone did each day
+// in the D1 database critterdaily-stats. Published from games/worker/ by
+// games/scripts/publish-site.mjs.
+{
+  "name": "critterdaily",
+  "main": "worker.js",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": ".",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "critterdaily-stats",
+      "database_id": "b6518789-c364-46fd-b619-8cf879f35542"
+    }
+  ],
+  "observability": { "enabled": true }
+}

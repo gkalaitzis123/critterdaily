@@ -4,6 +4,7 @@
 import { PERIODS, PROMPTS_PER_DAY, SECONDS_PER_PROMPT, compact, dayNumber, match, nearest, normalize, periodFor, promptsFor, shareText, stats } from "./game.js";
 import { settingsButton } from "./settings.js";
 import { calendar, tierBars } from "./stats-view.js";
+import { averageOf, beatShare, count, howEveryoneDid, sendScore } from "./everyone.js";
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -259,6 +260,7 @@ async function init() {
   if (saved?.done) {
     run = { day: today, ids: answered.map((r) => r.id), results: answered, index: PROMPTS_PER_DAY };
     showResults();
+    everyoneToday(today, totalOf(answered));
   } else if (answered.length || saved?.startedAt) {
     // Back mid-game, even mid-prompt: pick up where it was, with the clock still running.
     run = { day: today, ids: [...answered.map((r) => r.id), ...ids.slice(answered.length)], results: answered, index: answered.length, startedAt: saved.startedAt };
@@ -474,7 +476,9 @@ async function next() {
   if (run.index >= run.ids.length) {
     const total = totalOf(run.results);
     track("finish", { game: "deep-cut", mode, ...(mode === "daily" ? { day: run.day } : {}), depth: total, period: periodFor(total).name, answered: run.results.filter((r) => r.answer).length });
-    return showResults();
+    await showResults();
+    if (mode === "daily") everyoneToday(run.day, total, { send: true });
+    return;
   }
   await showPrompt();
 }
@@ -483,6 +487,20 @@ async function next() {
 // Results, sharing and stats
 
 const shareUrl = () => location.href.split(/[?#]/)[0];
+
+/** How everyone did today, under the results; a dig just finished is sent first. */
+async function everyoneToday(day, depth, { send = false } = {}) {
+  const el = $("#everyone");
+  el.hidden = true;
+  if (send) await sendScore("deep-cut", day, depth);
+  const all = await howEveryoneDid("deep-cut", day);
+  if (!all?.players || mode !== "daily") return;
+  el.textContent =
+    all.players === 1
+      ? "You're the first to finish today's dig. Come back later to see how everyone did."
+      : `${count(all.players)} players have dug today. ${beatShare(all, depth) ? `You went deeper than ${beatShare(all, depth)}% of them; the` : "The"} average dig is ${Math.round(averageOf(all).average)}\u00a0m.`;
+  el.hidden = false;
+}
 
 async function showResults() {
   const total = totalOf(run.results);

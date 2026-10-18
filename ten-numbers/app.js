@@ -4,6 +4,7 @@
 import { MAX_POINTS, MAX_YEARS, QUESTIONS_PER_DAY, SIZES, TIERS, UNITS, dayNumber, formatAmount, formatNumber, hasEra, hasSize, howClose, parseGuess, points, questionsFor, ranges, shareText, sizeOf, stats, tierFor, verdict } from "./game.js";
 import { settingsButton } from "./settings.js";
 import { calendar, tierBars } from "./stats-view.js";
+import { averageOf, beatShare, count, howEveryoneDid, sendScore } from "./everyone.js";
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -186,6 +187,7 @@ async function init() {
   if (ids && saved.done) {
     run = { day: today, ids, results: saved.results, index: QUESTIONS_PER_DAY };
     showResults();
+    everyoneToday(today, totalOf(saved.results));
   } else if (ids && saved.results?.length) {
     run = { day: today, ids, results: saved.results, index: saved.results.length };
     showQuestion();
@@ -406,13 +408,29 @@ function next() {
   if (run.index >= run.ids.length) {
     const total = totalOf(run.results);
     track("finish", { game: "ten-numbers", mode, ...(mode === "daily" ? { day: run.day } : {}), acorns: total, tier: tierFor(total).name });
-    return showResults();
+    showResults();
+    if (mode === "daily") everyoneToday(run.day, total, { send: true });
+    return;
   }
   showQuestion();
 }
 
 // ---------------------------------------------------------------------------
 // Results, sharing and stats
+
+/** How everyone did today, under the results; a day just finished is sent first. */
+async function everyoneToday(day, acorns, { send = false } = {}) {
+  const el = $("#everyone");
+  el.hidden = true;
+  if (send) await sendScore("ten-numbers", day, acorns);
+  const all = await howEveryoneDid("ten-numbers", day);
+  if (!all?.players || mode !== "daily") return;
+  el.textContent =
+    all.players === 1
+      ? "You're the first to finish today's. Come back later to see how everyone did."
+      : `${count(all.players)} players have played today. ${beatShare(all, acorns) ? `You earned more acorns than ${beatShare(all, acorns)}% of them; the` : "The"} average is ${Math.round(averageOf(all).average)} acorns.`;
+  el.hidden = false;
+}
 
 function showResults() {
   const total = totalOf(run.results);

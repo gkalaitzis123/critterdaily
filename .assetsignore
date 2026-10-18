@@ -1,0 +1,5 @@
+# The Worker and its settings are not part of the site.
+worker.js
+wrangler.jsonc
+.assetsignore
+.git

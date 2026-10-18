@@ -4,6 +4,7 @@
 import { MAX_GUESSES, HINTS, MISSED, TIERS, branchMatch, compare, cracks, dayNumber, find, hintsFor, lineage, mysteryFor, normalize, roughly, shareText, stats, suggest, tierFor, whereShort, whereText } from "./game.js";
 import { settingsButton } from "./settings.js";
 import { calendar, tierBars } from "./stats-view.js";
+import { averageOf, beatShare, count, howEveryoneDid, sendScore } from "./everyone.js";
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -191,8 +192,10 @@ async function init() {
   $("#game").hidden = false;
   $("#practice-start").hidden = !PRACTICE_FOR_ALL;
   render();
-  if (finished) showDone();
-  else $("#guess").focus();
+  if (finished) {
+    showDone();
+    everyoneToday();
+  } else $("#guess").focus();
 }
 
 function wire() {
@@ -409,6 +412,28 @@ function finish(outcome) {
     });
   render();
   showDone();
+  if (mode === "daily") everyoneToday(true);
+}
+
+/**
+ * How everyone did today, under the result; a game just finished is sent
+ * first, scored so that more is better: 20 for one guess, 1 for twenty, 0 for not found.
+ */
+async function everyoneToday(send = false) {
+  const el = $("#everyone");
+  el.hidden = true;
+  const solved = finished === "solved";
+  const score = solved ? MAX_GUESSES + 1 - results.length : 0;
+  if (send) await sendScore("mother-tongue", today, score);
+  const all = await howEveryoneDid("mother-tongue", today);
+  if (!all?.players || mode !== "daily") return;
+  const hatched = averageOf(all, (s) => s > 0);
+  const average = hatched.n ? `, in ${(MAX_GUESSES + 1 - hatched.average).toFixed(1)} guesses on average` : "";
+  el.textContent =
+    all.players === 1
+      ? "You're the first to finish today's. Come back later to see how everyone did."
+      : `${count(all.players)} players have played today, and ${Math.round((100 * hatched.n) / all.players)}% hatched it${average}.${solved && beatShare(all, score) ? ` You needed fewer guesses than ${beatShare(all, score)}% of them.` : ""}`;
+  el.hidden = false;
 }
 
 function showDone() {

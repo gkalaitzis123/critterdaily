@@ -1372,6 +1372,19 @@ main {
   opacity: 0.35;
 }
 
+/* How everyone did today (everyone.js), under the results */
+
+.everyone {
+  margin: 12px 0 0;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: var(--track);
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  color: var(--ink-2);
+}
+
 /* Dark colors, chosen in Settings or by the device (settings.js sets data-theme).
    The art keeps its own colors; text on sunny buttons and wooden signs stays dark. */
 :root[data-theme="dark"] {
