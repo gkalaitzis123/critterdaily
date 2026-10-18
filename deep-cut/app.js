@@ -9,9 +9,9 @@ const screens = ["loading", "intro", "prompt", "reveal", "results"];
 
 let schedule;
 let today;
-let categories = new Map(); // id -> category (loaded as needed)
+let categories = new Map(); // id -> the category, loading (as needed)
 let mode = "daily"; // or "practice"
-let run; // { day?, ids, results: [{ id, guess, answer, depth, oneIn, perDay }], index, startedAt }
+let run; // { day?, ids, results: [{ id, prompt, guess, answer, depth, oneIn, perDay }], index, startedAt }
 let timer = null;
 // For now anyone can play unlimited practice rounds, which is handy for testing.
 // Later, practice can be the supporter unlock: set this to false to hide it.
@@ -42,10 +42,14 @@ function save(fn) {
 // ---------------------------------------------------------------------------
 // Data
 
-async function category(id) {
+function category(id) {
   if (!categories.has(id)) {
-    const res = await fetch(`data/categories/${id}.json`);
-    categories.set(id, await res.json());
+    const loading = fetch(`data/categories/${id}.json`).then((res) => {
+      if (!res.ok) throw new Error(`Deep Cut has no category "${id}"`);
+      return res.json();
+    });
+    categories.set(id, loading);
+    loading.catch(() => categories.delete(id)); // try again next time
   }
   return categories.get(id);
 }
@@ -56,7 +60,7 @@ async function category(id) {
 // One color per period, from today's topsoil down to the Cambrian.
 const LAYERS = ["#c98b5b", "#9fb7c4", "#dcc58f", "#a8694a", "#b9533c", "#5d5478"];
 /** How rare an answer was, as a little label: "1 in 2.8k". A dash for no answer. */
-const oneInTag = (a) => (a?.depth ? `<span class="one-in">1 in ${compact(a.oneIn)}</span>` : '<span class="one-in none">–</span>');
+const oneInTag = (a) => (a?.depth && a.oneIn ? `<span class="one-in">1 in ${compact(a.oneIn)}</span>` : '<span class="one-in none">–</span>');
 
 /** Digby the mole, drawn around (0, 0), about 50 px across. */
 function digby({ digging = false, wave = false } = {}) {
@@ -231,14 +235,17 @@ async function init() {
   }
   $("#day-label").textContent = `#${today} · ${new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}`;
   const ids = promptsFor(today, schedule);
-  ids.forEach((id) => category(id)); // start loading today's categories
+  ids.forEach((id) => category(id).catch(() => {})); // start loading today's categories
   const saved = load().days?.[today];
+  // Answers already given keep their own prompts, even if the lists were
+  // rebuilt since (and one of them retired): the rest come from the schedule.
+  const answered = saved?.results ?? [];
   if (saved?.done) {
-    run = { day: today, ids, results: saved.results, index: PROMPTS_PER_DAY };
+    run = { day: today, ids: answered.map((r) => r.id), results: answered, index: PROMPTS_PER_DAY };
     showResults();
-  } else if (saved?.results?.length || saved?.startedAt) {
+  } else if (answered.length || saved?.startedAt) {
     // Back mid-game, even mid-prompt: pick up where it was, with the clock still running.
-    run = { day: today, ids, results: saved.results ?? [], index: (saved.results ?? []).length, startedAt: saved.startedAt };
+    run = { day: today, ids: [...answered.map((r) => r.id), ...ids.slice(answered.length)], results: answered, index: answered.length, startedAt: saved.startedAt };
     await showPrompt();
   } else {
     await showIntro();
@@ -343,7 +350,8 @@ async function finishPrompt(answer, typed = null) {
   if (run.locked) return;
   run.locked = true;
   const id = run.ids[run.index];
-  run.results.push({ id, guess: typed, answer: answer?.name ?? null, depth: answer?.depth ?? 0, oneIn: answer?.oneIn ?? null, perDay: answer?.perDay ?? null });
+  const { prompt } = await category(id);
+  run.results.push({ id, prompt, guess: typed, answer: answer?.name ?? null, depth: answer?.depth ?? 0, oneIn: answer?.oneIn ?? null, perDay: answer?.perDay ?? null });
   run.startedAt = null;
   run.index++;
   if (mode === "daily") {
@@ -438,18 +446,23 @@ async function showResults() {
   $("#back-today").hidden = daily;
   const items = await Promise.all(
     run.results.map(async (r) => {
-      const c = await category(r.id);
-      const what = c.prompt.replace(/^Name (a |an )?/, "");
+      const prompt = r.prompt ?? (await category(r.id).catch(() => null))?.prompt ?? "Name a past prompt";
+      const what = prompt.replace(/^Name (a |an )?/, "");
       return `<li><span><span class="s-prompt">${esc(what.charAt(0).toUpperCase() + what.slice(1))}</span><span class="s-answer${r.answer ? "" : " missed"}">${esc(r.answer ?? "Nothing")}</span></span>${oneInTag(r)}<span class="s-depth">${r.depth} m</span></li>`;
     }),
   );
   $("#summary").innerHTML = items.join("");
   // How rarely read the day's answers are, all together.
-  const found = run.results.filter((r) => r.answer);
+  // (Answers saved before readership was kept have no numbers to show.)
+  const found = run.results.filter((r) => r.answer && r.perDay && r.oneIn);
   const rarest = found.reduce((best, r) => (!best || r.oneIn > best.oneIn ? r : best), null);
-  $("#readers-note").innerHTML = found.length
+  const note = found.length
     ? `Your ${found.length === 1 ? "answer's page gets" : `${found.length} answers' pages get`} about <strong>${fmt(found.reduce((n, r) => n + r.perDay, 0))}</strong> Wikipedia readers a day${found.length > 1 ? " between them" : ""}. Rarest find: <strong>${esc(rarest.answer)}</strong>, 1 in ${fmt(rarest.oneIn)}.`
-    : "No answers this time. Tomorrow's another dig.";
+    : run.results.some((r) => r.answer)
+      ? ""
+      : "No answers this time. Tomorrow's another dig.";
+  $("#readers-note").innerHTML = note;
+  $("#readers-note").hidden = !note;
   $("#share-note").textContent = "";
   show("results");
   if (daily) countdown();

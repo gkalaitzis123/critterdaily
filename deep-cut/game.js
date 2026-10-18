@@ -138,7 +138,7 @@ export function periodFor(total) {
 /** The text players share: how deep, and how rare each answer was, never the answers. */
 export function shareText(day, results, url) {
   const total = results.reduce((n, r) => n + (r.depth ?? 0), 0);
-  const rare = results.map((r) => (r.depth ? `1 in ${compact(r.oneIn)}` : "✗")).join(" · ");
+  const rare = results.map((r) => (r.depth ? (r.oneIn ? `1 in ${compact(r.oneIn)}` : `${r.depth} m`) : "✗")).join(" · ");
   return `Deep Cut #${day} ⛏️ ${total} m · ${periodFor(total).name}\n${rare}\n${url}`;
 }
 
