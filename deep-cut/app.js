@@ -340,7 +340,7 @@ async function showPrompt() {
   offered = null;
   $("#progress").innerHTML = run.ids.map((_, i) => `<li class="${i < run.index ? "done" : i === run.index ? "now" : ""}"></li>`).join("");
   $("#prompt-text").textContent = c.prompt.replace(/^Name /, "");
-  $("#prompt-count").textContent = `Any of ${fmt(c.answers.length)} answers counts`;
+  $("#prompt-count").textContent = "Any right answer counts; the rarer, the deeper.";
   $("#feedback").textContent = "";
   $("#guess").value = "";
   $("#digby-status").innerHTML = digbyStatus(totalOf(run.results));
@@ -429,11 +429,11 @@ async function showReveal(c, result) {
   if (result.answer) {
     $("#reveal-one-in").innerHTML = `1 in <strong>${fmt(result.oneIn)}</strong>`;
     $("#reveal-note").innerHTML =
-      `About <strong>${fmt(result.perDay)}</strong> ${result.perDay === 1 ? "person reads" : "people read"} its Wikipedia page a day, out of ${fmt(c.readers)} reading all ${fmt(c.answers.length)} answers' pages.` +
+      `About <strong>${fmt(result.perDay)}</strong> ${result.perDay === 1 ? "person reads" : "people read"} its Wikipedia page a day, out of ${fmt(c.readers)} reading the pages of all its answers.` +
       (top.name === result.answer ? " It's the most read of them all." : ` The most read, ${esc(top.name)}, gets ${fmt(top.perDay)}.`);
   } else {
     $("#reveal-one-in").innerHTML = "";
-    $("#reveal-note").textContent = `${fmt(c.answers.length)} answers would have counted. Here are a few.`;
+    $("#reveal-note").textContent = "Here are a few that would have counted.";
   }
   $("#reveal-one-in").hidden = !result.answer;
   const row = (a) => `<li><span>${esc(a.name)}</span>${oneInTag(a)}</li>`;

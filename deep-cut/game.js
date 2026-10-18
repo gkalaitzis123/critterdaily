@@ -157,11 +157,14 @@ export const MAX_DEPTH = 50;
  * [{ oneIn, depth }], in the same order.
  *
  * Depth is measured within the list, so every prompt can go as deep: its
- * most-read answer digs 1 m and its rarest few (the rarest 3%, at least one)
- * dig MAX_DEPTH, with each ten times rarer in between digging the same
- * distance further. Some lists are all famous pages (the countries bordering
- * Germany) and some run to thousands of unread ones (dog breeds); either way,
- * the rarest answers are the deep ones.
+ * most-read answer digs 1 m and its rarest dig MAX_DEPTH, with each ten times
+ * rarer in between digging the same distance further. "Rarest" is the rarest
+ * 3% (at least one), or, if more, the answers that together get just the last
+ * 1% of the list's reads: a list padded with pages nobody reads (Latin names
+ * of beetles) would otherwise leave the answers people do know shallow.
+ * Some lists are all famous pages (the countries bordering Germany) and some
+ * run to thousands of unread ones (dog breeds); either way, the rarest
+ * answers are the deep ones.
  */
 export function rarity(views) {
   const total = views.reduce((n, v) => n + v, 0);
@@ -170,7 +173,15 @@ export function rarity(views) {
   const logs = share.map((n) => Math.log10(n));
   const sorted = [...logs].sort((a, b) => a - b);
   const low = sorted[0];
-  const high = sorted[sorted.length - Math.max(1, Math.ceil(sorted.length * 0.03))];
+  // The most read of the answers that together get the last 1% of the reads.
+  const byReads = [...views].sort((a, b) => a - b);
+  let tail = 0;
+  let deepest = byReads[0];
+  for (const v of byReads) {
+    if ((tail += v) > 0.01 * total) break;
+    deepest = v;
+  }
+  const high = Math.min(sorted[sorted.length - Math.max(1, Math.ceil(sorted.length * 0.03))], Math.log10(Math.max(1, total / Math.max(deepest, 1))));
   return oneIn.map((n, i) => ({
     oneIn: n,
     depth: high > low ? Math.max(1, Math.min(MAX_DEPTH, Math.round(1 + ((MAX_DEPTH - 1) * (logs[i] - low)) / (high - low)))) : 1,

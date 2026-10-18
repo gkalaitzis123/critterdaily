@@ -55,21 +55,6 @@
   "answers": 800
  },
  {
-  "id": "australia-pms",
-  "prompt": "Name a prime minister of Australia",
-  "answers": 31
- },
- {
-  "id": "aztec-gods",
-  "prompt": "Name an Aztec god or goddess",
-  "answers": 61
- },
- {
-  "id": "bach",
-  "prompt": "Name a work by Bach",
-  "answers": 361
- },
- {
   "id": "bats",
   "prompt": "Name a bat",
   "answers": 300
@@ -145,11 +130,6 @@
   "answers": 300
  },
  {
-  "id": "byzantine-emperors",
-  "prompt": "Name a Byzantine emperor",
-  "answers": 115
- },
- {
   "id": "canada-pms",
   "prompt": "Name a prime minister of Canada",
   "answers": 24
@@ -188,16 +168,6 @@
   "id": "castles-britain",
   "prompt": "Name a castle in Britain",
   "answers": 300
- },
- {
-  "id": "castles-germany",
-  "prompt": "Name a castle in Germany",
-  "answers": 249
- },
- {
-  "id": "castles-ireland",
-  "prompt": "Name a castle in Ireland",
-  "answers": 136
  },
  {
   "id": "castles",
@@ -515,11 +485,6 @@
   "answers": 235
  },
  {
-  "id": "india-states",
-  "prompt": "Name a state of India",
-  "answers": 30
- },
- {
   "id": "instruments",
   "prompt": "Name a musical instrument",
   "answers": 500
@@ -550,11 +515,6 @@
   "answers": 47
  },
  {
-  "id": "japanese-emperors",
-  "prompt": "Name an emperor of Japan",
-  "answers": 113
- },
- {
   "id": "lakes-africa",
   "prompt": "Name a lake in Africa",
   "answers": 143
@@ -578,11 +538,6 @@
   "id": "landlocked-countries",
   "prompt": "Name a landlocked country",
   "answers": 46
- },
- {
-  "id": "lemurs",
-  "prompt": "Name a lemur",
-  "answers": 148
  },
  {
   "id": "lizards",
@@ -645,11 +600,6 @@
   "answers": 120
  },
  {
-  "id": "mozart",
-  "prompt": "Name a work by Mozart",
-  "answers": 291
- },
- {
   "id": "muscles",
   "prompt": "Name a muscle in the human body",
   "answers": 219
@@ -690,11 +640,6 @@
   "answers": 123
  },
  {
-  "id": "nobel-medicine",
-  "prompt": "Name a winner of the Nobel Prize in Medicine",
-  "answers": 235
- },
- {
   "id": "nobel-peace",
   "prompt": "Name a person who won the Nobel Peace Prize",
   "answers": 113
@@ -718,11 +663,6 @@
   "id": "operas",
   "prompt": "Name an opera",
   "answers": 400
- },
- {
-  "id": "ottoman-sultans",
-  "prompt": "Name a sultan of the Ottoman Empire",
-  "answers": 36
  },
  {
   "id": "owls",
@@ -833,11 +773,6 @@
   "id": "punctuation",
   "prompt": "Name a punctuation mark",
   "answers": 33
- },
- {
-  "id": "rembrandt",
-  "prompt": "Name a painting by Rembrandt",
-  "answers": 139
  },
  {
   "id": "revolutionary-war-battles",
@@ -1048,11 +983,6 @@
   "id": "vice-presidents",
   "prompt": "Name a US vice president",
   "answers": 50
- },
- {
-  "id": "volcanoes-iceland",
-  "prompt": "Name a volcano in Iceland",
-  "answers": 55
  },
  {
   "id": "volcanoes-indonesia",

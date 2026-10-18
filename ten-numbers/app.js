@@ -285,7 +285,7 @@ function reading() {
     return year !== null && era === "BC" && !hasEra(typed) ? -Math.abs(year) : year;
   }
   const alt = units === "us" && hasAlt(q);
-  const unit = alt ? "count" : q.unit;
+  const unit = alt ? (q.unit === "kg" ? "lb" : "count") : q.unit;
   let value = parseGuess(typed, unit);
   if (value === null) return null;
   if (size && !hasSize(typed, unit)) value *= sizeOf(size);

@@ -24,6 +24,8 @@ export const UNITS = {
   m: { label: "m", alt: { label: "ft", factor: 3.28084 } },
   km: { label: "km", alt: { label: "mi", factor: 0.621371 } },
   km2: { label: "km²", alt: { label: "sq mi", factor: 0.386102 } },
+  kmh: { label: "km/h", alt: { label: "mph", factor: 0.621371 } },
+  kg: { label: "kg", alt: { label: "lb", factor: 2.20462 } },
 };
 
 const SCALES = { k: 1e3, thousand: 1e3, m: 1e6, mn: 1e6, mil: 1e6, million: 1e6, b: 1e9, bn: 1e9, billion: 1e9, t: 1e12, tn: 1e12, trillion: 1e12, quadrillion: 1e15 };
@@ -37,6 +39,7 @@ export const SIZES = {
   people: ["thousand", "million", "billion"],
   count: ["thousand", "million", "billion", "trillion", "quadrillion"],
   km2: ["thousand", "million"],
+  kg: ["thousand", "million", "billion"],
 };
 export const sizeOf = (word) => SCALES[word];
 
@@ -51,11 +54,15 @@ function tidy(text) {
 }
 
 const QUANTITY = /^(-?\d*\.?\d+(?:e[+-]?\d+)?)\s*([a-z]+)?\b.*$/;
+// Weights can be typed in tons: metric tonnes for kg, short tons (2,000 lb) for lb. ("t" is a tonne here, not a trillion.)
+const TONS = /\b(?:t|tons?|tonnes?)\b/;
+const heavy = (unit) => unit === "kg" || unit === "lb";
 
 /** Whether a typed quantity names its own size ("2.5 million", "15k"), so a size button shouldn't apply. */
 export function hasSize(text, unit = "count") {
   const word = tidy(text).match(QUANTITY)?.[2];
-  return Boolean(word && SCALES[word] && !(word === "m" && unit === "m"));
+  if (heavy(unit) && TONS.test(tidy(text))) return true;
+  return Boolean(word && SCALES[word] && !(word === "m" && unit === "m") && !(heavy(unit) && word === "t"));
 }
 
 /** Whether a typed year says its era ("500 BC", "AD 80", "-500"), so the BC button shouldn't apply. */
@@ -65,7 +72,7 @@ export const hasEra = (text) => /\b(bc|bce|b\.c\.|ad|ce|a\.d\.)(\s|$)|^\s*-/i.te
  * The number a player typed, or null. Understands "15,000,000", "15 million",
  * "1.5bn", "15k", "2e6", "about 300", and for years "500 BC", "AD 1066" and
  * "c. 1500". A trailing "m" means meters when the answer is in meters, and
- * millions otherwise.
+ * millions otherwise; for weights, "6 tons" and "2 million tonnes" count in tons.
  */
 export function parseGuess(text, unit = "count") {
   const s = tidy(text);
@@ -79,7 +86,8 @@ export function parseGuess(text, unit = "count") {
   if (!q) return null;
   let value = Number(q[1]);
   const word = q[2];
-  if (word && SCALES[word] && !(word === "m" && unit === "m")) value *= SCALES[word];
+  if (word && SCALES[word] && !(word === "m" && unit === "m") && !(heavy(unit) && word === "t")) value *= SCALES[word];
+  if (heavy(unit) && TONS.test(s)) value *= unit === "lb" ? 2000 : 1000;
   return Number.isFinite(value) ? value : null;
 }
 
@@ -95,8 +103,8 @@ export function parseGuess(text, unit = "count") {
  * How old someone was when they died gets 1.5 (most lives run 50 to 90, so a
  * guess of 70 shouldn't score on its own); an animal's record lifespan gets 2.
  */
-const FACTORS = { minutes: 1.4, years: 1.6, m: 2, km: 2, km2: 4, people: 4, count: 4 };
-const KIND_FACTORS = { "city-people": 2.5, "state-people": 2.5, deaths: 3, body: 3, age: 1.5, lifespan: 2 };
+const FACTORS = { minutes: 1.4, years: 1.6, m: 2, km: 2, km2: 4, kmh: 2, kg: 3, people: 4, count: 4 };
+const KIND_FACTORS = { "city-people": 2.5, "state-people": 2.5, deaths: 3, body: 3, everyday: 2, age: 1.5, lifespan: 2 };
 /**
  * Astronomical numbers get more room: nobody knows how many ants there are to
  * within a factor of 4, and getting the power of ten right is the feat. Each
