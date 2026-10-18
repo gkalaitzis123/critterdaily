@@ -104,7 +104,7 @@ export function parseGuess(text, unit = "count") {
  * guess of 70 shouldn't score on its own); an animal's record lifespan gets 2.
  */
 const FACTORS = { minutes: 1.4, years: 1.6, m: 2, km: 2, km2: 4, kmh: 2, kg: 3, people: 4, count: 4 };
-const KIND_FACTORS = { "city-people": 2.5, "state-people": 2.5, deaths: 3, body: 3, everyday: 2, age: 1.5, lifespan: 2 };
+const KIND_FACTORS = { "city-people": 2.5, "state-people": 2.5, deaths: 3, body: 3, everyday: 2, age: 1.5, lifespan: 2, "tv-episodes": 3 };
 /**
  * Astronomical numbers get more room: nobody knows how many ants there are to
  * within a factor of 4, and getting the power of ten right is the feat. Each
