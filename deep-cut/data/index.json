@@ -15,14 +15,34 @@
   "answers": 300
  },
  {
+  "id": "ancient-philosophers",
+  "prompt": "Name a philosopher of the ancient world",
+  "answers": 300
+ },
+ {
+  "id": "apes",
+  "prompt": "Name an ape",
+  "answers": 130
+ },
+ {
   "id": "archaeological-sites",
   "prompt": "Name an archaeological site",
   "answers": 277
  },
  {
+  "id": "armored-dinosaurs",
+  "prompt": "Name an armored or plated dinosaur",
+  "answers": 102
+ },
+ {
   "id": "asia",
   "prompt": "Name a country in Asia",
   "answers": 50
+ },
+ {
+  "id": "astronauts-us",
+  "prompt": "Name an American astronaut",
+  "answers": 400
  },
  {
   "id": "astronauts",
@@ -40,6 +60,46 @@
   "answers": 31
  },
  {
+  "id": "aztec-gods",
+  "prompt": "Name an Aztec god or goddess",
+  "answers": 61
+ },
+ {
+  "id": "bach",
+  "prompt": "Name a work by Bach",
+  "answers": 363
+ },
+ {
+  "id": "bats",
+  "prompt": "Name a bat",
+  "answers": 300
+ },
+ {
+  "id": "bears",
+  "prompt": "Name a bear",
+  "answers": 26
+ },
+ {
+  "id": "beethoven",
+  "prompt": "Name a work by Beethoven",
+  "answers": 152
+ },
+ {
+  "id": "beetles",
+  "prompt": "Name a beetle",
+  "answers": 156
+ },
+ {
+  "id": "bible-books",
+  "prompt": "Name a book of the Bible",
+  "answers": 66
+ },
+ {
+  "id": "birds-of-prey",
+  "prompt": "Name a bird of prey",
+  "answers": 601
+ },
+ {
   "id": "birds",
   "prompt": "Name a bird",
   "answers": 1500
@@ -55,9 +115,34 @@
   "answers": 66
  },
  {
+  "id": "borders-brazil",
+  "prompt": "Name a country that borders Brazil",
+  "answers": 10
+ },
+ {
+  "id": "borders-china",
+  "prompt": "Name a country that borders China",
+  "answers": 18
+ },
+ {
+  "id": "borders-germany",
+  "prompt": "Name a country that borders Germany",
+  "answers": 9
+ },
+ {
+  "id": "borders-russia",
+  "prompt": "Name a country that borders Russia",
+  "answers": 15
+ },
+ {
   "id": "british-monarchs",
   "prompt": "Name a king or queen of England or Britain",
   "answers": 61
+ },
+ {
+  "id": "butterflies",
+  "prompt": "Name a butterfly",
+  "answers": 300
  },
  {
   "id": "byzantine-emperors",
@@ -75,9 +160,44 @@
   "answers": 13
  },
  {
+  "id": "capitals-africa",
+  "prompt": "Name a capital city in Africa",
+  "answers": 57
+ },
+ {
+  "id": "capitals-americas",
+  "prompt": "Name a capital city in the Americas",
+  "answers": 36
+ },
+ {
+  "id": "capitals-asia",
+  "prompt": "Name a capital city in Asia",
+  "answers": 51
+ },
+ {
+  "id": "capitals-europe",
+  "prompt": "Name a capital city in Europe",
+  "answers": 49
+ },
+ {
   "id": "capitals",
   "prompt": "Name a capital city",
   "answers": 207
+ },
+ {
+  "id": "castles-britain",
+  "prompt": "Name a castle in Britain",
+  "answers": 300
+ },
+ {
+  "id": "castles-germany",
+  "prompt": "Name a castle in Germany",
+  "answers": 249
+ },
+ {
+  "id": "castles-ireland",
+  "prompt": "Name a castle in Ireland",
+  "answers": 136
  },
  {
   "id": "castles",
@@ -100,9 +220,89 @@
   "answers": 40
  },
  {
+  "id": "cities-australia",
+  "prompt": "Name a city in Australia",
+  "answers": 46
+ },
+ {
+  "id": "cities-brazil",
+  "prompt": "Name a city in Brazil",
+  "answers": 159
+ },
+ {
+  "id": "cities-california",
+  "prompt": "Name a city in California",
+  "answers": 247
+ },
+ {
+  "id": "cities-canada",
+  "prompt": "Name a city in Canada",
+  "answers": 106
+ },
+ {
+  "id": "cities-china",
+  "prompt": "Name a city in China",
+  "answers": 300
+ },
+ {
+  "id": "cities-france",
+  "prompt": "Name a city in France",
+  "answers": 137
+ },
+ {
+  "id": "cities-germany",
+  "prompt": "Name a city in Germany",
+  "answers": 79
+ },
+ {
+  "id": "cities-india",
+  "prompt": "Name a city in India",
+  "answers": 129
+ },
+ {
+  "id": "cities-italy",
+  "prompt": "Name a city in Italy",
+  "answers": 145
+ },
+ {
+  "id": "cities-japan",
+  "prompt": "Name a city in Japan",
+  "answers": 113
+ },
+ {
+  "id": "cities-mexico",
+  "prompt": "Name a city in Mexico",
+  "answers": 87
+ },
+ {
+  "id": "cities-russia",
+  "prompt": "Name a city in Russia",
+  "answers": 94
+ },
+ {
+  "id": "cities-spain",
+  "prompt": "Name a city in Spain",
+  "answers": 152
+ },
+ {
+  "id": "cities-texas",
+  "prompt": "Name a city in Texas",
+  "answers": 68
+ },
+ {
+  "id": "cities-uk",
+  "prompt": "Name a city in the UK",
+  "answers": 77
+ },
+ {
   "id": "civil-war-battles",
   "prompt": "Name a battle of the American Civil War",
-  "answers": 291
+  "answers": 271
+ },
+ {
+  "id": "civil-wars",
+  "prompt": "Name a civil war",
+  "answers": 137
  },
  {
   "id": "clouds",
@@ -130,9 +330,19 @@
   "answers": 89
  },
  {
+  "id": "cosmonauts",
+  "prompt": "Name a Soviet or Russian cosmonaut",
+  "answers": 155
+ },
+ {
   "id": "countries",
   "prompt": "Name a country",
   "answers": 201
+ },
+ {
+  "id": "crocodilians",
+  "prompt": "Name a crocodile, alligator or relative",
+  "answers": 128
  },
  {
   "id": "currencies",
@@ -148,6 +358,11 @@
   "id": "declaration-signers",
   "prompt": "Name a signer of the Declaration of Independence",
   "answers": 56
+ },
+ {
+  "id": "deer",
+  "prompt": "Name a deer",
+  "answers": 66
  },
  {
   "id": "deserts",
@@ -175,6 +390,21 @@
   "answers": 636
  },
  {
+  "id": "ducks",
+  "prompt": "Name a duck, goose or swan",
+  "answers": 184
+ },
+ {
+  "id": "early-composers",
+  "prompt": "Name a composer born before 1750",
+  "answers": 300
+ },
+ {
+  "id": "eastern-front-battles",
+  "prompt": "Name a battle on the Eastern Front of World War II",
+  "answers": 96
+ },
+ {
   "id": "egyptian-gods",
   "prompt": "Name an Egyptian god or goddess",
   "answers": 158
@@ -188,6 +418,11 @@
   "id": "empires",
   "prompt": "Name an empire",
   "answers": 112
+ },
+ {
+  "id": "euro-countries",
+  "prompt": "Name a country that uses the euro",
+  "answers": 28
  },
  {
   "id": "europe",
@@ -215,6 +450,11 @@
   "answers": 108
  },
  {
+  "id": "frogs",
+  "prompt": "Name a frog or toad",
+  "answers": 300
+ },
+ {
   "id": "gemstones",
   "prompt": "Name a gemstone",
   "answers": 106
@@ -228,6 +468,11 @@
   "id": "greek-gods",
   "prompt": "Name a Greek god or goddess",
   "answers": 211
+ },
+ {
+  "id": "greek-islands",
+  "prompt": "Name a Greek island",
+  "answers": 160
  },
  {
   "id": "greek-letters",
@@ -250,9 +495,24 @@
   "answers": 57
  },
  {
+  "id": "horned-dinosaurs",
+  "prompt": "Name a horned dinosaur (a ceratopsian)",
+  "answers": 87
+ },
+ {
   "id": "horse-breeds",
   "prompt": "Name a horse breed",
-  "answers": 473
+  "answers": 471
+ },
+ {
+  "id": "hounds",
+  "prompt": "Name a hound",
+  "answers": 89
+ },
+ {
+  "id": "impressionists",
+  "prompt": "Name an Impressionist painter",
+  "answers": 235
  },
  {
   "id": "india-states",
@@ -270,6 +530,21 @@
   "answers": 350
  },
  {
+  "id": "island-countries",
+  "prompt": "Name an island country",
+  "answers": 54
+ },
+ {
+  "id": "islands-indonesia",
+  "prompt": "Name an island of Indonesia",
+  "answers": 100
+ },
+ {
+  "id": "islands-japan",
+  "prompt": "Name an island of Japan",
+  "answers": 107
+ },
+ {
   "id": "japan-prefectures",
   "prompt": "Name a Japanese prefecture",
   "answers": 47
@@ -278,6 +553,46 @@
   "id": "japanese-emperors",
   "prompt": "Name an emperor of Japan",
   "answers": 113
+ },
+ {
+  "id": "lakes-africa",
+  "prompt": "Name a lake in Africa",
+  "answers": 143
+ },
+ {
+  "id": "lakes-asia",
+  "prompt": "Name a lake in Asia",
+  "answers": 188
+ },
+ {
+  "id": "lakes-europe",
+  "prompt": "Name a lake in Europe",
+  "answers": 270
+ },
+ {
+  "id": "lakes-north-america",
+  "prompt": "Name a lake in North America",
+  "answers": 127
+ },
+ {
+  "id": "landlocked-countries",
+  "prompt": "Name a landlocked country",
+  "answers": 46
+ },
+ {
+  "id": "lemurs",
+  "prompt": "Name a lemur",
+  "answers": 149
+ },
+ {
+  "id": "lizards",
+  "prompt": "Name a lizard",
+  "answers": 300
+ },
+ {
+  "id": "marsupials",
+  "prompt": "Name a marsupial",
+  "answers": 300
  },
  {
   "id": "mathematicians",
@@ -295,9 +610,44 @@
   "answers": 400
  },
  {
+  "id": "modern-composers",
+  "prompt": "Name a composer born after 1870",
+  "answers": 300
+ },
+ {
+  "id": "monet",
+  "prompt": "Name a painting by Monet",
+  "answers": 69
+ },
+ {
+  "id": "monkeys",
+  "prompt": "Name a monkey",
+  "answers": 385
+ },
+ {
   "id": "moons",
   "prompt": "Name a moon in our Solar System",
   "answers": 185
+ },
+ {
+  "id": "mountains-nepal",
+  "prompt": "Name a mountain in Nepal",
+  "answers": 57
+ },
+ {
+  "id": "mountains-switzerland",
+  "prompt": "Name a mountain in Switzerland",
+  "answers": 300
+ },
+ {
+  "id": "mountains-us",
+  "prompt": "Name a mountain in the US",
+  "answers": 120
+ },
+ {
+  "id": "mozart",
+  "prompt": "Name a work by Mozart",
+  "answers": 293
  },
  {
   "id": "muscles",
@@ -312,7 +662,12 @@
  {
   "id": "napoleonic-battles",
   "prompt": "Name a battle of the Napoleonic Wars",
-  "answers": 231
+  "answers": 224
+ },
+ {
+  "id": "national-parks-africa",
+  "prompt": "Name a national park in Africa",
+  "answers": 275
  },
  {
   "id": "national-parks",
@@ -370,6 +725,46 @@
   "answers": 36
  },
  {
+  "id": "owls",
+  "prompt": "Name an owl",
+  "answers": 256
+ },
+ {
+  "id": "pacific-war-battles",
+  "prompt": "Name a battle of the Pacific War",
+  "answers": 151
+ },
+ {
+  "id": "painters-american",
+  "prompt": "Name an American painter",
+  "answers": 283
+ },
+ {
+  "id": "painters-british",
+  "prompt": "Name a British painter",
+  "answers": 213
+ },
+ {
+  "id": "painters-dutch",
+  "prompt": "Name a Dutch or Flemish painter",
+  "answers": 278
+ },
+ {
+  "id": "painters-french",
+  "prompt": "Name a French painter",
+  "answers": 300
+ },
+ {
+  "id": "painters-italian",
+  "prompt": "Name an Italian painter",
+  "answers": 300
+ },
+ {
+  "id": "painters-spanish",
+  "prompt": "Name a Spanish painter",
+  "answers": 83
+ },
+ {
   "id": "painters",
   "prompt": "Name a painter born before 1900",
   "answers": 500
@@ -380,9 +775,19 @@
   "answers": 42
  },
  {
+  "id": "parrots",
+  "prompt": "Name a parrot",
+  "answers": 424
+ },
+ {
   "id": "particles",
   "prompt": "Name a subatomic particle",
   "answers": 94
+ },
+ {
+  "id": "penguins",
+  "prompt": "Name a penguin",
+  "answers": 40
  },
  {
   "id": "pharaohs",
@@ -405,6 +810,11 @@
   "answers": 800
  },
  {
+  "id": "picasso",
+  "prompt": "Name a work by Picasso",
+  "answers": 80
+ },
+ {
   "id": "popes",
   "prompt": "Name a pope",
   "answers": 267
@@ -415,9 +825,24 @@
   "answers": 300
  },
  {
+  "id": "pterosaurs",
+  "prompt": "Name a pterosaur",
+  "answers": 127
+ },
+ {
   "id": "punctuation",
   "prompt": "Name a punctuation mark",
   "answers": 33
+ },
+ {
+  "id": "rembrandt",
+  "prompt": "Name a painting by Rembrandt",
+  "answers": 139
+ },
+ {
+  "id": "revolutionary-war-battles",
+  "prompt": "Name a battle of the American Revolutionary War",
+  "answers": 112
  },
  {
   "id": "revolutions",
@@ -425,9 +850,39 @@
   "answers": 109
  },
  {
+  "id": "rivers-africa",
+  "prompt": "Name a river in Africa",
+  "answers": 266
+ },
+ {
+  "id": "rivers-asia",
+  "prompt": "Name a river in Asia",
+  "answers": 300
+ },
+ {
+  "id": "rivers-europe",
+  "prompt": "Name a river in Europe",
+  "answers": 300
+ },
+ {
+  "id": "rivers-north-america",
+  "prompt": "Name a river in North America",
+  "answers": 156
+ },
+ {
+  "id": "rivers-south-america",
+  "prompt": "Name a river in South America",
+  "answers": 166
+ },
+ {
   "id": "rivers",
   "prompt": "Name a river over 1,000 km long",
   "answers": 238
+ },
+ {
+  "id": "rodents",
+  "prompt": "Name a rodent",
+  "answers": 300
  },
  {
   "id": "roman-emperors",
@@ -438,6 +893,31 @@
   "id": "roman-gods",
   "prompt": "Name a Roman god or goddess",
   "answers": 202
+ },
+ {
+  "id": "saints",
+  "prompt": "Name a saint",
+  "answers": 400
+ },
+ {
+  "id": "salamanders",
+  "prompt": "Name a salamander or newt",
+  "answers": 366
+ },
+ {
+  "id": "sauropods",
+  "prompt": "Name a long-necked dinosaur (a sauropod)",
+  "answers": 192
+ },
+ {
+  "id": "sea-reptiles",
+  "prompt": "Name a prehistoric sea reptile",
+  "answers": 140
+ },
+ {
+  "id": "seals",
+  "prompt": "Name a seal, sea lion or walrus",
+  "answers": 40
  },
  {
   "id": "seas",
@@ -480,6 +960,11 @@
   "answers": 200
  },
  {
+  "id": "spiders",
+  "prompt": "Name a spider",
+  "answers": 300
+ },
+ {
   "id": "stars",
   "prompt": "Name a star other than the Sun",
   "answers": 83
@@ -500,6 +985,21 @@
   "answers": 116
  },
  {
+  "id": "surrealists",
+  "prompt": "Name a Surrealist artist",
+  "answers": 139
+ },
+ {
+  "id": "terriers",
+  "prompt": "Name a terrier",
+  "answers": 56
+ },
+ {
+  "id": "theropods",
+  "prompt": "Name a meat-eating dinosaur (a theropod)",
+  "answers": 292
+ },
+ {
   "id": "treaties",
   "prompt": "Name a treaty",
   "answers": 450
@@ -508,6 +1008,11 @@
   "id": "tsars",
   "prompt": "Name a Russian tsar or empress",
   "answers": 27
+ },
+ {
+  "id": "turtles",
+  "prompt": "Name a turtle or tortoise",
+  "answers": 300
  },
  {
   "id": "uk-prime-ministers",
@@ -535,9 +1040,39 @@
   "answers": 50
  },
  {
+  "id": "van-gogh",
+  "prompt": "Name a painting by Van Gogh",
+  "answers": 134
+ },
+ {
   "id": "vice-presidents",
   "prompt": "Name a US vice president",
   "answers": 50
+ },
+ {
+  "id": "volcanoes-iceland",
+  "prompt": "Name a volcano in Iceland",
+  "answers": 55
+ },
+ {
+  "id": "volcanoes-indonesia",
+  "prompt": "Name a volcano in Indonesia",
+  "answers": 122
+ },
+ {
+  "id": "volcanoes-italy",
+  "prompt": "Name a volcano in Italy",
+  "answers": 27
+ },
+ {
+  "id": "volcanoes-japan",
+  "prompt": "Name a volcano in Japan",
+  "answers": 113
+ },
+ {
+  "id": "volcanoes-us",
+  "prompt": "Name a volcano in the US",
+  "answers": 129
  },
  {
   "id": "volcanoes",
@@ -550,6 +1085,11 @@
   "answers": 400
  },
  {
+  "id": "weasel-family",
+  "prompt": "Name an otter, badger, weasel or relative",
+  "answers": 78
+ },
+ {
   "id": "whales",
   "prompt": "Name a whale, dolphin or porpoise",
   "answers": 150
@@ -560,6 +1100,21 @@
   "answers": 76
  },
  {
+  "id": "wild-dogs",
+  "prompt": "Name a wolf, fox or other wild dog",
+  "answers": 59
+ },
+ {
+  "id": "women-astronauts",
+  "prompt": "Name a woman who's been to space",
+  "answers": 93
+ },
+ {
+  "id": "women-scientists",
+  "prompt": "Name a woman scientist",
+  "answers": 204
+ },
+ {
   "id": "writing-systems",
   "prompt": "Name a writing system or alphabet",
   "answers": 300
@@ -567,7 +1122,7 @@
  {
   "id": "ww1-battles",
   "prompt": "Name a battle of World War I",
-  "answers": 211
+  "answers": 194
  },
  {
   "id": "ww2-battles",
