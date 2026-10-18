@@ -31,6 +31,18 @@
 }
 
 html,
+/* Headings break evenly, and paragraphs don't end on one short word. */
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p,
+li {
+  text-wrap: pretty;
+}
+
 body {
   margin: 0;
 }
@@ -67,8 +79,12 @@ a {
 }
 
 :focus-visible {
-  outline: 3px solid var(--link);
-  outline-offset: 2px;
+  outline: 3px solid rgba(31, 95, 153, 0.45);
+  outline-offset: 3px;
+}
+
+.sheet h2:focus {
+  outline: none;
 }
 
 /* Header */
@@ -365,6 +381,7 @@ main {
 }
 
 .cloud {
+  text-wrap: balance;
   margin: 0 0 6px;
   padding: 8px 14px;
   border-radius: 999px;
@@ -435,6 +452,8 @@ main {
 }
 
 .branch .side {
+  position: relative;
+  z-index: 1; /* plaques sit over the leaves */
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -474,19 +493,19 @@ main {
 .branch.found::after {
   content: "";
   position: absolute;
-  top: calc(50% - 24px);
-  width: 24px;
-  height: 17px;
+  top: calc(50% - 23px);
+  width: 22px;
+  height: 16px;
   border-radius: 60% 40% 60% 40%;
   background: var(--leaf-dark);
 }
 
 .branch.left.found::after {
-  right: calc(50% + 10px);
+  right: calc(50% + 7px);
 }
 
 .branch.right.found::after {
-  left: calc(50% + 10px);
+  left: calc(50% + 7px);
 }
 
 .branch.hidden::before {
@@ -561,13 +580,14 @@ main {
   z-index: 2;
 }
 
+/* Pip waits at the foot of the trunk, on the left: the lowest branch grows to the right. */
 .roots-pip {
   position: absolute;
   left: 50%;
   bottom: 6px;
   width: 46px;
   height: 62px;
-  margin-left: 14px;
+  margin-left: -60px;
   z-index: 2;
 }
 
@@ -1050,6 +1070,7 @@ main {
 }
 
 .foot p {
+  text-wrap: balance;
   margin: 0;
 }
 

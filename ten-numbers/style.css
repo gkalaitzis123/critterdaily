@@ -30,6 +30,18 @@
 }
 
 html,
+/* Headings break evenly, and paragraphs don't end on one short word. */
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p,
+li {
+  text-wrap: pretty;
+}
+
 body {
   margin: 0;
 }
@@ -66,8 +78,12 @@ a {
 }
 
 :focus-visible {
-  outline: 3px solid var(--link);
-  outline-offset: 2px;
+  outline: 3px solid rgba(31, 95, 153, 0.45);
+  outline-offset: 3px;
+}
+
+.sheet h2:focus {
+  outline: none;
 }
 
 /* Header */
@@ -285,6 +301,13 @@ main {
 
 .example p {
   margin: 0;
+}
+
+.example .example-answer {
+  margin: -4px 0 2px;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 22px;
 }
 
 .example-row {
@@ -900,6 +923,7 @@ main {
 }
 
 .foot p {
+  text-wrap: balance;
   margin: 0;
 }
 

@@ -125,9 +125,9 @@ function numberLine(q, guess) {
     const off = raw < L ? "◀ " : raw > L + W ? " ▶" : "";
     const label = `${raw < L ? off : ""}You: ${show(guess, q)}${raw > L + W ? off : ""}`;
     marker = `<g transform="translate(${gx.toFixed(1)} 0)"><g class="nl-acorn" style="--from:${(-gx).toFixed(0)}px"><g transform="translate(-10 58)">${ACORN}</g></g></g>
-      <text class="nl-mark" x="${Math.min(L + W - 40, Math.max(L + 40, gx)).toFixed(1)}" y="118" text-anchor="middle">${esc(label)}</text>`;
+      <text class="nl-mark" x="${Math.min(L + W - 40, Math.max(L + 40, gx)).toFixed(1)}" y="122" text-anchor="middle">${esc(label)}</text>`;
   }
-  return `<svg viewBox="0 0 340 126" role="img" aria-label="The answer is ${esc(show(q.answer, q))}${guess !== null ? `; you guessed ${esc(show(guess, q))}` : ""}.">
+  return `<svg viewBox="0 0 340 132" role="img" aria-label="The answer is ${esc(show(q.answer, q))}${guess !== null ? `; you guessed ${esc(show(guess, q))}` : ""}.">
     <rect x="${b1.toFixed(1)}" y="64" width="${(b2 - b1).toFixed(1)}" height="28" rx="8" fill="#dff3d9"/>
     <text class="nl-label" x="${((b1 + b2) / 2).toFixed(1)}" y="101" text-anchor="middle">7+ acorns</text>
     <path d="M${L} 82H${L + W}" stroke="#2e2a3b" stroke-width="3" stroke-linecap="round"/>
@@ -178,11 +178,12 @@ async function init() {
 }
 
 function showIntro() {
-  // A worked example, scored by the real rules.
-  const everest = { kind: "height", unit: "m", answer: 8849 };
-  const tries = [9000, 7000, 12000].map((g) => ({ g, p: points(g, everest) }));
-  $("#example").innerHTML = `<p class="muted small">For example: how high is Mount Everest? (${esc(show(8849, everest))})</p>${tries
-    .map(({ g, p }) => `<div class="example-row"><span>${esc(show(g, everest))} <span class="muted">${esc(howClose(g, everest))}</span></span><b>${p}</b>${acorn("", "width:18px;height:22px")}</div>`)
+  // A worked example from today's data, scored by the real rules.
+  const q = questions.get("country-people-Q142") ?? [...questions.values()].find((x) => x.kind === "country-people");
+  const round = (v) => Number(v.toPrecision(2));
+  const tries = [round(q.answer * 0.97), round(q.answer * 0.72), round(q.answer * 2.4)].map((g) => ({ g, p: points(g, q) }));
+  $("#example").innerHTML = `<p class="muted small">For example: ${esc(q.text.charAt(0).toLowerCase() + q.text.slice(1))}</p><p class="example-answer">${esc(show(q.answer, q))}</p>${tries
+    .map(({ g, p }) => `<div class="example-row"><span>${esc(show(g, q))} <span class="muted">${esc(howClose(g, q))}</span></span><b>${p}</b>${acorn("", "width:18px;height:22px")}</div>`)
     .join("")}`;
   $("#tier-key").innerHTML = tierList();
   $("#start").textContent = `Start Ten Numbers #${today}`;

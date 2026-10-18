@@ -286,7 +286,8 @@ function render(latest = null) {
   // Guesses used, as seeds.
   $("#seeds").innerHTML = Array.from({ length: MAX_GUESSES }, (_, i) => `<span class="${i < results.length ? "used" : ""}"></span>`).join("");
   $("#seeds").setAttribute("aria-label", `${results.length} of ${MAX_GUESSES} guesses used`);
-  $("#counter").textContent = done ? "" : `${results.length} of ${MAX_GUESSES} guesses`;
+  $("#counter").textContent = `${results.length} of ${MAX_GUESSES} guesses`;
+  $(".seeds-row").hidden = done; // the finished card says how many it took
 
   // Guesses, closest first.
   $("#guesses-section").hidden = !results.length;

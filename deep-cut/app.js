@@ -1,7 +1,7 @@
 // Deep Cut in the browser: today's five prompts, the timer, saving progress
-// on this device, Digby's dig, the results and the stats. The rules live in
-// game.js.
-import { PROMPTS_PER_DAY, RARITIES, SECONDS_PER_PROMPT, TIERS, dayNumber, match, promptsFor, rarityFor, shareText, stats, tierFor } from "./game.js";
+// on this device, Digby's dig back through Earth's history, the results and
+// the stats. The rules live in game.js.
+import { PERIODS, PROMPTS_PER_DAY, SECONDS_PER_PROMPT, compact, dayNumber, match, periodFor, promptsFor, shareText, stats } from "./game.js";
 
 const $ = (sel) => document.querySelector(sel);
 const STORE = "deepcut-v1";
@@ -11,7 +11,7 @@ let schedule;
 let today;
 let categories = new Map(); // id -> category (loaded as needed)
 let mode = "daily"; // or "practice"
-let run; // { day?, ids, results: [{ id, guess, answer, depth, perDay }], index, startedAt }
+let run; // { day?, ids, results: [{ id, guess, answer, depth, oneIn, perDay }], index, startedAt }
 let timer = null;
 // For now anyone can play unlimited practice rounds, which is handy for testing.
 // Later, practice can be the supporter unlock: set this to false to hide it.
@@ -53,13 +53,10 @@ async function category(id) {
 // ---------------------------------------------------------------------------
 // Digby and his hillside
 
-const LAYERS = ["#c98b5b", "#b26a3e", "#8c7b6b", "#4e4378", "#e2643a"]; // one per tier
-const layerFor = (depth) => LAYERS[Math.min(4, Math.floor(depth / 20))];
-/** An answer's rarity as a little colored label ("Rare"), or a dash for no answer. */
-const rarityTag = (depth) => {
-  const r = rarityFor(depth);
-  return r ? `<span class="rarity r${r.index}">${r.name}</span>` : '<span class="rarity none">–</span>';
-};
+// One color per period, from today's topsoil down to the Cambrian.
+const LAYERS = ["#c98b5b", "#9fb7c4", "#dcc58f", "#a8694a", "#b9533c", "#5d5478"];
+/** How rare an answer was, as a little label: "1 in 2.8k". A dash for no answer. */
+const oneInTag = (a) => (a?.depth ? `<span class="one-in">1 in ${compact(a.oneIn)}</span>` : '<span class="one-in none">–</span>');
 
 /** Digby the mole, drawn around (0, 0), about 50 px across. */
 function digby({ digging = false, wave = false } = {}) {
@@ -90,42 +87,70 @@ function digby({ digging = false, wave = false } = {}) {
     ${right}`;
 }
 
-/** The five layers as rows: the tiers. `now` marks one, and `total` says how far the next is. */
+/** The periods as rows. `now` marks one, and `total` says how far the next is. */
 function strata(now = -1, total = 0) {
-  return TIERS.map((t, i) => {
-    const range = i < TIERS.length - 1 ? `${t.min}–${TIERS[i + 1].min - 1} m` : `${t.min}+ m`;
-    const right = i === now ? `<svg viewBox="-34 -34 68 68" aria-hidden="true">${digby()}</svg>` : `<span>${now >= 0 && i === now + 1 ? `${t.min - total} m to go` : range}</span>`;
-    return `<div class="stratum${i === now ? " now" : ""}" style="--c:${LAYERS[i]}"><span>${t.name}${i === now ? " · you" : ""}</span>${right}</div>`;
+  return PERIODS.map((p, i) => {
+    const range = i < PERIODS.length - 1 ? `${p.min}–${PERIODS[i + 1].min - 1}\u00a0m` : `${p.min}+\u00a0m`;
+    const right = i === now ? `<svg viewBox="-34 -34 68 68" aria-hidden="true">${digby()}</svg>` : `<span>${now >= 0 && i === now + 1 ? `${p.min - total}\u00a0m to go` : range}</span>`;
+    return `<div class="stratum${i === now ? " now" : ""}" style="--c:${LAYERS[i]}"><span>${p.name}${i === now ? " · you" : ""}</span>${right}</div>`;
   }).join("");
 }
 
-// The hillside on the reveal screen: 500 m of ground below the grass.
+// The hillside on the reveal screen: one band per period, each the same
+// height, so the thin deep periods aren't squeezed. Within a band, depth is
+// linear; the last band shows 40 m.
 const SCENE_TOP = 40;
-const PER_M = 0.86;
-const SCENE_H = SCENE_TOP + 500 * PER_M;
-const SHAFT_X = 172;
-const yAt = (m) => SCENE_TOP + Math.min(500, Math.max(0, m)) * PER_M;
+const BAND = 72;
+const SCENE_H = SCENE_TOP + PERIODS.length * BAND;
+const SHAFT_X = 150;
+const SIGN_X = SHAFT_X + 24;
+const SIGN_CHARS = 30; // what fits on a signpost between the tunnel and the edge
+const bandEnd = (i) => (i < PERIODS.length - 1 ? PERIODS[i + 1].min : PERIODS[i].min + 40);
+function yAt(m) {
+  const i = Math.max(0, PERIODS.findLastIndex((p) => m >= p.min));
+  const share = Math.min(1, (m - PERIODS[i].min) / (bandEnd(i) - PERIODS[i].min));
+  return SCENE_TOP + (i + share) * BAND;
+}
 const ridge = (y) => `M0 ${y}Q32 ${y - 7} 65 ${y}T130 ${y}T195 ${y}T260 ${y}T325 ${y}T390 ${y}L390 ${SCENE_H}L0 ${SCENE_H}Z`;
 const shaft = (y1, y2) => `M${SHAFT_X} ${y1}C${SHAFT_X - 9} ${y1 + (y2 - y1) / 3} ${SHAFT_X + 9} ${y1 + (2 * (y2 - y1)) / 3} ${SHAFT_X} ${y2}`;
-const SCENERY = `
-  <path d="M352 44Q348 66 356 84" stroke="#8a5a36" fill="none" stroke-width="2" stroke-linecap="round"/>
-  <g class="worm"><path d="M316 104q10-10 20 0t20 0" stroke="#ff9aae" fill="none" stroke-width="9" stroke-linecap="round"/><circle cx="357" cy="102" r="1.6" fill="#2e2a3b"/></g>
-  <ellipse cx="350" cy="168" rx="10" ry="7" fill="#94552f"/><ellipse cx="318" cy="196" rx="13" ry="8" fill="#c98455"/>
-  <g transform="translate(342 268) rotate(-18)"><rect x="-22" y="-4" width="44" height="8" rx="4" fill="#efe6d8"/><circle cx="-22" cy="-5" r="5" fill="#efe6d8"/><circle cx="-22" cy="5" r="5" fill="#efe6d8"/><circle cx="22" cy="-5" r="5" fill="#efe6d8"/><circle cx="22" cy="5" r="5" fill="#efe6d8"/></g>
-  <g class="twinkle"><path d="M312 368l12-28l12 28l-12 10Z" fill="#b79cff"/><path d="M336 372l8-18l8 18l-8 6Z" fill="#e3d7ff"/></g>
-  <circle class="rise" cx="330" cy="450" r="7" fill="#ffd23f"/><circle class="rise" cx="360" cy="460" r="5" fill="#ffb938" style="animation-delay:1.1s"/>`;
 
-/** The hillside: the layers, Digby's tunnel so far, and a signpost at each answer's running total. */
+// A fossil for each period, drawn around (0, 0), about 40 px across.
+const FOSSILS = [
+  // Holocene: a worm in the topsoil.
+  '<g class="worm"><path d="M-20 2q10-10 20 0t20 0" stroke="#ff9aae" fill="none" stroke-width="9" stroke-linecap="round"/><circle cx="21" cy="0" r="1.6" fill="#2e2a3b"/></g>',
+  // Pleistocene: a mammoth's tusk.
+  '<path d="M-22 10C-20 -14 8 -20 22 -6C10 -12 -6 -8 -12 12Z" fill="#fff8ec" stroke="#cdbb9f" stroke-width="1.5"/>',
+  // Cretaceous: an ammonite.
+  '<circle r="17" fill="#c9a76b"/><path d="M0 0m0-3a3 3 0 1 1-3 3a6 6 0 1 1 6 6a10 10 0 1 1-10-10a14 14 0 1 1 14 14" stroke="#8a6a3a" fill="none" stroke-width="2.4" stroke-linecap="round"/>',
+  // Jurassic: a dinosaur bone.
+  '<g transform="rotate(-18)"><rect x="-22" y="-4" width="44" height="8" rx="4" fill="#efe6d8"/><circle cx="-22" cy="-5" r="5" fill="#efe6d8"/><circle cx="-22" cy="5" r="5" fill="#efe6d8"/><circle cx="22" cy="-5" r="5" fill="#efe6d8"/><circle cx="22" cy="5" r="5" fill="#efe6d8"/></g>',
+  // Permian: a fern.
+  '<path d="M-14 18Q0 0 14 -18" stroke="#3f6b3a" stroke-width="2.5" fill="none" stroke-linecap="round"/><path d="M-9 12l-8 -3M-4 6l-8 -4M1 0l-7 -5M6 -6l-6 -5M10 -12l-5 -4M-9 12l3 8M-4 6l5 7M1 0l7 5M6 -6l7 3M10 -12l6 1" stroke="#5b8f4a" stroke-width="2.5" stroke-linecap="round"/>',
+  // Cambrian: a trilobite.
+  '<ellipse rx="13" ry="18" fill="#cfc4e8"/><path d="M-13 -6h26M-13 0h26M-12 6h24M-10 12h20" stroke="#8e80b8" stroke-width="2"/><path d="M-4 -18v36M4 -18v36" stroke="#8e80b8" stroke-width="1.6"/><path d="M-12 -12Q0 -26 12 -12" fill="#b9acd9"/>',
+];
+// Each period's fossil sits on the right, or under the period's name when a signpost is in the way.
+function fossils(signs) {
+  return FOSSILS.map((f, i) => {
+    const top = SCENE_TOP + i * BAND;
+    const right = [i % 2 ? 318 : 344, top + (i ? 40 : 58)];
+    const [x, y] = signs.some((s) => Math.abs(s - right[1]) < 34) ? [62, top + 52] : right;
+    return `<g transform="translate(${x} ${y})">${f}</g>`;
+  }).join("");
+}
+
+/** The hillside: the periods, Digby's tunnel so far, and a signpost at each answer's running total. */
 function hillside(results, before, after) {
-  const now = tierFor(after).index;
-  const layers = LAYERS.map((c, i) => `<path d="${ridge(SCENE_TOP + i * 86)}" fill="${c}"/>`).join("");
-  const labels = TIERS.map((t, i) => {
-    const y = SCENE_TOP + i * 86 + 8;
-    const w = Math.round(t.name.length * 6.9 + 20);
-    return `<rect x="8" y="${y}" width="${w}" height="22" rx="11" fill="${i === now ? "#ffb938" : "#ffffff"}" opacity="${i === now ? 1 : 0.9}"/><text class="scene-label" x="${8 + w / 2}" y="${y + 15}" text-anchor="middle">${t.name}</text>`;
+  const now = periodFor(after).index;
+  const layers = LAYERS.map((c, i) => `<path d="${ridge(SCENE_TOP + i * BAND)}" fill="${c}"/>`).join("");
+  const labels = PERIODS.map((p, i) => {
+    const y = SCENE_TOP + i * BAND + 8;
+    const w = Math.round(p.name.length * 6.9 + 20);
+    return `<rect x="8" y="${y}" width="${w}" height="22" rx="11" fill="${i === now ? "#ffb938" : "#ffffff"}" opacity="${i === now ? 1 : 0.92}"/><text class="scene-label" x="${8 + w / 2}" y="${y + 15}" text-anchor="middle">${p.name}</text>`;
   }).join("");
   let sum = 0;
   let lastY = -Infinity;
+  const signYs = [];
   const signs = results
     .map((r, i) => {
       sum += r.depth;
@@ -133,17 +158,22 @@ function hillside(results, before, after) {
       const at = yAt(sum);
       const y = Math.min(SCENE_H - 14, Math.max(at, lastY + 24)); // nudged apart when they'd overlap
       lastY = y;
-      const label = `${r.answer.length > 24 ? `${r.answer.slice(0, 23)}…` : r.answer} · ${r.depth} m`;
+      signYs.push(y);
+      const tail = ` · ${r.depth}\u00a0m`;
+      const room = SIGN_CHARS - tail.length;
+      const label = `${r.answer.length > room ? `${r.answer.slice(0, room - 1).trimEnd()}…` : r.answer}${tail}`;
       const w = Math.round(label.length * 6.3 + 18);
-      return `<g${i === results.length - 1 ? ' class="sign-new"' : ""}><path d="M${SHAFT_X + 12} ${at}L196 ${y}" stroke="#7a4e2e" stroke-width="2"/><rect x="196" y="${y - 11}" width="${w}" height="22" rx="7" fill="#ffe7b8" stroke="#7a4e2e" stroke-width="1.5"/><text class="scene-sign" x="${196 + w / 2}" y="${y + 4}" text-anchor="middle">${esc(label)}</text></g>`;
+      return `<g${i === results.length - 1 ? ' class="sign-new"' : ""}><path d="M${SHAFT_X + 12} ${at}L${SIGN_X} ${y}" stroke="#7a4e2e" stroke-width="2"/><rect x="${SIGN_X}" y="${y - 11}" width="${w}" height="22" rx="7" fill="#ffe7b8" stroke="#7a4e2e" stroke-width="1.5"/><text class="scene-sign" x="${SIGN_X + w / 2}" y="${y + 4}" text-anchor="middle">${esc(label)}</text></g>`;
     })
     .join("");
   const from = yAt(before);
   const to = yAt(after);
-  return `<svg viewBox="0 0 390 ${SCENE_H}" role="img" aria-label="Digby has dug ${after} metres down, into the ${TIERS[now].name} layer.">
+  return `<svg viewBox="0 0 390 ${SCENE_H}" role="img" aria-label="Digby has dug ${after} metres down, into the ${PERIODS[now].name}.">
     <path d="M0 30Q20 22 40 30T80 30T120 30T160 30T200 30T240 30T280 30T320 30T360 30T400 30L400 44L0 44Z" fill="#7bc96f"/>
     <path d="M${SHAFT_X + 34} 30V6" stroke="#7a4e2e" stroke-width="3" stroke-linecap="round"/><path d="M${SHAFT_X + 35} 7l20 6l-20 6Z" fill="#ff6f61"/>
-    ${layers}${SCENERY}${labels}
+    ${layers}
+    <path d="M352 44Q348 66 356 84" stroke="#8a5a36" fill="none" stroke-width="2" stroke-linecap="round"/>
+    ${fossils(signYs)}${labels}
     <path d="${shaft(32, Math.max(from, 44))}" stroke="#3b2a20" stroke-width="22" fill="none" stroke-linecap="round"/>
     ${to > from ? `<path class="tunnel-new" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" d="${shaft(from, to)}" stroke="#3b2a20" stroke-width="22" fill="none" stroke-linecap="round"/>` : ""}
     ${signs}
@@ -151,15 +181,7 @@ function hillside(results, before, after) {
   </svg>`;
 }
 
-// One medal per tier, each with its layer's treasure.
-const EMBLEMS = [
-  '<path d="M100 84V64" stroke="#3f8f3a" stroke-width="4" stroke-linecap="round"/><path d="M100 66Q84 50 76 62Q88 74 100 66Z" fill="#7bc96f"/><path d="M100 62Q116 44 126 56Q114 70 100 62Z" fill="#5daf55"/>',
-  '<path d="M78 76Q86 64 94 76T110 76T122 72" stroke="#ff9aae" stroke-width="9" fill="none" stroke-linecap="round"/><circle cx="123" cy="70" r="1.8" fill="#2e2a3b"/>',
-  '<path d="M100 68m0-3a3 3 0 1 1-3 3a6 6 0 1 1 6 6a10 10 0 1 1-10-10a14 14 0 1 1 14 14" stroke="#8c7b6b" fill="none" stroke-width="2.5" stroke-linecap="round"/>',
-  '<path d="M100 46L116 66L100 90L84 66Z" fill="#b79cff"/><path d="M100 46L107 66L100 90L93 66Z" fill="#e3d7ff"/>',
-  '<path d="M100 90Q78 82 85 62Q91 70 96 66Q91 52 104 44Q104 56 112 60Q121 71 112 83Q108 90 100 90Z" fill="#ff8a3d"/><path d="M100 88Q91 82 95 71Q100 77 104 73Q108 82 100 88Z" fill="#ffd23f"/>',
-];
-
+// The medal on the results: the fossil of the period reached.
 function medal(index) {
   const confetti = [
     [22, 8, "#ff6f61", 0],
@@ -172,17 +194,17 @@ function medal(index) {
   return `<svg viewBox="0 0 200 122" aria-hidden="true">${confetti}
     <g class="medal-swing">
       <path d="M82 0L72 34L92 30Z" fill="#ff6f61"/><path d="M118 0L128 34L108 30Z" fill="#4fa3e0"/>
-      <circle cx="100" cy="68" r="46" fill="#ffb938"/><circle cx="100" cy="68" r="38" fill="#ffd47a"/><circle cx="100" cy="68" r="28" fill="#efe6d8"/>
-      ${EMBLEMS[index]}
+      <circle cx="100" cy="68" r="46" fill="#ffb938"/><circle cx="100" cy="68" r="38" fill="#ffd47a"/><circle cx="100" cy="68" r="28" fill="${LAYERS[index]}"/>
+      <g transform="translate(100 68) scale(1.05)">${FOSSILS[index]}</g>
     </g>
   </svg>`;
 }
 
 /** Where Digby is between prompts. */
 function digbyStatus(total) {
-  const t = tierFor(total);
-  const where = total ? `Digby is <strong>${total} m</strong> down, in the <strong>${t.name}</strong> layer.` : "Digby is at the surface, ready to dig.";
-  return `<svg viewBox="-36 -36 72 72" aria-hidden="true">${digby({ wave: !total })}</svg><p>${where}${t.next ? ` ${t.next.toGo} m to ${t.next.name}.` : ""}</p>`;
+  const p = periodFor(total);
+  const where = total ? `Digby is <strong>${total}\u00a0m</strong> down, in the <strong>${p.name}</strong>.` : "Digby is at the surface, ready to dig.";
+  return `<svg viewBox="-36 -36 72 72" aria-hidden="true">${digby({ wave: !total })}</svg><p>${where}${p.next ? ` ${p.next.toGo}\u00a0m to the ${p.next.name}.` : ""}</p>`;
 }
 
 // ---------------------------------------------------------------------------
@@ -224,18 +246,17 @@ async function init() {
 }
 
 async function showIntro() {
-  // A real example from the cheese list, so the numbers are honest.
+  // A real example, so the numbers are honest: a famous, a middling and a deep Roman emperor.
   const box = $("#example");
   try {
-    const cheeses = await category("cheeses");
-    // A Common, a Rare and a Deep cut cheese, picked by name, or by rarity if the names move.
-    const named = ["Cheddar cheese", "Manchego cheese", "Stinking Bishop cheese"].map((n) => cheeses.answers.find((a) => a.name === n));
-    const first = (depth) => cheeses.answers.find((a) => a.depth === depth);
-    const picks = named.every((a, i) => a && a.depth === [10, 45, 100][i]) ? named : [first(10), first(45), first(100)].filter(Boolean);
-    box.innerHTML = `<p class="muted small">For example: name a cheese</p>${picks
-      .map((a) => `<div class="example-row"><span>${esc(a.name)}</span>${rarityTag(a.depth)}<strong>${a.depth} m</strong><div class="example-bar"><span style="--d:${a.depth};--c:${layerFor(a.depth)}"></span></div></div>`)
-      .join("")}<div class="rarity-key">${RARITIES.map((r, i) => `<span class="rarity r${i}">${r.name} <b>${r.depth} m</b></span>`).join("")}</div>`;
-    box.hidden = picks.length < 2;
+    const emperors = await category("roman-emperors");
+    const named = ["Augustus", "Hadrian", "Trebonianus Gallus"].map((n) => emperors.answers.find((a) => a.name === n));
+    const near = (d) => emperors.answers.reduce((best, a) => (Math.abs(a.depth - d) < Math.abs(best.depth - d) ? a : best));
+    const picks = named.every(Boolean) ? named : [near(10), near(18), near(30)];
+    box.innerHTML = `<p class="muted small">For example: name a Roman emperor</p>${picks
+      .map((a) => `<div class="example-row"><span>${esc(a.name)}</span>${oneInTag(a)}<strong>${a.depth}\u00a0m</strong><div class="example-bar"><span style="--d:${a.depth * 1.6}"></span></div></div>`)
+      .join("")}<p class="example-key">${esc(picks[0].name)}'s page gets ${fmt(picks[0].perDay)} readers a day; ${esc(picks[2].name)}'s gets ${fmt(picks[2].perDay)}. Every ten times rarer digs 10 m deeper.</p>`;
+    box.hidden = false;
   } catch {
     box.hidden = true;
   }
@@ -322,7 +343,7 @@ async function finishPrompt(answer, typed = null) {
   if (run.locked) return;
   run.locked = true;
   const id = run.ids[run.index];
-  run.results.push({ id, guess: typed, answer: answer?.name ?? null, depth: answer?.depth ?? 0, perDay: answer?.perDay ?? null });
+  run.results.push({ id, guess: typed, answer: answer?.name ?? null, depth: answer?.depth ?? 0, oneIn: answer?.oneIn ?? null, perDay: answer?.perDay ?? null });
   run.startedAt = null;
   run.index++;
   if (mode === "daily") {
@@ -340,21 +361,27 @@ async function showReveal(c, result) {
   $("#reveal-prompt").textContent = c.prompt;
   $("#reveal-answer").textContent = result.answer ?? "Nothing this time";
   $("#reveal-answer").classList.toggle("missed", !result.answer);
-  $("#reveal-note").textContent = result.answer
-    ? `Its Wikipedia page gets about ${fmt(result.perDay)} view${result.perDay === 1 ? "" : "s"} a day. ${c.answers.length} answers counted.`
-    : `${c.answers.length} answers would have counted. Here are a few.`;
-  const rarity = rarityFor(result.depth);
-  $("#reveal-rarity").innerHTML = rarity ? rarityTag(result.depth) : "";
-  const row = (a) => `<li><span>${esc(a.name)}</span>${rarityTag(a.depth)}</li>`;
+  const top = c.answers[0];
+  if (result.answer) {
+    $("#reveal-one-in").innerHTML = `1 in <strong>${fmt(result.oneIn)}</strong>`;
+    $("#reveal-note").innerHTML =
+      `About <strong>${fmt(result.perDay)}</strong> ${result.perDay === 1 ? "person reads" : "people read"} its Wikipedia page a day, out of ${fmt(c.readers)} reading all ${fmt(c.answers.length)} answers' pages.` +
+      (top.name === result.answer ? " It's the most read of them all." : ` The most read, ${esc(top.name)}, gets ${fmt(top.perDay)}.`);
+  } else {
+    $("#reveal-one-in").innerHTML = "";
+    $("#reveal-note").textContent = `${fmt(c.answers.length)} answers would have counted. Here are a few.`;
+  }
+  $("#reveal-one-in").hidden = !result.answer;
+  const row = (a) => `<li><span>${esc(a.name)}</span>${oneInTag(a)}</li>`;
   $("#surface").innerHTML = c.answers.slice(0, 3).map(row).join("");
   $("#deepest").innerHTML = c.answers.slice(-3).reverse().map(row).join("");
   $("#next").textContent = run.index >= run.ids.length ? "See how deep we went" : "Next prompt";
 
   const after = totalOf(run.results);
   const before = after - result.depth;
-  const t = tierFor(after);
+  const p = periodFor(after);
   $("#scene").innerHTML = hillside(run.results, before, after);
-  $("#dig-tier").innerHTML = `<strong>${t.name}</strong> layer<br>${t.next ? `${t.next.toGo} m to ${t.next.name}` : "The deepest layer there is!"}`;
+  $("#dig-tier").innerHTML = `In the <strong>${p.name}</strong><br>${p.next ? `${p.next.toGo}\u00a0m to the ${p.next.name}` : "The deepest period there is!"}`;
   show("reveal");
   // Dig: Digby and the new stretch of tunnel go down together while the meters count up.
   requestAnimationFrame(() =>
@@ -394,15 +421,16 @@ const shareUrl = () => location.href.split(/[?#]/)[0];
 async function showResults() {
   const total = totalOf(run.results);
   const daily = mode === "daily";
-  const t = tierFor(total);
+  const p = periodFor(total);
   $("#results-label").textContent = daily ? `Deep Cut #${run.day}` : "Practice round";
-  $("#medal").innerHTML = medal(t.index);
-  $("#tier-name").textContent = t.name;
+  $("#medal").innerHTML = medal(p.index);
+  $("#tier-name").textContent = p.name;
+  $("#tier-ago").textContent = p.ago === "today" ? "the present day" : p.ago;
   $("#total").textContent = "0";
   countUp($("#total"), total, 1200);
   const s = stats(load().history ?? {}, today);
   $("#total-note").textContent = !daily ? "Practice rounds don't count toward your stats." : s.played > 1 ? `Your average is ${s.average} m. Streak: ${s.streak} day${s.streak === 1 ? "" : "s"}.` : "";
-  $("#tier-ladder").innerHTML = strata(t.index, total);
+  $("#tier-ladder").innerHTML = strata(p.index, total);
   $("#share").hidden = !daily;
   $(".next-in").hidden = !daily;
   $("#practice").textContent = daily ? "Keep digging (practice)" : "Another practice round";
@@ -412,10 +440,16 @@ async function showResults() {
     run.results.map(async (r) => {
       const c = await category(r.id);
       const what = c.prompt.replace(/^Name (a |an )?/, "");
-      return `<li><span><span class="s-prompt">${esc(what.charAt(0).toUpperCase() + what.slice(1))} ${r.answer ? rarityTag(r.depth) : ""}</span><span class="s-answer${r.answer ? "" : " missed"}">${esc(r.answer ?? "Nothing")}</span></span><span class="s-bar"><span style="--d:${r.depth};--c:${layerFor(r.depth)}"></span></span><span class="s-depth">${r.depth} m</span></li>`;
+      return `<li><span><span class="s-prompt">${esc(what.charAt(0).toUpperCase() + what.slice(1))}</span><span class="s-answer${r.answer ? "" : " missed"}">${esc(r.answer ?? "Nothing")}</span></span>${oneInTag(r)}<span class="s-depth">${r.depth} m</span></li>`;
     }),
   );
   $("#summary").innerHTML = items.join("");
+  // How rarely read the day's answers are, all together.
+  const found = run.results.filter((r) => r.answer);
+  const rarest = found.reduce((best, r) => (!best || r.oneIn > best.oneIn ? r : best), null);
+  $("#readers-note").innerHTML = found.length
+    ? `Your ${found.length === 1 ? "answer's page gets" : `${found.length} answers' pages get`} about <strong>${fmt(found.reduce((n, r) => n + r.perDay, 0))}</strong> Wikipedia readers a day${found.length > 1 ? " between them" : ""}. Rarest find: <strong>${esc(rarest.answer)}</strong>, 1 in ${fmt(rarest.oneIn)}.`
+    : "No answers this time. Tomorrow's another dig.";
   $("#share-note").textContent = "";
   show("results");
   if (daily) countdown();
@@ -451,14 +485,13 @@ async function share() {
 
 function showStats() {
   const s = stats(load().history ?? {}, today);
-  const stat = (n, label) => `<div class="stat"><strong>${n}</strong><span>${label}</span></div>`;
+  const stat = (n, label, wide = false) => `<div class="stat${wide ? " wide" : ""}"><strong>${n}</strong><span>${label}</span></div>`;
   $("#stats-grid").innerHTML = [
     stat(s.played, "Played"),
-    stat(`${s.average} m`, "Average"),
-    stat(`${s.deepest} m`, "Deepest"),
     stat(s.streak, "Streak"),
     stat(s.bestStreak, "Best streak"),
-    stat(s.played ? tierFor(s.deepest).name.split(" ")[0] : "–", "Best layer"),
+    stat(`${s.average}\u00a0m`, "Average", true),
+    stat(`${s.deepest}\u00a0m`, s.played ? `Deepest, in the ${periodFor(s.deepest).name}` : "Deepest", true),
   ].join("");
   $("#stats").showModal();
 }

@@ -31,6 +31,18 @@
 }
 
 html,
+/* Headings break evenly, and paragraphs don't end on one short word. */
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p,
+li {
+  text-wrap: pretty;
+}
+
 body {
   margin: 0;
 }
@@ -67,8 +79,12 @@ a {
 }
 
 :focus-visible {
-  outline: 3px solid var(--link);
-  outline-offset: 2px;
+  outline: 3px solid rgba(31, 95, 153, 0.45);
+  outline-offset: 3px;
+}
+
+.sheet h2:focus {
+  outline: none;
 }
 
 /* Header */
@@ -291,6 +307,7 @@ main {
 }
 
 .headline {
+  text-wrap: balance;
   margin: -6px 0 0;
   text-align: center;
   font-family: var(--display);
@@ -387,6 +404,14 @@ main {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--muted);
+}
+
+/* Short lines of big text break evenly, not with one word left over. */
+.prompt-text,
+.feedback,
+.reveal-answer,
+.tier-name {
+  text-wrap: balance;
 }
 
 .prompt-text {
@@ -520,69 +545,66 @@ main {
   color: var(--muted);
 }
 
-/* Rarities, colored like loot: gray, green, blue, purple, gold */
+/* How rare an answer is: "1 in 2.8k" */
 
-.rarity {
+.one-in {
   display: inline-block;
+  flex: none;
   padding: 1px 8px;
   border-radius: 999px;
+  background: #f3e6d6;
+  color: #6b4a33;
   font-size: 12px;
   font-weight: 800;
   line-height: 1.5;
   white-space: nowrap;
-  vertical-align: 1px;
+  font-variant-numeric: tabular-nums;
 }
 
-.rarity.r0 {
-  background: #ece8e1;
-  color: #5d554b;
-}
-
-.rarity.r1 {
-  background: #d9f2d2;
-  color: #2b6e27;
-}
-
-.rarity.r2 {
-  background: #d8e8ff;
-  color: #1d5aa8;
-}
-
-.rarity.r3 {
-  background: #ebdcff;
-  color: #6236ad;
-}
-
-.rarity.r4 {
-  background: linear-gradient(135deg, #ffe48a, #ffc93c);
-  color: #7a4b00;
-  box-shadow: 0 0 0 1.5px #e0a400 inset;
-}
-
-.rarity.none {
+.one-in.none {
+  background: none;
   color: var(--muted);
 }
 
-.reveal-rarity {
-  flex: none;
-  margin-left: auto;
+.reveal-one-in {
+  margin: 8px 0 2px;
+  font-family: var(--display);
+  font-size: 30px;
+  line-height: 1.1;
+  color: #6b4a33;
 }
 
-.reveal-rarity .rarity {
-  font-size: 14px;
-  padding: 3px 10px;
+.reveal-one-in strong {
+  font-weight: 700;
+  color: var(--ink);
 }
 
-.rarity-key {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 10px;
+.reveal-note {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: 14.5px;
+  line-height: 1.45;
 }
 
-.rarity-key b {
-  font-weight: 800;
-  opacity: 0.8;
+.example-key,
+.readers-note {
+  margin: 10px 0 0;
+  color: var(--ink-2);
+  font-size: 13.5px;
+  line-height: 1.45;
+}
+
+.readers-note {
+  margin: 0;
+  text-align: center;
+  font-size: 14.5px;
+}
+
+.tier-ago {
+  margin: -4px 0 0;
+  text-align: center;
+  color: var(--muted);
+  font-weight: 700;
 }
 
 .depth-pill {
@@ -598,6 +620,14 @@ main {
 
 .scene {
   margin: 0 -16px;
+}
+
+@media (min-width: 600px) {
+  .scene {
+    margin: 0;
+    border-radius: 0 0 20px 20px;
+    overflow: hidden;
+  }
 }
 
 .scene svg {
@@ -654,6 +684,12 @@ main {
   gap: 10px;
 }
 
+@media (max-width: 480px) {
+  .lists {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 .lists .card {
   padding: 12px 14px;
 }
@@ -687,9 +723,7 @@ main {
 
 .lists li span:first-child {
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 
 .lists li span:last-child {
@@ -916,7 +950,7 @@ main {
 
 .summary li {
   display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) 46px;
+  grid-template-columns: minmax(0, 1fr) auto 44px;
   align-items: center;
   gap: 8px;
 }
@@ -1012,12 +1046,13 @@ main {
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 10px;
   margin-bottom: 16px;
 }
 
 .stat {
+  grid-column: span 2;
   padding: 12px 6px;
   border-radius: 16px;
   background: var(--sky);
@@ -1029,6 +1064,10 @@ main {
   font-family: var(--display);
   font-size: 24px;
   font-variant-numeric: tabular-nums;
+}
+
+.stat.wide {
+  grid-column: span 3;
 }
 
 .stat span {
@@ -1046,6 +1085,7 @@ main {
 }
 
 .foot p {
+  text-wrap: balance;
   margin: 0;
 }
 

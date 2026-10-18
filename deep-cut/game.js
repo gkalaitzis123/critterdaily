@@ -1,10 +1,11 @@
 // Deep Cut's rules, with no page or network code, so they're unit-tested in
 // Node and shared by the data builder and the game.
 //
-// Each day has five prompts ("Name a cheese"). Any answer on the list counts,
-// and rarer answers dig deeper: each answer is Common, Uncommon, Rare, Very
-// rare or a Deep cut, from its place on the list ranked by how often its
-// Wikipedia article is read, and each rarity digs a set number of meters.
+// Each day has five prompts ("Name a Roman emperor"). Any answer on the list
+// counts, and the less it's read on Wikipedia, the deeper Digby digs: an
+// answer's rarity is its share of everyone reading the list's articles ("1 in
+// 2,769"), and every ten times rarer digs 10 m deeper, down through the
+// periods of Earth's history.
 
 export const PROMPTS_PER_DAY = 5;
 export const SECONDS_PER_PROMPT = 30;
@@ -73,49 +74,31 @@ export function match(guess, answers) {
 }
 
 /**
- * The rarities, and how deep each digs. `from` is where a rarity starts on the
- * list, measured on a log scale (0 is the most famous answer, 1 the least), so
- * the first steps down the list count the most: what most people think of is
- * near the top. In a list of 500, the 8 most famous answers are Common, then
- * Uncommon to about the 30th, Rare to the 90th, Very rare to the 220th, and the
- * rest are Deep cuts. In a list of 50, the top 3 are Common and the last 20
- * are Deep cuts.
+ * How deep an answer digs, from how rare it is: 10 m for every ten times
+ * rarer. 1 in 10 readers is 10 m, 1 in 1,000 is 30 m, 1 in 100,000 is 50 m.
+ * A right answer always digs at least 1 m.
  */
-export const RARITIES = [
-  { name: "Common", depth: 10, from: 0 },
-  { name: "Uncommon", depth: 25, from: 0.35 },
-  { name: "Rare", depth: 45, from: 0.55 },
-  { name: "Very rare", depth: 70, from: 0.72 },
-  { name: "Deep cut", depth: 100, from: 0.87 },
-];
-
-/** The rarity of a depth, as { name, depth, from, index }, or null for no answer. */
-export function rarityFor(depth) {
-  if (!depth) return null;
-  const index = Math.max(0, RARITIES.findLastIndex((r) => depth >= r.depth));
-  return { ...RARITIES[index], index };
-}
+export const depthFor = (oneIn) => Math.max(1, Math.round(10 * Math.log10(oneIn)));
 
 /**
- * Depths for a category's answers, from their page views: the answers are
- * ranked by how often they're read, and each one's place on that list sets
- * its rarity. Answers read equally often share the middle of their ranks.
+ * How rare each of a list's answers is, from how often its Wikipedia article
+ * is read (`views`, over the same span for all of them): of all the reads of
+ * the list's articles, this one's share, as "1 in N". Returns
+ * [{ oneIn, depth }], in the same order.
  */
-export function depths(views) {
-  const n = views.length;
-  if (n === 1) return [RARITIES.at(-1).depth];
-  const order = views.map((v, i) => [v, i]).sort((a, b) => b[0] - a[0]);
-  const rank = new Array(n);
-  for (let i = 0; i < n; ) {
-    let j = i;
-    while (j + 1 < n && order[j + 1][0] === order[i][0]) j++;
-    for (let k = i; k <= j; k++) rank[order[k][1]] = (i + j) / 2;
-    i = j + 1;
-  }
-  return rank.map((r) => {
-    const place = Math.log(r + 1) / Math.log(n); // 0 for the most read, 1 for the least
-    return RARITIES.findLast((rarity) => place >= rarity.from - 1e-9).depth;
+export function rarity(views) {
+  const total = views.reduce((n, v) => n + v, 0);
+  return views.map((v) => {
+    const oneIn = Math.max(1, Math.round(total / Math.max(v, 1)));
+    return { oneIn, depth: depthFor(oneIn) };
   });
+}
+
+/** "1 in 2,769"-style numbers, short: 40, 610, 2.8k, 60k, 1.2M. */
+export function compact(n) {
+  if (n < 1000) return String(n);
+  if (n < 1e6) return `${Number((n / 1e3).toPrecision(2)) >= 10 ? Math.round(n / 1e3) : Number((n / 1e3).toPrecision(2))}k`;
+  return `${Number((n / 1e6).toPrecision(2))}M`;
 }
 
 /** Days since launch, counting from 1, by the player's own calendar. */
@@ -131,33 +114,32 @@ export function promptsFor(day, schedule) {
   return schedule[(((day - 1) % schedule.length) + schedule.length) % schedule.length];
 }
 
-// One square a prompt in the shared result, colored like loot: gray, green, blue, purple, gold.
-const SQUARES = ["⬜", "🟩", "🟦", "🟪", "🟨"];
-export const square = (depth) => (depth ? SQUARES[rarityFor(depth).index] : "⬛");
-
 /**
- * The tiers: the layers Digby digs through, 100 m each. A day's total (up to
- * 500 m) lands in one of them.
+ * The periods of Earth's history Digby digs back through. A day's total
+ * lands in one of them: famous answers all day stay in the Holocene, and
+ * five deep cuts reach the Cambrian.
  */
-export const TIERS = [
-  { name: "Topsoil Tourist", min: 0 },
-  { name: "Worm Wrangler", min: 100 },
-  { name: "Fossil Finder", min: 200 },
-  { name: "Crystal Collector", min: 300 },
-  { name: "Core Explorer", min: 400 },
+export const PERIODS = [
+  { name: "Holocene", min: 0, ago: "today" },
+  { name: "Pleistocene", min: 60, ago: "the Ice Age" },
+  { name: "Cretaceous", min: 80, ago: "70 million years ago" },
+  { name: "Jurassic", min: 100, ago: "170 million years ago" },
+  { name: "Permian", min: 125, ago: "270 million years ago" },
+  { name: "Cambrian", min: 150, ago: "510 million years ago" },
 ];
 
-/** The tier for a total, with the next one and how far it is: { name, min, index, next: { name, toGo } | null }. */
-export function tierFor(total) {
-  const index = Math.max(0, TIERS.findLastIndex((t) => total >= t.min));
-  const next = TIERS[index + 1];
-  return { ...TIERS[index], index, next: next ? { name: next.name, toGo: next.min - total } : null };
+/** The period for a total, with the next one and how far it is: { name, min, ago, index, next: { name, toGo } | null }. */
+export function periodFor(total) {
+  const index = Math.max(0, PERIODS.findLastIndex((p) => total >= p.min));
+  const next = PERIODS[index + 1];
+  return { ...PERIODS[index], index, next: next ? { name: next.name, toGo: next.min - total } : null };
 }
 
-/** The text players share: no answers, just how deep they dug. */
+/** The text players share: how deep, and how rare each answer was, never the answers. */
 export function shareText(day, results, url) {
   const total = results.reduce((n, r) => n + (r.depth ?? 0), 0);
-  return `Deep Cut #${day} ⛏️ ${total} m · ${tierFor(total).name}\n${results.map((r) => square(r.depth)).join("")}\n${url}`;
+  const rare = results.map((r) => (r.depth ? `1 in ${compact(r.oneIn)}` : "✗")).join(" · ");
+  return `Deep Cut #${day} ⛏️ ${total} m · ${periodFor(total).name}\n${rare}\n${url}`;
 }
 
 /** Streaks and totals from a record of finished days: { [day]: totalDepth }. */

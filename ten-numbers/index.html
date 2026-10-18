@@ -38,7 +38,7 @@
         <div id="tier-key" class="tier-list" aria-label="What your acorns make you"></div>
         <button id="start" class="primary" type="button">Start</button>
         <button id="practice-start" class="secondary" type="button">Practice round (unlimited)</button>
-        <p class="fine">Answers come from Wikidata, the free database behind Wikipedia, as of when they were last updated there.</p>
+        <p class="fine">Numbers come from Wikidata and Wikipedia, as of when they were last updated there.</p>
       </section>
 
       <section id="question" class="screen" hidden>
@@ -102,14 +102,14 @@
     </main>
 
     <footer class="foot">
-      <p>Answers from <a href="https://www.wikidata.org/" target="_blank" rel="noopener">Wikidata</a> (public domain). Each answer links to its Wikipedia article.</p>
+      <p>Numbers from <a href="https://www.wikidata.org/" target="_blank" rel="noopener">Wikidata</a> and <a href="https://en.wikipedia.org/" target="_blank" rel="noopener">Wikipedia</a>. Each answer links to its article.</p>
       <p class="more"><a href="../">More games from Critter Daily</a> · <a href="../privacy.html">Privacy</a></p>
     </footer>
 
     <dialog id="help" class="sheet">
       <div class="sheet-head">
         <svg class="sheet-nutmeg" viewBox="-44 -44 88 88" aria-hidden="true" data-nutmeg="wave"></svg>
-        <h2>How to play</h2>
+        <h2 tabindex="-1" autofocus>How to play</h2>
       </div>
       <ul>
         <li>Ten questions a day, the same for everyone, each with a number for an answer: how many people live somewhere, how many species of beetle there are, the year a battle was fought or a landmark opened, how many people a disaster killed, the longest a lion has lived.</li>
@@ -124,7 +124,7 @@
     </dialog>
 
     <dialog id="stats" class="sheet">
-      <h2>Your stash</h2>
+      <h2 tabindex="-1" autofocus>Your stash</h2>
       <div id="stats-grid" class="stats-grid"></div>
       <form method="dialog"><button class="primary">Close</button></form>
     </dialog>

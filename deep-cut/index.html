@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Deep Cut: the daily game where obscure answers win</title>
-    <meta name="description" content="Five prompts a day. Name anything that fits, and the less famous your answer, the deeper Digby the mole digs." />
+    <title>Deep Cut: name the pages nobody reads</title>
+    <meta name="description" content="A daily science and history game. Name anything that fits the prompt; the fewer people read its Wikipedia page, the deeper Digby the mole digs back through Earth's history." />
     <meta name="theme-color" content="#cfeaff" />
     <link rel="icon" href="icon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -35,13 +35,13 @@
           <p class="bubble">Hi, I'm Digby! Help me dig.</p>
           <svg class="hello-digby" viewBox="-40 -40 80 80" aria-hidden="true" data-digby="wave"></svg>
         </div>
-        <h2 class="headline">The rarer the answer, the deeper we dig.</h2>
-        <p>Five prompts a day. Name anything that fits, within 30 seconds. Famous answers barely scratch the surface; the ones people have forgotten go deep.</p>
+        <h2 class="headline">Name the pages nobody reads.</h2>
+        <p>Five prompts a day, mostly science and history, 30 seconds each. Any right answer counts. Then we look at how many people read its Wikipedia page: the rarer the read, the deeper Digby digs, back through Earth's history.</p>
         <div id="example" class="card example" aria-label="Example"></div>
-        <div id="strata-key" class="strata" aria-label="The layers you can reach"></div>
+        <div id="strata-key" class="strata" aria-label="The periods you can reach"></div>
         <button id="start" class="primary" type="button">Start digging</button>
         <button id="practice-start" class="secondary" type="button">Practice round (unlimited)</button>
-        <p class="fine">Every right answer is ranked by how often its Wikipedia page is read, and its place on that list makes it Common, Uncommon, Rare, Very rare or a Deep cut. The first few steps down the list count the most: in a list of 500 cheeses, the top 8 are Common and anything past the 220th is a Deep cut.</p>
+        <p class="fine">"1 in 2,769" means that of everyone who read the pages of all the prompt's answers on English Wikipedia over the last 60 days, 1 in 2,769 read this one. Answers come from Wikidata.</p>
       </section>
 
       <section id="prompt" class="screen" hidden>
@@ -66,10 +66,10 @@
           <p id="reveal-prompt" class="muted small"></p>
           <div class="answer-row">
             <h2 id="reveal-answer" class="reveal-answer"></h2>
-            <span id="reveal-rarity" class="reveal-rarity"></span>
             <span class="depth-pill">+<span id="reveal-depth">0</span> m</span>
           </div>
-          <p id="reveal-note" class="muted small"></p>
+          <p id="reveal-one-in" class="reveal-one-in"></p>
+          <p id="reveal-note" class="reveal-note"></p>
         </div>
         <div id="scene" class="scene"></div>
         <div class="dig-total">
@@ -79,11 +79,11 @@
         <button id="next" class="primary" type="button">Next prompt</button>
         <div class="lists">
           <div class="card">
-            <h3>The surface</h3>
+            <h3>Most read</h3>
             <ul id="surface"></ul>
           </div>
           <div class="card">
-            <h3>The deepest cuts</h3>
+            <h3>Least read</h3>
             <ul id="deepest"></ul>
           </div>
         </div>
@@ -92,12 +92,14 @@
       <section id="results" class="screen" hidden>
         <div id="medal" class="medal"></div>
         <p id="results-label" class="kicker"></p>
-        <p class="kicker">You're a</p>
+        <p class="kicker">Digby reached the</p>
         <h2 id="tier-name" class="tier-name"></h2>
-        <p class="total"><span id="total">0</span> m <span class="muted small">out of 500 m</span></p>
+        <p id="tier-ago" class="tier-ago"></p>
+        <p class="total"><span id="total">0</span> m <span class="muted small">down</span></p>
         <p id="total-note" class="muted small"></p>
         <div id="tier-ladder" class="strata ladder" aria-label="Tiers"></div>
         <ul id="summary" class="card summary"></ul>
+        <p id="readers-note" class="readers-note"></p>
         <button id="share" class="primary" type="button">Share your dig</button>
         <p id="share-note" class="feedback" role="status"></p>
         <p class="next-in">Next Deep Cut in <strong id="countdown"></strong></p>
@@ -107,28 +109,28 @@
     </main>
 
     <footer class="foot">
-      <p>Answers from <a href="https://www.wikidata.org/" target="_blank" rel="noopener">Wikidata</a>; depths from Wikipedia page views. Both public domain.</p>
+      <p>Answers from <a href="https://www.wikidata.org/" target="_blank" rel="noopener">Wikidata</a>; how rare they are from <a href="https://en.wikipedia.org/wiki/Wikipedia:Pageview_statistics" target="_blank" rel="noopener">Wikipedia page views</a>. Both public domain.</p>
       <p class="more"><a href="../">More games from Critter Daily</a> · <a href="../privacy.html">Privacy</a></p>
     </footer>
 
     <dialog id="help" class="sheet">
       <div class="sheet-head">
         <svg class="sheet-digby" viewBox="-40 -40 80 80" aria-hidden="true" data-digby="wave"></svg>
-        <h2>How to play</h2>
+        <h2 tabindex="-1" autofocus>How to play</h2>
       </div>
       <ul>
-        <li>Each day has five prompts, like <em>Name a cheese</em>. Everyone gets the same ones.</li>
-        <li>You have 30 seconds to type any answer that fits. Wrong guesses cost nothing but time.</li>
-        <li>Your first right answer is locked in. The rarer it is, the deeper Digby digs: Common 10 m, Uncommon 25 m, Rare 45 m, Very rare 70 m, and a Deep cut 100 m.</li>
-        <li>Rarity comes from how often each answer's Wikipedia page is read, ranked within the list. The first few steps down the list count the most, so you don't need the most obscure answer to score well.</li>
-        <li>Your five answers add up. Every 100 m is a new layer, from Topsoil Tourist down to Core Explorer.</li>
+        <li>Each day has five prompts, like <em>Name a Roman emperor</em> or <em>Name a bone in the human body</em>. Everyone gets the same ones.</li>
+        <li>You have 30 seconds to type any answer that fits. Wrong guesses cost nothing but time. Your first right answer is locked in.</li>
+        <li>Then we look at its Wikipedia page. Of everyone who read the pages of all the prompt's answers over the last 60 days, what share read yours? Augustus is 1 in 11; Trebonianus Gallus is 1 in 240.</li>
+        <li>Every ten times rarer digs 10 m deeper: 1 in 10 is 10 m, 1 in 1,000 is 30 m, 1 in 100,000 is 50 m.</li>
+        <li>Your five answers add up, and Digby digs back through Earth's history: the Holocene, the Pleistocene, the Cretaceous, the Jurassic, the Permian and, deepest of all, the Cambrian.</li>
         <li>Want more? Practice rounds use random prompts, as many as you like, and don't count toward your stats.</li>
       </ul>
       <form method="dialog"><button class="primary">Got it</button></form>
     </dialog>
 
     <dialog id="stats" class="sheet">
-      <h2>Your digs</h2>
+      <h2 tabindex="-1" autofocus>Your digs</h2>
       <div id="stats-grid" class="stats-grid"></div>
       <form method="dialog"><button class="primary">Close</button></form>
     </dialog>
