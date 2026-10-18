@@ -8,6 +8,7 @@
 // few, and a year within a few years if it's recent, more if it's centuries ago.
 
 export const QUESTIONS_PER_DAY = 10;
+export const MAX_YEARS = 5; // "In what year ..." questions in a day, at most
 export const MAX_POINTS = 10;
 export const LAUNCH = "2026-10-17"; // Ten Numbers #1
 export const REFERENCE_YEAR = 2026; // "how long ago", for year questions
@@ -28,23 +29,53 @@ export const UNITS = {
 const SCALES = { k: 1e3, thousand: 1e3, m: 1e6, mn: 1e6, mil: 1e6, million: 1e6, b: 1e9, bn: 1e9, billion: 1e9, t: 1e12, tn: 1e12, trillion: 1e12, quadrillion: 1e15 };
 
 /**
- * The number a player typed, or null. Understands "15,000,000", "15 million",
- * "1.5bn", "15k", "2e6", and for years "500 BC" and "AD 1066". A trailing "m"
- * means meters when the answer is in meters, and millions otherwise.
+ * The sizes offered as buttons under the box, by unit, for phones whose
+ * number pads have no letters: type 2.5, pick "million". The same for every
+ * question in a unit, so they don't hint at the answer.
  */
-export function parseGuess(text, unit = "count") {
-  const s = String(text ?? "")
+export const SIZES = {
+  people: ["thousand", "million", "billion"],
+  count: ["thousand", "million", "billion", "trillion", "quadrillion"],
+  km2: ["thousand", "million"],
+};
+export const sizeOf = (word) => SCALES[word];
+
+/** A guess's text, lowercased, without thousands separators or a leading "about". */
+function tidy(text) {
+  return String(text ?? "")
     .trim()
     .toLowerCase()
+    .replace(/^(about|around|roughly|approximately|approx\.?|circa|ca\.|c\.|~|≈)\s*/, "")
     .replace(/(\d)[,\s](?=\d{3}(\D|$))/g, "$1") // thousands separators
     .replace(/(\d)[,\s](?=\d{3}(\D|$))/g, "$1");
+}
+
+const QUANTITY = /^(-?\d*\.?\d+(?:e[+-]?\d+)?)\s*([a-z]+)?\b.*$/;
+
+/** Whether a typed quantity names its own size ("2.5 million", "15k"), so a size button shouldn't apply. */
+export function hasSize(text, unit = "count") {
+  const word = tidy(text).match(QUANTITY)?.[2];
+  return Boolean(word && SCALES[word] && !(word === "m" && unit === "m"));
+}
+
+/** Whether a typed year says its era ("500 BC", "AD 80", "-500"), so the BC button shouldn't apply. */
+export const hasEra = (text) => /\b(bc|bce|b\.c\.|ad|ce|a\.d\.)(\s|$)|^\s*-/i.test(tidy(text));
+
+/**
+ * The number a player typed, or null. Understands "15,000,000", "15 million",
+ * "1.5bn", "15k", "2e6", "about 300", and for years "500 BC", "AD 1066" and
+ * "c. 1500". A trailing "m" means meters when the answer is in meters, and
+ * millions otherwise.
+ */
+export function parseGuess(text, unit = "count") {
+  const s = tidy(text);
   if (unit === "year") {
     const y = s.match(/^(?:ad\s*)?(-?\d{1,4})\s*(bc|bce|b\.c\.|ad|ce|a\.d\.)?$/);
     if (!y) return null;
     const year = Number(y[1]);
     return y[2] && y[2].startsWith("b") ? -Math.abs(year) : year;
   }
-  const q = s.match(/^(-?\d*\.?\d+(?:e[+-]?\d+)?)\s*([a-z]+)?\b.*$/);
+  const q = s.match(QUANTITY);
   if (!q) return null;
   let value = Number(q[1]);
   const word = q[2];
@@ -61,9 +92,11 @@ export function parseGuess(text, unit = "count") {
  * together get less room, so a guess at the typical value doesn't score well
  * on its own: US cities (most have 200,000 to a million people) and states.
  * Death tolls and the human body (206 bones) are better known, so they get 3.
+ * How old someone was when they died gets 1.5 (most lives run 50 to 90, so a
+ * guess of 70 shouldn't score on its own); an animal's record lifespan gets 2.
  */
 const FACTORS = { minutes: 1.4, years: 1.6, m: 2, km: 2, km2: 4, people: 4, count: 4 };
-const KIND_FACTORS = { "city-people": 2.5, "state-people": 2.5, deaths: 3, body: 3 };
+const KIND_FACTORS = { "city-people": 2.5, "state-people": 2.5, deaths: 3, body: 3, age: 1.5, lifespan: 2 };
 export const factorFor = (q) => KIND_FACTORS[q.kind] ?? FACTORS[q.unit] ?? 4;
 
 /** How much room a year has: 10 years for something recent, a year more for every 8 years ago (31 for 1856, 60 for 1626), and at most 80, even for ancient history. */

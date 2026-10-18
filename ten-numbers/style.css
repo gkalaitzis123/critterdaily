@@ -227,6 +227,12 @@ main {
   color: var(--muted);
 }
 
+.note.reading {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
 .feedback {
   min-height: 22px;
   margin: -6px 0 0;
@@ -487,11 +493,19 @@ main {
   pointer-events: none;
 }
 
+.helpers {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 14px;
+  margin-top: -6px;
+}
+
 .unit-toggle {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   gap: 4px;
-  margin-top: -6px;
 }
 
 .unit-toggle button {

@@ -290,7 +290,7 @@ main {
 .combo input {
   width: 100%;
   min-height: 54px;
-  padding: 10px 16px;
+  padding: 10px 48px 10px 16px;
   border: 2px solid var(--ink);
   border-radius: 16px;
   background: var(--card);
@@ -302,12 +302,47 @@ main {
   box-shadow: 0 0 0 3px var(--sun);
 }
 
+/* The arrow in the box that opens the whole list. */
+.browse {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--ink-2);
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.browse svg {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.15s;
+}
+
+.browse.open svg {
+  transform: rotate(180deg);
+}
+
+.browse:hover {
+  background: var(--sky);
+}
+
 .suggestions {
   position: absolute;
   z-index: 5;
   top: calc(100% + 6px);
   left: 0;
   right: 0;
+  max-height: min(380px, 46vh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   margin: 0;
   padding: 6px;
   list-style: none;
@@ -327,8 +362,26 @@ main {
 }
 
 .suggestions li[aria-selected="true"],
-.suggestions li:hover {
+.suggestions li[role="option"]:hover {
   background: var(--sky);
+}
+
+.suggestions .list-head {
+  position: sticky;
+  top: -6px;
+  z-index: 1;
+  margin: -6px -6px 4px;
+  padding: 10px 18px 8px;
+  border-radius: 16px 16px 0 0;
+  background: var(--card);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  cursor: default;
+}
+
+.suggestions li.guessed {
+  opacity: 0.55;
 }
 
 .suggestions .also {

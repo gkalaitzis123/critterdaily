@@ -1,7 +1,7 @@
 // Deep Cut in the browser: today's five prompts, the timer, saving progress
 // on this device, Digby's dig back through Earth's history, the results and
 // the stats. The rules live in game.js.
-import { PERIODS, PROMPTS_PER_DAY, SECONDS_PER_PROMPT, compact, dayNumber, match, periodFor, promptsFor, shareText, stats } from "./game.js";
+import { PERIODS, PROMPTS_PER_DAY, SECONDS_PER_PROMPT, compact, dayNumber, match, nearest, normalize, periodFor, promptsFor, shareText, stats } from "./game.js";
 
 const $ = (sel) => document.querySelector(sel);
 const STORE = "deepcut-v1";
@@ -13,6 +13,7 @@ let categories = new Map(); // id -> the category, loading (as needed)
 let mode = "daily"; // or "practice"
 let run; // { day?, ids, results: [{ id, prompt, guess, answer, depth, oneIn, perDay }], index, startedAt }
 let timer = null;
+let offered = null; // after a near miss: { typed, answers } for "Did you mean ...?"
 // For now anyone can play unlimited practice rounds, which is handy for testing.
 // Later, practice can be the supporter unlock: set this to false to hide it.
 const PRACTICE_FOR_ALL = true;
@@ -279,9 +280,25 @@ function wire() {
     run = { day: today, ids: promptsFor(today, schedule), results: [], index: 0 };
     await showPrompt();
   });
+  const input = $("#guess");
+  // A near miss asks "Did you mean ...?": tap an answer, or press Enter again
+  // to take the first. Typing something else drops the question.
+  input.addEventListener("input", () => {
+    if (offered && normalize(input.value) !== offered.typed) {
+      offered = null;
+      $("#feedback").textContent = "";
+      $("#feedback").classList.remove("ask");
+    }
+  });
+  $("#feedback").addEventListener("pointerdown", (e) => e.target.closest(".fix") && e.preventDefault()); // keep the box focused
+  $("#feedback").addEventListener("click", (e) => {
+    const fix = e.target.closest(".fix");
+    if (fix && offered) take(offered.answers[Number(fix.dataset.i)]);
+  });
   $("#guess-form").addEventListener("submit", (e) => {
     e.preventDefault();
-    guess($("#guess").value);
+    if (offered && normalize(input.value) === offered.typed) take(offered.answers[0]);
+    else guess(input.value);
   });
   $("#give-up").addEventListener("click", () => finishPrompt(null));
   $("#next").addEventListener("click", next);
@@ -301,8 +318,10 @@ function wire() {
 
 async function showPrompt() {
   const c = await category(run.ids[run.index]);
+  offered = null;
   $("#progress").innerHTML = run.ids.map((_, i) => `<li class="${i < run.index ? "done" : i === run.index ? "now" : ""}"></li>`).join("");
   $("#prompt-text").textContent = c.prompt.replace(/^Name /, "");
+  $("#prompt-count").textContent = `Any of ${fmt(c.answers.length)} answers counts`;
   $("#feedback").textContent = "";
   $("#guess").value = "";
   $("#digby-status").innerHTML = digbyStatus(totalOf(run.results));
@@ -328,13 +347,31 @@ function tick() {
   timer = setInterval(update, 100);
 }
 
+/** Take the answer a near miss was offered. */
+function take(answer) {
+  const typed = $("#guess").value;
+  offered = null;
+  $("#feedback").textContent = "";
+  $("#feedback").classList.remove("ask");
+  finishPrompt(answer, typed);
+}
+
 async function guess(text) {
   if (!text.trim() || run.locked) return;
   const c = await category(run.ids[run.index]);
-  const found = match(text, c.answers);
+  const found = match(text, c.answers, c);
   if (!found) {
-    $("#feedback").textContent = `“${text.trim()}” isn't on our list. Keep digging.`;
+    // Close but not close enough to count on its own: ask.
+    const near = nearest(text, c.answers, c);
+    offered = near.length ? { typed: normalize(text), answers: near } : null;
+    const fixes = near.map((a, i) => `<button type="button" class="fix" data-i="${i}">${esc(a.name)}</button>`);
+    const list = fixes.length > 1 ? `${fixes.slice(0, -1).join(", ")} or ${fixes.at(-1)}` : fixes[0];
+    $("#feedback").innerHTML = near.length
+      ? `Did you mean ${list}?<span class="fix-hint">${near.length > 1 ? "Tap one, or press Enter for the first." : "Tap it, or press Enter."}</span>`
+      : `“${esc(text.trim())}” isn't on our list. Keep digging.`;
+    $("#feedback").classList.toggle("ask", near.length > 0);
     $("#feedback").classList.remove("ok");
+    if (near.length) return; // not wrong, just not sure: no shake, and the spelling stays to fix
     $("#guess-form").classList.remove("shake");
     void $("#guess-form").offsetWidth; // restart the animation
     $("#guess-form").classList.add("shake");

@@ -1,7 +1,7 @@
 // Ten Numbers in the browser: today's ten questions, guessing in metric or US
 // units, Nutmeg's acorns and jar, the results, sharing, stats and practice
 // rounds. The rules live in game.js.
-import { MAX_POINTS, QUESTIONS_PER_DAY, TIERS, UNITS, dayNumber, formatAmount, formatNumber, howClose, parseGuess, points, questionsFor, ranges, shareText, stats, tierFor, verdict } from "./game.js";
+import { MAX_POINTS, MAX_YEARS, QUESTIONS_PER_DAY, SIZES, TIERS, UNITS, dayNumber, formatAmount, formatNumber, hasEra, hasSize, howClose, parseGuess, points, questionsFor, ranges, shareText, sizeOf, stats, tierFor, verdict } from "./game.js";
 
 const $ = (sel) => document.querySelector(sel);
 const STORE = "tennumbers-v1";
@@ -18,6 +18,8 @@ let run; // { day?, ids, results: [{ id, guess, points }], index }
 const PRACTICE_FOR_ALL = true;
 let deck = []; // practice questions still to come, shuffled, so rounds don't repeat
 let units = "metric"; // or "us": how lengths and areas are typed and shown
+let size = null; // a size picked under the box ("million"), if any
+let era = "AD"; // for years: BC makes a plain number a year before Christ
 
 function load() {
   try {
@@ -163,13 +165,13 @@ async function init() {
     return;
   }
   $("#day-label").textContent = `#${today} · ${new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}`;
-  const ids = questionsFor(today, schedule);
+  // A game already started keeps its questions, even if the schedule was rebuilt since.
   const saved = load().days?.[today];
-  const same = saved && saved.ids?.join() === ids.join(); // a saved game counts only for these questions
-  if (same && saved.done) {
+  const ids = saved?.ids?.length === QUESTIONS_PER_DAY && saved.ids.every((id) => questions.has(id)) ? saved.ids : null;
+  if (ids && saved.done) {
     run = { day: today, ids, results: saved.results, index: QUESTIONS_PER_DAY };
     showResults();
-  } else if (same && saved.results?.length) {
+  } else if (ids && saved.results?.length) {
     run = { day: today, ids, results: saved.results, index: saved.results.length };
     showQuestion();
   } else {
@@ -211,6 +213,23 @@ function wire() {
   $("#stats-button").addEventListener("click", showStats);
   $("#unit-metric").addEventListener("click", () => setUnits("metric"));
   $("#unit-us").addEventListener("click", () => setUnits("us"));
+  $("#guess").addEventListener("input", showReading);
+  // The size and BC buttons keep the box focused, so a phone's keyboard stays up.
+  for (const id of ["#sizes", "#era"]) $(id).addEventListener("pointerdown", (e) => e.target.closest("button") && e.preventDefault());
+  $("#sizes").addEventListener("click", (e) => {
+    const button = e.target.closest("button");
+    if (!button) return;
+    size = size === button.dataset.size ? null : button.dataset.size;
+    for (const b of $("#sizes").children) b.setAttribute("aria-pressed", String(b.dataset.size === size));
+    showReading();
+  });
+  $("#era").addEventListener("click", (e) => {
+    const button = e.target.closest("button");
+    if (!button) return;
+    era = button.dataset.era;
+    for (const b of $("#era").children) b.setAttribute("aria-pressed", String(b.dataset.era === era));
+    showReading();
+  });
   document.addEventListener("keydown", (e) => {
     if (e.key === "Enter" && !$("#reveal").hidden && document.activeElement?.tagName !== "BUTTON") next();
   });
@@ -221,7 +240,51 @@ function setUnits(choice) {
   save((s) => (s.units = choice));
   const q = current();
   if (q) labelUnits(q);
+  showReading();
   $("#guess").focus();
+}
+
+/** The buttons under the box for this question: units, sizes or the era. */
+function showHelpers(q) {
+  size = null;
+  era = "AD";
+  const sizes = SIZES[q.unit] ?? [];
+  $("#sizes").innerHTML = sizes.map((w) => `<button type="button" data-size="${w}" aria-pressed="false">${w}</button>`).join("");
+  $("#sizes").hidden = !sizes.length;
+  $("#era").hidden = q.unit !== "year";
+  for (const b of $("#era").children) b.setAttribute("aria-pressed", String(b.dataset.era === era));
+  $(".helpers").hidden = $("#unit-toggle").hidden && $("#sizes").hidden && $("#era").hidden;
+}
+
+/** What the box says, as a number in the answer's own unit (meters even if typed in feet), or null. */
+function reading() {
+  const q = current();
+  const typed = $("#guess").value;
+  if (!q || !typed.trim()) return null;
+  if (q.unit === "year") {
+    const year = parseGuess(typed, "year");
+    return year !== null && era === "BC" && !hasEra(typed) ? -Math.abs(year) : year;
+  }
+  const alt = units === "us" && hasAlt(q);
+  const unit = alt ? "count" : q.unit;
+  let value = parseGuess(typed, unit);
+  if (value === null) return null;
+  if (size && !hasSize(typed, unit)) value *= sizeOf(size);
+  return alt ? value / UNITS[q.unit].alt.factor : value;
+}
+
+const hintFor = (q) =>
+  q.unit === "year" ? "Type a year, like 1969. Before Christ? Pick BC." : SIZES[q.unit] ? "Type it however you like: 15,000, 15k, 2.5 million. Or type 2.5 and pick million." : "Type a number.";
+
+/** Under the box: how to type it, or what's typed so far, read back ("That's 2.5 million people"). */
+function showReading() {
+  const q = current();
+  if (!q) return;
+  const typed = $("#guess").value.trim();
+  const value = reading();
+  const readable = value !== null && (q.unit === "year" || value > 0);
+  $("#unit-note").classList.toggle("reading", Boolean(typed && readable));
+  $("#unit-note").textContent = !typed ? hintFor(q) : readable ? `That's ${show(value, q)}` : "That isn't a number we can read yet.";
 }
 
 const current = () => (run && run.index < run.ids.length ? questions.get(run.ids[run.index]) : null);
@@ -252,9 +315,10 @@ function showQuestion() {
   $("#running-total").textContent = total;
   $("#question-topic").textContent = `${q.topic} · ${run.index + 1} of ${run.ids.length}`;
   $("#question-text").textContent = q.text;
-  $("#unit-note").textContent = q.unit === "year" ? "Type a year, like 1969 or 500 BC." : "Type it however you like: 15,000 or 15k, 2.5 million, 1.4bn.";
   labelUnits(q);
+  showHelpers(q);
   $("#guess").value = "";
+  showReading();
   $("#guess").inputMode = q.unit === "year" ? "numeric" : "decimal";
   $("#feedback").textContent = "";
   run.locked = false;
@@ -266,8 +330,7 @@ function submitGuess() {
   const q = current();
   if (!q || run.locked) return;
   const typed = $("#guess").value;
-  const alt = units === "us" && hasAlt(q);
-  const value = parseGuess(typed, alt ? "count" : q.unit);
+  const value = reading();
   if (value === null || (q.unit !== "year" && value <= 0)) {
     $("#feedback").textContent = typed.trim() ? `“${typed.trim()}” isn't a number we can read. Try 1500, 1.5k or 2.5 million.` : "Type a number first.";
     $("#guess-form").classList.remove("shake");
@@ -275,7 +338,7 @@ function submitGuess() {
     $("#guess-form").classList.add("shake");
     return;
   }
-  finishQuestion(alt ? value / UNITS[q.unit].alt.factor : value);
+  finishQuestion(value);
 }
 
 function finishQuestion(guess) {
@@ -410,15 +473,34 @@ function showStats() {
 
 function startPractice() {
   mode = "practice";
-  if (deck.length < QUESTIONS_PER_DAY) {
+  // Mixed like a day: ten kinds, at most five of them years. The deck is
+  // shuffled once and dealt from, so rounds don't repeat questions.
+  const pick = () => {
+    const ids = [];
+    const kinds = new Set();
+    let years = 0;
+    for (const id of deck) {
+      const q = questions.get(id);
+      if (kinds.has(q.kind) || (q.unit === "year" && years >= MAX_YEARS)) continue;
+      ids.push(id);
+      kinds.add(q.kind);
+      if (q.unit === "year") years++;
+      if (ids.length === QUESTIONS_PER_DAY) break;
+    }
+    return ids.length === QUESTIONS_PER_DAY ? ids : null;
+  };
+  let ids = pick();
+  if (!ids) {
     const fresh = [...questions.keys()].filter((id) => !deck.includes(id));
     for (let i = fresh.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [fresh[i], fresh[j]] = [fresh[j], fresh[i]];
     }
     deck = [...deck, ...fresh];
+    ids = pick();
   }
-  run = { ids: deck.splice(0, QUESTIONS_PER_DAY), results: [], index: 0 };
+  deck = deck.filter((id) => !ids.includes(id));
+  run = { ids, results: [], index: 0 };
   $("#day-label").textContent = "Practice round · doesn't count";
   showQuestion();
 }

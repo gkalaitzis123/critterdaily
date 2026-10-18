@@ -51,8 +51,11 @@
 
         <form id="guess-form" class="guess" autocomplete="off">
           <div class="combo">
-            <input id="guess" type="text" spellcheck="false" placeholder="Type a language" aria-label="Type a language" role="combobox" aria-expanded="false" aria-controls="suggestions" aria-autocomplete="list" />
-            <ul id="suggestions" class="suggestions" role="listbox" hidden></ul>
+            <input id="guess" type="text" spellcheck="false" placeholder="Type a language" aria-label="Type or pick a language" role="combobox" aria-expanded="false" aria-controls="suggestions" aria-autocomplete="list" />
+            <button id="browse" class="browse" type="button" tabindex="-1" aria-label="Show all languages" aria-controls="suggestions">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            </button>
+            <ul id="suggestions" class="suggestions" role="listbox" aria-label="Languages" hidden></ul>
           </div>
           <button class="primary" type="submit">Guess</button>
         </form>
@@ -103,7 +106,7 @@
       </div>
       <ul>
         <li>Everyone gets the same mystery language each day. It's waiting in an egg at the top of the family tree.</li>
-        <li>Guess any language. Pip hops to the deepest branch it shares with the mystery: guess Spanish when it's Portuguese, and you learn they're both <em>West Iberian</em>.</li>
+        <li>Guess any language: type it, or tap the box to scroll through the 600 best known. Pip hops to the deepest branch it shares with the mystery: guess Spanish when it's Portuguese, and you learn they're both <em>West Iberian</em>.</li>
         <li>Each guess also shows how far away the mystery is spoken, and in which direction, even when they aren't related.</li>
         <li>The closer you get, the more the egg cracks. Type a branch's name, like <em>Bantu</em>, to see the languages in it.</li>
         <li>After 5, 10 and 15 guesses you get a hint. You have 20 guesses in all: the fewer you need, the better your feather.</li>

@@ -24,6 +24,7 @@ let mystery;
 let results = []; // { lang, found, shared, closeness, branch, where }
 let finished = null; // null, "solved" or "lost"
 let active = -1; // highlighted suggestion
+let browse = []; // the languages to scroll through, A to Z
 let schedule;
 let mode = "daily"; // or "practice"
 // For now anyone can practice with random languages as often as they like,
@@ -136,6 +137,11 @@ async function init() {
     nodes = data.nodes;
     languages = data.languages;
     byId = new Map(languages.map((l) => [l.id, l]));
+    // The list to scroll through: every language that can be a mystery, plus
+    // the rest of the 600 best known, A to Z (all 7,000 would bury them).
+    const known = new Set([...languages].sort((a, b) => (b.fame ?? 0) - (a.fame ?? 0)).slice(0, 600).map((l) => l.id));
+    for (const id of schedule) known.add(id);
+    browse = languages.filter((l) => known.has(l.id)).sort((a, b) => a.name.localeCompare(b.name));
     today = dayNumber();
     mystery = byId.get(mysteryFor(today, schedule));
   } catch {
@@ -158,19 +164,38 @@ async function init() {
 function wire() {
   const input = $("#guess");
   input.addEventListener("input", showSuggestions);
+  // Tapping the empty box, or the arrow in it, opens the whole list to scroll through.
+  input.addEventListener("pointerdown", () => {
+    if (!input.value.trim() && $("#suggestions").hidden) showSuggestions();
+  });
+  $("#browse").addEventListener("pointerdown", (e) => {
+    e.preventDefault(); // keep the box focused
+    if ($("#suggestions").hidden) {
+      input.focus();
+      showSuggestions();
+    } else hideSuggestions();
+  });
   input.addEventListener("keydown", (e) => {
-    const items = [...document.querySelectorAll("#suggestions li")];
+    const items = [...document.querySelectorAll("#suggestions [role=option]")];
     if (e.key === "ArrowDown" || e.key === "ArrowUp") {
       e.preventDefault();
+      if ($("#suggestions").hidden) return showSuggestions();
       if (!items.length) return;
       active = (active + (e.key === "ArrowDown" ? 1 : -1) + items.length) % items.length;
       items.forEach((li, i) => li.setAttribute("aria-selected", String(i === active)));
+      items[active].scrollIntoView({ block: "nearest" });
     } else if (e.key === "Escape") hideSuggestions();
   });
   input.addEventListener("blur", () => setTimeout(hideSuggestions, 150));
+  $("#suggestions").addEventListener("pointerdown", (e) => {
+    const li = e.target.closest("[role=option]");
+    if (!li) return;
+    e.preventDefault();
+    guess(byId.get(li.dataset.id));
+  });
   $("#guess-form").addEventListener("submit", (e) => {
     e.preventDefault();
-    const items = [...document.querySelectorAll("#suggestions li")];
+    const items = [...document.querySelectorAll("#suggestions [role=option]")];
     const picked = items[active]?.dataset.id ?? null;
     guess(picked ? byId.get(picked) : find(input.value, languages) ?? suggest(input.value, languages, 1, nodes)[0] ?? null, input.value);
   });
@@ -190,28 +215,49 @@ function wire() {
   $("#stats-button").addEventListener("click", showStats);
 }
 
+/**
+ * The list under the box: with nothing typed, the well-known languages A to
+ * Z to scroll through; while typing, every match (by name, other name or
+ * branch), the best known first.
+ */
 function showSuggestions() {
+  if (finished) return;
   const list = $("#suggestions");
-  const found = suggest($("#guess").value, languages, 8, nodes);
   const typed = normalize($("#guess").value);
-  active = found.length ? 0 : -1;
-  list.innerHTML = found
-    .map((l, i) => {
-      // Why it's suggested, when the name doesn't say: another name, or the branch it's in.
-      const other = l.aliases.find((a) => a.includes(typed));
-      const branch = branchMatch(typed, l, nodes);
-      const via = normalize(l.name).includes(typed) ? "" : other ? other.replace(/\b\w/g, (c) => c.toUpperCase()) : branch ? `in ${branch}` : "";
-      return `<li role="option" data-id="${l.id}" aria-selected="${i === 0}"><span>${esc(l.name)}</span>${via ? `<span class="also">${esc(via)}</span>` : ""}</li>`;
-    })
-    .join("");
-  for (const li of list.querySelectorAll("li")) li.addEventListener("mousedown", () => guess(byId.get(li.dataset.id)));
+  const found = typed ? suggest($("#guess").value, languages, 100, nodes) : browse;
+  const guessed = new Set(results.map((r) => r.lang.id));
+  active = typed && found.length ? 0 : -1;
+  const head = typed ? "" : `<li class="list-head" role="presentation">${browse.length} well-known languages, A to Z. Or type any of 7,000.</li>`;
+  list.innerHTML =
+    head +
+    found
+      .map((l, i) => {
+        // Why it's suggested, when the name doesn't say: another name, or the branch it's in.
+        const other = typed && l.aliases.find((a) => a.includes(typed));
+        const branch = typed && branchMatch(typed, l, nodes);
+        const via = !typed ? speakers(l) : normalize(l.name).includes(typed) ? "" : other ? other.replace(/\b\w/g, (c) => c.toUpperCase()) : branch ? `in ${branch}` : "";
+        const note = guessed.has(l.id) ? "guessed" : via;
+        return `<li role="option" data-id="${l.id}" aria-selected="${i === active}"${guessed.has(l.id) ? ' class="guessed"' : ""}><span>${esc(l.name)}</span>${note ? `<span class="also">${esc(note)}</span>` : ""}</li>`;
+      })
+      .join("");
   list.hidden = !found.length;
+  list.scrollTop = 0;
   $("#guess").setAttribute("aria-expanded", String(!!found.length));
+  $("#browse").classList.toggle("open", !list.hidden);
+}
+
+/** "12M speakers", short, for the list. */
+function speakers(l) {
+  if (!l.speakers) return "";
+  const n = l.speakers;
+  const short = n >= 1e9 ? `${+(n / 1e9).toPrecision(2)}B` : n >= 1e6 ? `${+(n / 1e6).toPrecision(n >= 1e7 ? 3 : 2)}M` : n >= 1e3 ? `${Math.round(n / 1e3)}k` : String(n);
+  return `${short} speakers`;
 }
 
 function hideSuggestions() {
   $("#suggestions").hidden = true;
   $("#guess").setAttribute("aria-expanded", "false");
+  $("#browse").classList.remove("open");
   active = -1;
 }
 

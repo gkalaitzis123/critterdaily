@@ -2,7 +2,7 @@
  {
   "id": "africa",
   "prompt": "Name a country in Africa",
-  "answers": 54
+  "answers": 55
  },
  {
   "id": "americas",
@@ -17,22 +17,22 @@
  {
   "id": "archaeological-sites",
   "prompt": "Name an archaeological site",
-  "answers": 253
+  "answers": 277
  },
  {
   "id": "asia",
   "prompt": "Name a country in Asia",
-  "answers": 48
+  "answers": 50
  },
  {
   "id": "astronauts",
   "prompt": "Name an astronaut",
-  "answers": 500
+  "answers": 550
  },
  {
   "id": "astronomers",
   "prompt": "Name an astronomer",
-  "answers": 400
+  "answers": 800
  },
  {
   "id": "australia-pms",
@@ -41,28 +41,28 @@
  },
  {
   "id": "birds",
-  "prompt": "Name a species of bird",
-  "answers": 600
+  "prompt": "Name a bird",
+  "answers": 1500
  },
  {
   "id": "boats",
   "prompt": "Name a type of boat",
-  "answers": 300
+  "answers": 400
  },
  {
   "id": "bones",
   "prompt": "Name a bone in the human body",
-  "answers": 48
+  "answers": 66
  },
  {
   "id": "british-monarchs",
   "prompt": "Name a king or queen of England or Britain",
-  "answers": 55
+  "answers": 61
  },
  {
   "id": "byzantine-emperors",
   "prompt": "Name a Byzantine emperor",
-  "answers": 130
+  "answers": 115
  },
  {
   "id": "canada-pms",
@@ -77,37 +77,37 @@
  {
   "id": "capitals",
   "prompt": "Name a capital city",
-  "answers": 203
+  "answers": 207
  },
  {
   "id": "castles",
   "prompt": "Name a castle",
-  "answers": 122
+  "answers": 149
  },
  {
   "id": "cat-breeds",
   "prompt": "Name a cat breed",
-  "answers": 99
+  "answers": 97
  },
  {
   "id": "chemists",
   "prompt": "Name a chemist",
-  "answers": 400
+  "answers": 758
  },
  {
   "id": "chinese-dynasties",
   "prompt": "Name a Chinese dynasty",
-  "answers": 30
+  "answers": 40
  },
  {
   "id": "civil-war-battles",
   "prompt": "Name a battle of the American Civil War",
-  "answers": 290
+  "answers": 291
  },
  {
   "id": "clouds",
   "prompt": "Name a type of cloud",
-  "answers": 12
+  "answers": 26
  },
  {
   "id": "cognitive-biases",
@@ -127,12 +127,12 @@
  {
   "id": "constellations",
   "prompt": "Name a constellation",
-  "answers": 88
+  "answers": 89
  },
  {
   "id": "countries",
   "prompt": "Name a country",
-  "answers": 197
+  "answers": 201
  },
  {
   "id": "currencies",
@@ -147,12 +147,12 @@
  {
   "id": "declaration-signers",
   "prompt": "Name a signer of the Declaration of Independence",
-  "answers": 55
+  "answers": 56
  },
  {
   "id": "deserts",
   "prompt": "Name a desert",
-  "answers": 153
+  "answers": 159
  },
  {
   "id": "dickens",
@@ -167,17 +167,17 @@
  {
   "id": "diseases",
   "prompt": "Name an infectious disease",
-  "answers": 177
+  "answers": 179
  },
  {
   "id": "dog-breeds",
   "prompt": "Name a dog breed",
-  "answers": 613
+  "answers": 636
  },
  {
   "id": "egyptian-gods",
   "prompt": "Name an Egyptian god or goddess",
-  "answers": 155
+  "answers": 158
  },
  {
   "id": "elements",
@@ -187,17 +187,17 @@
  {
   "id": "empires",
   "prompt": "Name an empire",
-  "answers": 103
+  "answers": 112
  },
  {
   "id": "europe",
   "prompt": "Name a country in Europe",
-  "answers": 49
+  "answers": 55
  },
  {
   "id": "explorers",
   "prompt": "Name an explorer",
-  "answers": 300
+  "answers": 492
  },
  {
   "id": "extinct-animals",
@@ -217,47 +217,47 @@
  {
   "id": "gemstones",
   "prompt": "Name a gemstone",
-  "answers": 102
+  "answers": 106
  },
  {
   "id": "geological-time",
   "prompt": "Name a period, era or epoch of Earth's history",
-  "answers": 63
+  "answers": 70
  },
  {
   "id": "greek-gods",
   "prompt": "Name a Greek god or goddess",
-  "answers": 201
+  "answers": 211
  },
  {
   "id": "greek-letters",
   "prompt": "Name a letter of the Greek alphabet",
-  "answers": 24
+  "answers": 26
  },
  {
   "id": "hindu-gods",
   "prompt": "Name a Hindu god or goddess",
-  "answers": 136
+  "answers": 142
  },
  {
   "id": "holy-roman-emperors",
   "prompt": "Name a Holy Roman Emperor",
-  "answers": 40
+  "answers": 43
  },
  {
   "id": "hormones",
   "prompt": "Name a hormone",
-  "answers": 28
+  "answers": 57
  },
  {
   "id": "horse-breeds",
   "prompt": "Name a horse breed",
-  "answers": 460
+  "answers": 473
  },
  {
   "id": "india-states",
   "prompt": "Name a state of India",
-  "answers": 28
+  "answers": 30
  },
  {
   "id": "instruments",
@@ -267,7 +267,7 @@
  {
   "id": "inventors",
   "prompt": "Name an inventor",
-  "answers": 333
+  "answers": 350
  },
  {
   "id": "japan-prefectures",
@@ -277,17 +277,17 @@
  {
   "id": "japanese-emperors",
   "prompt": "Name an emperor of Japan",
-  "answers": 110
+  "answers": 113
  },
  {
   "id": "mathematicians",
   "prompt": "Name a mathematician",
-  "answers": 500
+  "answers": 800
  },
  {
   "id": "mexico-states",
   "prompt": "Name a Mexican state",
-  "answers": 31
+  "answers": 32
  },
  {
   "id": "minerals",
@@ -297,12 +297,12 @@
  {
   "id": "moons",
   "prompt": "Name a moon in our Solar System",
-  "answers": 181
+  "answers": 185
  },
  {
   "id": "muscles",
   "prompt": "Name a muscle in the human body",
-  "answers": 211
+  "answers": 219
  },
  {
   "id": "mythical-creatures",
@@ -312,17 +312,17 @@
  {
   "id": "napoleonic-battles",
   "prompt": "Name a battle of the Napoleonic Wars",
-  "answers": 222
+  "answers": 231
  },
  {
   "id": "national-parks",
   "prompt": "Name a US national park",
-  "answers": 62
+  "answers": 63
  },
  {
   "id": "naturalists",
   "prompt": "Name a biologist or naturalist",
-  "answers": 400
+  "answers": 800
  },
  {
   "id": "nobel-chemistry",
@@ -352,12 +352,12 @@
  {
   "id": "norse-gods",
   "prompt": "Name a Norse god or goddess",
-  "answers": 59
+  "answers": 64
  },
  {
   "id": "oceania",
   "prompt": "Name a country in Oceania",
-  "answers": 14
+  "answers": 16
  },
  {
   "id": "operas",
@@ -367,7 +367,7 @@
  {
   "id": "ottoman-sultans",
   "prompt": "Name a sultan of the Ottoman Empire",
-  "answers": 39
+  "answers": 36
  },
  {
   "id": "painters",
@@ -377,12 +377,12 @@
  {
   "id": "pandemics",
   "prompt": "Name an epidemic or pandemic",
-  "answers": 43
+  "answers": 42
  },
  {
   "id": "particles",
   "prompt": "Name a subatomic particle",
-  "answers": 102
+  "answers": 94
  },
  {
   "id": "pharaohs",
@@ -397,12 +397,12 @@
  {
   "id": "phobias",
   "prompt": "Name a phobia",
-  "answers": 178
+  "answers": 165
  },
  {
   "id": "physicists",
   "prompt": "Name a physicist",
-  "answers": 400
+  "answers": 800
  },
  {
   "id": "popes",
@@ -417,52 +417,52 @@
  {
   "id": "punctuation",
   "prompt": "Name a punctuation mark",
-  "answers": 29
+  "answers": 33
  },
  {
   "id": "revolutions",
   "prompt": "Name a revolution",
-  "answers": 93
+  "answers": 109
  },
  {
   "id": "rivers",
   "prompt": "Name a river over 1,000 km long",
-  "answers": 235
+  "answers": 238
  },
  {
   "id": "roman-emperors",
   "prompt": "Name a Roman emperor",
-  "answers": 103
+  "answers": 134
  },
  {
   "id": "roman-gods",
   "prompt": "Name a Roman god or goddess",
-  "answers": 199
+  "answers": 202
  },
  {
   "id": "seas",
   "prompt": "Name a sea",
-  "answers": 111
+  "answers": 124
  },
  {
   "id": "secretaries-of-state",
   "prompt": "Name a US Secretary of State",
-  "answers": 103
+  "answers": 71
  },
  {
   "id": "shakespeare",
   "prompt": "Name a play by Shakespeare",
-  "answers": 40
+  "answers": 42
  },
  {
   "id": "sharks",
   "prompt": "Name a shark",
-  "answers": 531
+  "answers": 569
  },
  {
   "id": "ships",
   "prompt": "Name a famous ship",
-  "answers": 111
+  "answers": 360
  },
  {
   "id": "snakes",
@@ -472,7 +472,7 @@
  {
   "id": "space-probes",
   "prompt": "Name a space probe",
-  "answers": 157
+  "answers": 193
  },
  {
   "id": "spaceflights",
@@ -482,7 +482,7 @@
  {
   "id": "stars",
   "prompt": "Name a star other than the Sun",
-  "answers": 41
+  "answers": 83
  },
  {
   "id": "state-capitals",
@@ -492,22 +492,22 @@
  {
   "id": "supreme-court-cases",
   "prompt": "Name a US Supreme Court case",
-  "answers": 255
+  "answers": 291
  },
  {
   "id": "supreme-court",
   "prompt": "Name a US Supreme Court justice",
-  "answers": 115
+  "answers": 116
  },
  {
   "id": "treaties",
   "prompt": "Name a treaty",
-  "answers": 300
+  "answers": 450
  },
  {
   "id": "tsars",
   "prompt": "Name a Russian tsar or empress",
-  "answers": 26
+  "answers": 27
  },
  {
   "id": "uk-prime-ministers",
@@ -517,12 +517,12 @@
  {
   "id": "units",
   "prompt": "Name a unit of measurement",
-  "answers": 300
+  "answers": 500
  },
  {
   "id": "us-cities",
   "prompt": "Name a US city with over 200,000 people",
-  "answers": 120
+  "answers": 121
  },
  {
   "id": "us-presidents",
@@ -547,17 +547,17 @@
  {
   "id": "wars",
   "prompt": "Name a war",
-  "answers": 300
+  "answers": 400
  },
  {
   "id": "whales",
   "prompt": "Name a whale, dolphin or porpoise",
-  "answers": 133
+  "answers": 150
  },
  {
   "id": "wild-cats",
-  "prompt": "Name a species of wild cat",
-  "answers": 74
+  "prompt": "Name a wild cat",
+  "answers": 76
  },
  {
   "id": "writing-systems",
@@ -567,7 +567,7 @@
  {
   "id": "ww1-battles",
   "prompt": "Name a battle of World War I",
-  "answers": 197
+  "answers": 211
  },
  {
   "id": "ww2-battles",
