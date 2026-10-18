@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The pages search engines should know about (robots.txt points here).
+     A new game gets a line. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://critterdaily.com/</loc></url>
+  <url><loc>https://critterdaily.com/deep-cut/</loc></url>
+  <url><loc>https://critterdaily.com/mother-tongue/</loc></url>
+  <url><loc>https://critterdaily.com/ten-numbers/</loc></url>
+  <url><loc>https://critterdaily.com/privacy</loc></url>
+</urlset>

@@ -1,0 +1,5 @@
+# Critter Daily: search engines are welcome everywhere but the scores API.
+User-agent: *
+Disallow: /api/
+
+Sitemap: https://critterdaily.com/sitemap.xml
