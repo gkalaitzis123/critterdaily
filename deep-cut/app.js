@@ -477,7 +477,10 @@ async function next() {
     const total = totalOf(run.results);
     track("finish", { game: "deep-cut", mode, ...(mode === "daily" ? { day: run.day } : {}), depth: total, period: periodFor(total).name, answered: run.results.filter((r) => r.answer).length });
     await showResults();
-    if (mode === "daily") everyoneToday(run.day, total, { send: true });
+    if (mode === "daily") {
+      window.critterNav?.refresh(); // tick it in the bar
+      everyoneToday(run.day, total, { send: true });
+    }
     return;
   }
   await showPrompt();

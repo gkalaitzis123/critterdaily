@@ -409,7 +409,10 @@ function next() {
     const total = totalOf(run.results);
     track("finish", { game: "ten-numbers", mode, ...(mode === "daily" ? { day: run.day } : {}), acorns: total, tier: tierFor(total).name });
     showResults();
-    if (mode === "daily") everyoneToday(run.day, total, { send: true });
+    if (mode === "daily") {
+      window.critterNav?.refresh(); // tick it in the bar
+      everyoneToday(run.day, total, { send: true });
+    }
     return;
   }
   showQuestion();

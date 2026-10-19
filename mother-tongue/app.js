@@ -412,7 +412,10 @@ function finish(outcome) {
     });
   render();
   showDone();
-  if (mode === "daily") everyoneToday(true);
+  if (mode === "daily") {
+    window.critterNav?.refresh(); // tick it in the bar
+    everyoneToday(true);
+  }
 }
 
 /**
