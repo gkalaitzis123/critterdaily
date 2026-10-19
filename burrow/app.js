@@ -24,7 +24,7 @@ const STORE = "burrow-v1";
 const screens = ["loading", "intro", "play", "results"];
 const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const SOIL = ["#b07a4f", "#8f5e3b", "#7a6a5d", "#4e4378", "#2f6f7e"]; // the tiers' layers, top to bottom
-const SCALE = 220; // meters the burrow drawing shows
+const SCALE = 180; // meters the burrow drawing shows
 
 let puzzles;
 let practicePuzzles = null;
@@ -280,7 +280,7 @@ function drawFound(latest = null) {
   const total = totalOf(found, puzzle);
   $("#depth").textContent = total;
   $("#count").textContent = found.length;
-  // The burrow: Clover goes down with the meters, on a 220 m scale.
+  // The burrow: Clover goes down with the meters, on a 180 m scale.
   const gauge = $("#gauge");
   const down = Math.min(1, total / SCALE) * (gauge.clientHeight - 30) + 26;
   gauge.querySelector(".tunnel").style.height = `${down - 8}px`;

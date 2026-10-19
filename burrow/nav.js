@@ -12,7 +12,8 @@
   const GAMES = [
     { id: "deep-cut", name: "Deep Cut", key: "deepcut-v1", done: (h) => `${h} m deep` },
     { id: "mother-tongue", name: "Mother Tongue", key: "mothertongue-v1", done: (h) => (h.solved ? `hatched in ${h.guesses}` : "not found") },
-    { id: "ten-numbers", name: "Ten Numbers", key: "tennumbers-v1", done: (h) => `${h} acorns` },
+    // Ten Numbers days saved before its #5 were out of 100, and count ten times over (until the game converts them and marks `outOf`).
+    { id: "ten-numbers", name: "Ten Numbers", key: "tennumbers-v1", done: (h, saved) => `${saved.outOf === 1000 ? h : h * 10} points` },
     { id: "burrow", name: "Burrow", key: "burrow-v1", done: (h) => `${h} m deep`, late: 1 }, // its #1 was a day after the others
   ];
   const script = document.currentScript;
@@ -25,8 +26,9 @@
   /** How today's game went ("92 m deep"), or null if it hasn't been played. */
   const result = (game) => {
     try {
-      const h = JSON.parse(localStorage.getItem(game.key))?.history?.[today() - (game.late ?? 0)];
-      return h === undefined ? null : game.done(h);
+      const saved = JSON.parse(localStorage.getItem(game.key));
+      const h = saved?.history?.[today() - (game.late ?? 0)];
+      return h === undefined ? null : game.done(h, saved);
     } catch {
       return null;
     }

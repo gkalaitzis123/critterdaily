@@ -63,7 +63,7 @@ export function streakOf(counts, today) {
 
 function read(key) {
   try {
-    return JSON.parse(localStorage.getItem(key))?.history ?? {};
+    return JSON.parse(localStorage.getItem(key)) ?? {};
   } catch {
     return {};
   }
@@ -77,15 +77,17 @@ export function homeSummary(today = dayToday()) {
   const games = {
     "deep-cut": { key: "deepcut-v1", result: (h) => `${h} m`, counts: (h) => h !== undefined },
     "mother-tongue": { key: "mothertongue-v1", result: (h) => (h.solved ? `hatched in ${h.guesses}` : "not found"), counts: (h) => h?.solved },
-    "ten-numbers": { key: "tennumbers-v1", result: (h) => `${h} acorns`, counts: (h) => h !== undefined },
+    // Days saved before its #5 were out of 100, and count ten times over (until the game converts them and marks `outOf`).
+    "ten-numbers": { key: "tennumbers-v1", result: (h, saved) => `${saved.outOf === 1000 ? h : h * 10} points`, counts: (h) => h !== undefined },
     burrow: { key: "burrow-v1", result: (h) => `${h} m`, counts: (h) => h !== undefined, late: 1 }, // its #1 was a day after the others
   };
   const out = {};
   for (const [id, g] of Object.entries(games)) {
-    const history = read(g.key);
+    const saved = read(g.key);
+    const history = saved.history ?? {};
     if (!Object.keys(history).length) continue;
     const day = today - (g.late ?? 0); // the game's own day number
-    out[id] = { today: history[day] !== undefined ? g.result(history[day]) : null, streak: streakOf((d) => g.counts(history[d]), day) };
+    out[id] = { today: history[day] !== undefined ? g.result(history[day], saved) : null, streak: streakOf((d) => g.counts(history[d]), day) };
   }
   return out;
 }

@@ -11,7 +11,7 @@
 const DAY_ONE = Date.UTC(2026, 9, 17); // the first games' #1
 // The highest score each game can send (Burrow's: every word of its deepest
 // day), and how many days after DAY_ONE its #1 was.
-const GAMES = { "deep-cut": [250, 0], "mother-tongue": [20, 0], "ten-numbers": [100, 0], burrow: [1000, 1] };
+const GAMES = { "deep-cut": [250, 0], "mother-tongue": [20, 0], "ten-numbers": [1000, 0], burrow: [1000, 1] };
 
 let ready; // the tables and the secret, made on first use
 

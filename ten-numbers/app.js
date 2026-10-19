@@ -1,7 +1,7 @@
 // Ten Numbers in the browser: today's ten questions, guessing in metric or US
 // units, Nutmeg's acorns and jar, the results, sharing, stats and practice
 // rounds. The rules live in game.js.
-import { MAX_POINTS, MAX_YEARS, QUESTIONS_PER_DAY, SIZES, TIERS, UNITS, dayNumber, formatAmount, formatNumber, hasEra, hasSize, howClose, parseGuess, points, questionsFor, ranges, shareText, sizeOf, stats, tierFor, verdict } from "./game.js";
+import { MAX_POINTS, MAX_YEARS, QUESTIONS_PER_DAY, SIZES, SMOOTH_FROM, TIERS, UNITS, dayNumber, formatAmount, formatNumber, hasEra, hasSize, howClose, parseGuess, points, questionsFor, ranges, shareText, sizeOf, stats, tierFor, upgrade, verdict } from "./game.js";
 import { settingsButton } from "./settings.js";
 import { calendar, tierBars } from "./stats-view.js";
 import { averageOf, beatShare, count, howEveryoneDid, sendScore } from "./everyone.js";
@@ -39,7 +39,7 @@ let era = "AD"; // for years: BC makes a plain number a year before Christ
 
 function load() {
   try {
-    return JSON.parse(localStorage.getItem(STORE)) ?? {};
+    return upgrade(JSON.parse(localStorage.getItem(STORE)) ?? {}); // days from before #5 count ten times over
   } catch {
     return {};
   }
@@ -87,6 +87,14 @@ function nutmeg({ wave = false, cheer = false } = {}) {
 
 const ACORN = '<ellipse cx="10" cy="15" rx="7" ry="8" fill="#c98b5b"/><path d="M2 10Q10 1 18 10Q10 13 2 10Z" fill="#7a4e2e"/><rect x="9" y="1.5" width="2" height="5" rx="1" fill="#7a4e2e"/>';
 const acorn = (cls = "", style = "") => `<svg class="${cls}" viewBox="0 0 20 24" aria-hidden="true"${style ? ` style="${style}"` : ""}>${ACORN}</svg>`;
+const PALE = ACORN.replaceAll("#c98b5b", "#959595").replaceAll("#7a4e2e", "#555555"); // as .acorns .empty grays them
+/** An acorn filled from the left to `share` (0 to 1), the rest pale, like a star rating. */
+function acornPart(share, style) {
+  if (share >= 1) return acorn("won", style);
+  if (share <= 0) return acorn("empty");
+  // The acorn spans x 2 to 18; a nested <svg> clips what's past its width.
+  return `<svg class="won" viewBox="0 0 20 24" aria-hidden="true" style="${style}"><g opacity=".25">${PALE}</g><svg width="${(2 + 16 * share).toFixed(1)}" height="24">${ACORN}</svg></svg>`;
+}
 
 const GLASS = "M22 34Q22 26 30 26H70Q78 26 78 34V104Q78 116 66 116H34Q22 116 22 104Z";
 /** Nutmeg's jar, in a 0 0 100 124 box, filled to `share` (0 to 1). `id` keeps two jars on one page apart. */
@@ -105,7 +113,7 @@ const TIER_COLORS = ["#e8d6c2", "#d9b08a", "#c98b5b", "#a8743f", "#ffb938"];
 function tierList(current = -1, total = 0) {
   return TIERS.map((t, i) => {
     const range = i < TIERS.length - 1 ? `${t.min}–${TIERS[i + 1].min - 1}` : `${t.min}+`;
-    const right = i === current ? "you" : current >= 0 && i === current + 1 ? `${t.min - total} to go` : `${range} acorns`;
+    const right = i === current ? "you" : current >= 0 && i === current + 1 ? `${t.min - total} to go` : `${range} points`;
     return `<div class="tier${i === current ? " now" : ""}"><svg viewBox="0 0 20 24" aria-hidden="true" style="transform:scale(${0.75 + i * 0.07})"><ellipse cx="10" cy="15" rx="7" ry="8" fill="${TIER_COLORS[i]}"/><path d="M2 10Q10 2 18 10Q10 13 2 10Z" fill="#7a4e2e"/></svg><b>${t.name}</b><span>${right}</span></div>`;
   }).join("");
 }
@@ -126,9 +134,9 @@ const showOther = (value, q) => (hasAlt(q) ? `(${formatAmount(value, q.unit, { a
 function numberLine(q, guess) {
   const L = 22;
   const W = 296;
-  // The line runs out where guesses stop earning acorns; the green band earns 7 or more.
-  const { zero, good } = ranges(q);
-  const [lo, hi] = zero;
+  // The line runs out where guesses earn under 20 points; the green band earns 70 or more.
+  const { line, good } = ranges(q, run.day);
+  const [lo, hi] = line;
   const year = q.unit === "year";
   const pos = year ? (v) => L + (W * (v - lo)) / (hi - lo) : (v) => L + (W * (Math.log10(v) - Math.log10(lo))) / (Math.log10(hi) - Math.log10(lo));
   const band = good;
@@ -147,7 +155,7 @@ function numberLine(q, guess) {
   }
   return `<svg viewBox="0 0 340 132" role="img" aria-label="The answer is ${esc(show(q.answer, q))}${guess !== null ? `; you guessed ${esc(show(guess, q))}` : ""}.">
     <rect x="${b1.toFixed(1)}" y="64" width="${(b2 - b1).toFixed(1)}" height="28" rx="8" class="nl-band" fill="#dff3d9"/>
-    <text class="nl-label" x="${((b1 + b2) / 2).toFixed(1)}" y="101" text-anchor="middle">7+ acorns</text>
+    <text class="nl-label" x="${((b1 + b2) / 2).toFixed(1)}" y="101" text-anchor="middle">70+ points</text>
     <path class="nl-axis" d="M${L} 82H${L + W}" stroke="#2e2a3b" stroke-width="3" stroke-linecap="round"/>
     <text class="nl-label" x="${L}" y="101" text-anchor="start">${esc(ends[0])}</text>
     <text class="nl-label" x="${L + W}" y="101" text-anchor="end">${esc(ends[1])}</text>
@@ -326,7 +334,7 @@ function showQuestion() {
   $("#progress").innerHTML = run.ids
     .map((_, i) => {
       const r = run.results[i];
-      return `<li class="${i === run.index ? "now" : ""}">${r ? acorn("", r.points >= 5 ? "" : "opacity:.35;filter:grayscale(1)") : ""}</li>`;
+      return `<li class="${i === run.index ? "now" : ""}">${r ? acorn("", r.points >= 50 ? "" : "opacity:.35;filter:grayscale(1)") : ""}</li>`;
     })
     .join("");
   const total = totalOf(run.results);
@@ -364,7 +372,7 @@ function finishQuestion(guess) {
   const q = current();
   if (!q || run.locked) return;
   run.locked = true;
-  const result = { id: q.id, guess, points: guess === null ? 0 : points(guess, q) };
+  const result = { id: q.id, guess, points: guess === null ? 0 : points(guess, q, run.day) };
   run.results.push(result);
   run.index++;
   if (mode === "daily") {
@@ -385,7 +393,8 @@ function showReveal(q, r) {
   $("#number-line").innerHTML = numberLine(q, r.guess);
   $("#reveal-verdict").textContent = r.guess === null ? "Skipped" : verdict(r.points);
   $("#reveal-points").textContent = "0";
-  $("#acorns").innerHTML = Array.from({ length: MAX_POINTS }, (_, i) => (i < r.points ? acorn("won", `animation-delay:${0.7 + i * 0.08}s`) : acorn("empty"))).join("");
+  // An acorn for every 10 points, the last one filled as far as they go: 73 is seven and a third.
+  $("#acorns").innerHTML = Array.from({ length: MAX_POINTS / 10 }, (_, i) => acornPart(r.points / 10 - i, `animation-delay:${0.7 + i * 0.08}s`)).join("");
   $("#reveal-source").innerHTML = `${esc(q.subject)}: ${esc(show(q.answer, q))}${q.asOf ? ` (${q.asOf})` : ""}, from ${q.source ?? "Wikidata"}. <a href="https://en.wikipedia.org/wiki/${encodeURIComponent(q.wiki)}" target="_blank" rel="noopener">Read about it on Wikipedia</a>`;
   $("#next").textContent = run.index >= run.ids.length ? "See your acorns" : "Next question";
   showScreen("reveal");
@@ -407,7 +416,7 @@ function countUp(el, to, ms = 900, from = 0, delay = 0) {
 function next() {
   if (run.index >= run.ids.length) {
     const total = totalOf(run.results);
-    track("finish", { game: "ten-numbers", mode, ...(mode === "daily" ? { day: run.day } : {}), acorns: total, tier: tierFor(total).name });
+    track("finish", { game: "ten-numbers", mode, ...(mode === "daily" ? { day: run.day } : {}), points: total, tier: tierFor(total).name });
     showResults();
     if (mode === "daily") {
       window.critterNav?.refresh(); // tick it in the bar
@@ -422,16 +431,18 @@ function next() {
 // Results, sharing and stats
 
 /** How everyone did today, under the results; a day just finished is sent first. */
-async function everyoneToday(day, acorns, { send = false } = {}) {
+async function everyoneToday(day, total, { send = false } = {}) {
   const el = $("#everyone");
   el.hidden = true;
-  if (send) await sendScore("ten-numbers", day, acorns);
+  const per = day < SMOOTH_FROM ? 10 : 1; // days before #5 went to the server out of 100
+  if (send) await sendScore("ten-numbers", day, total / per);
   const all = await howEveryoneDid("ten-numbers", day);
   if (!all?.players || mode !== "daily") return;
+  const beat = beatShare(all, total / per);
   el.textContent =
     all.players === 1
       ? "You're the first to finish today's. Come back later to see how everyone did."
-      : `${count(all.players)} players have played today. ${beatShare(all, acorns) ? `You earned more acorns than ${beatShare(all, acorns)}% of them; the` : "The"} average is ${Math.round(averageOf(all).average)} acorns.`;
+      : `${count(all.players)} players have played today. ${beat ? `You scored more than ${beat}% of them; the` : "The"} average is ${Math.round(averageOf(all).average * per)} points.`;
   el.hidden = false;
 }
 
@@ -450,7 +461,7 @@ function showResults() {
     .map((r) => {
       const q = questions.get(r.id);
       const detail = r.guess === null ? `Skipped · answer ${show(q.answer, q)}` : `You: ${show(r.guess, q)} · answer ${show(q.answer, q)}`;
-      return `<li><span class="s-question">${esc(q.text)}</span><span class="s-detail">${esc(detail)}</span><span class="s-points${r.points >= 8 ? " great" : ""}">${r.points}</span></li>`;
+      return `<li><span class="s-question">${esc(q.text)}</span><span class="s-detail">${esc(detail)}</span><span class="s-points${r.points >= 70 ? " great" : ""}">${r.points}</span></li>`;
     })
     .join("");
   $("#share").hidden = !daily;
@@ -506,7 +517,7 @@ function showStats() {
     stat(s.best || "–", "Best day"),
     stat(s.streak, "Streak"),
     stat(s.bestStreak, "Best streak"),
-    stat(formatNumber(Object.values(load().history ?? {}).reduce((n, t) => n + t, 0)), "Acorns ever"),
+    stat(formatNumber(Object.values(load().history ?? {}).reduce((n, t) => n + t, 0)), "Points ever"),
   ].join("");
   // Each day's tier, and the last five weeks in those colors, from a pale nut to a dark one.
   const history = load().history ?? {};

@@ -2,14 +2,22 @@
 // Node and shared by the question builder and the game.
 //
 // Each day has ten questions whose answer is a number ("How many species of
-// beetle are known?", "In what year was the Battle of Hastings fought?"). A guess earns up to 10 acorns, fewer the further off
-// it is. How far off is too far depends on the question: a film's running
-// time has to be within minutes, a country's population within a factor of a
-// few, and a year within a few years if it's recent, more if it's centuries ago.
+// beetle are known?", "In what year was the Battle of Hastings fought?"). A guess earns up to 100 points, fewer the further off
+// it is, and an acorn for Nutmeg's jar for every 10. How far off is far
+// depends on the question: a film's running time has to be within minutes, a
+// country's population within a factor of a few, and a year within a few
+// years if it's recent, more if it's centuries ago.
 
 export const QUESTIONS_PER_DAY = 10;
 export const MAX_YEARS = 5; // "In what year ..." questions in a day, at most
-export const MAX_POINTS = 10;
+export const MAX_POINTS = 100; // a question's; a day is out of 1,000
+// Until Ten Numbers #4, a guess earned 0 to 10, falling evenly to nothing at
+// the edge of its room. From #5 it earns 0 to 100 on a smooth curve (see
+// `points`). Days before #5 are scored as they were, ten times over, so every
+// day is out of 1,000. (The change went live on #3's evening in the US, when
+// #4 had already begun in Asia, so #5 was the first day nobody had started.)
+export const SMOOTH_FROM = 5;
+const SHAPE = 1.25; // how the points fall away: 1 drops fastest near the answer, 2 is a bell
 export const LAUNCH = "2026-10-17"; // Ten Numbers #1
 export const REFERENCE_YEAR = 2026; // "how long ago", for year questions
 
@@ -92,9 +100,9 @@ export function parseGuess(text, unit = "count") {
 }
 
 /**
- * How much room a quantity has: the factor at which a guess earns nothing.
- * 1.4 for a film's running time (100 minutes for a 140-minute film earns
- * nothing), 1.6 for record lifespans (most are 15 to 40 years), 2 for lengths,
+ * How much room a quantity has: the factor off at which a guess earns 37
+ * points (before #5, nothing). 1.4 for a film's running time (100 minutes for
+ * a 140-minute film earns 37), 1.6 for record lifespans (most are 15 to 40 years), 2 for lengths,
  * and 4 for populations, areas and counts like how many species a group has,
  * which few people know to within double. Kinds whose answers sit close
  * together get less room, so a guess at the typical value doesn't score well
@@ -110,8 +118,8 @@ const KIND_FACTORS = { "city-people": 2.5, "state-people": 2.5, deaths: 3, body:
  * within a factor of 4, and getting the power of ten right is the feat. Each
  * power of ten past a billion (or, for tiny numbers, below a thousandth)
  * multiplies the room by 10^0.3, about 2. The 20 quadrillion ants get a
- * factor of about 600, so a guess ten times off earns 6 acorns; the 30
- * trillion cells in a body, about 65.
+ * factor of about 600, so a guess ten times off earns 76 points; the 30
+ * trillion cells in a body, about 65 (62 points).
  */
 const EVERYDAY = [-3, 9]; // powers of ten
 const GROWTH = 0.3; // more powers of ten of room, per power of ten outside EVERYDAY
@@ -125,24 +133,37 @@ export function factorFor(q) {
 /** How much room a year has: 10 years for something recent, a year more for every 8 years ago (31 for 1856, 60 for 1626), and at most 80, even for ancient history. */
 export const yearRoom = (answer) => Math.min(80, 10 + Math.max(0, REFERENCE_YEAR - answer) / 8);
 
-/** How far off a guess is, as a share of its room: 0 is spot on, 1 or more earns nothing. */
+/** How far off a guess is, as a share of its room: 0 is spot on, and 1 earns 37 points (before #5, 1 or more earned nothing). */
 export function offBy(guess, q) {
   if (q.unit === "year") return Math.abs(guess - q.answer) / yearRoom(q.answer);
   if (!(guess > 0)) return Infinity;
   return Math.abs(Math.log(guess / q.answer)) / Math.log(factorFor(q));
 }
 
-/** Acorns for a guess, 0 to 10, falling evenly to 0 at the edge of its room. `q` is { kind, unit, answer }. */
-export function points(guess, q) {
+/**
+ * Points for a guess, 0 to 100: 100 × e^-(offBy^1.25). They fall smoothly
+ * and never quite to nothing: a population 15% off earns 94, twice off 66,
+ * four times off 37 and ten times off 15. On days before #5 (`day`), a guess
+ * is scored as it was then: 0 to 10, falling evenly to nothing at the edge of
+ * its room, ten times over. `q` is { kind, unit, answer }; practice rounds
+ * have no day.
+ */
+export function points(guess, q, day) {
   if (guess === null || guess === undefined || !Number.isFinite(guess)) return 0;
-  return Math.round(MAX_POINTS * Math.max(0, 1 - offBy(guess, q)));
+  const off = offBy(guess, q);
+  if (day < SMOOTH_FROM) return 10 * Math.round(10 * Math.max(0, 1 - off));
+  return Math.round(MAX_POINTS * Math.exp(-(off ** SHAPE)));
 }
 
+/** How far off a guess can be, as a share of its room, and still earn `pts` points. */
+const within = (pts) => (-Math.log((pts - 0.5) / MAX_POINTS)) ** (1 / SHAPE);
+
 /**
- * Where guesses earn something, for the number line: `zero` is the range past
- * which they earn nothing, `good` where they earn 7 acorns or more.
+ * For the number line: `line` is how far it runs, to where guesses earn
+ * under 20 points (before #5, to where they earned nothing), and `good` is
+ * the band that earns 70 or more.
  */
-export function ranges(q) {
+export function ranges(q, day) {
   const at = (share) => {
     if (q.unit === "year") {
       const room = yearRoom(q.answer) * share;
@@ -151,7 +172,7 @@ export function ranges(q) {
     const f = factorFor(q) ** share;
     return [q.answer / f, q.answer * f];
   };
-  return { zero: at(1), good: at(0.35) };
+  return day < SMOOTH_FROM ? { line: at(1), good: at(0.35) } : { line: at(within(20)), good: at(within(70)) };
 }
 
 const times = (r) => (r < 10 ? r.toFixed(1).replace(/\.0$/, "") : Math.round(r).toLocaleString("en-US"));
@@ -179,7 +200,7 @@ export function howClose(guess, q) {
 
 /** A word for a score. */
 export function verdict(pts) {
-  return pts >= 10 ? "Spot on!" : pts >= 8 ? "So close!" : pts >= 5 ? "Not bad!" : pts >= 2 ? "A bit off" : "Way off";
+  return pts >= 95 ? "Spot on!" : pts >= 70 ? "So close!" : pts >= 40 ? "Not bad!" : pts >= 15 ? "A bit off" : "Way off";
 }
 
 /** "15.4 million", "8,849", "1.4 billion". */
@@ -205,13 +226,17 @@ export function formatAmount(value, unit, { alt = false } = {}) {
   return label ? `${formatNumber(shown)} ${label}` : formatNumber(shown);
 }
 
-/** The tiers, by the day's total out of 100 acorns. */
+/**
+ * The tiers, by the day's points out of 1,000. Set from real players' days
+ * (as they'd score on the smooth curve): a typical day is about 450, about a
+ * fifth of days are Nut Nibblers, and one in fifty reaches Squirrel Sage.
+ */
 export const TIERS = [
   { name: "Nut Nibbler", min: 0 },
-  { name: "Acorn Gatherer", min: 40 },
-  { name: "Stash Keeper", min: 60 },
-  { name: "Hoard Master", min: 75 },
-  { name: "Squirrel Sage", min: 90 },
+  { name: "Acorn Gatherer", min: 250 },
+  { name: "Stash Keeper", min: 450 },
+  { name: "Hoard Master", min: 600 },
+  { name: "Squirrel Sage", min: 750 },
 ];
 
 /** The tier for a total, with the next one and how far it is: { name, min, index, next: { name, toGo } | null }. */
@@ -232,12 +257,25 @@ export function questionsFor(day, schedule) {
   return schedule[(((day - 1) % schedule.length) + schedule.length) % schedule.length];
 }
 
-export const square = (pts) => (pts >= 10 ? "🎯" : pts >= 8 ? "🟩" : pts >= 5 ? "🟨" : pts >= 2 ? "🟧" : "🟥");
+export const square = (pts) => (pts >= 95 ? "🎯" : pts >= 70 ? "🟩" : pts >= 40 ? "🟨" : pts >= 15 ? "🟧" : "🟥");
 
 /** The text players share: how close each guess was, never the questions or answers. */
 export function shareText(day, results, url) {
   const total = results.reduce((n, r) => n + r.points, 0);
   return `Ten Numbers #${day} 🌰 ${total}/${QUESTIONS_PER_DAY * MAX_POINTS} · ${tierFor(total).name}\n${results.map((r) => square(r.points)).join("")}\n${url}`;
+}
+
+/**
+ * A player's saved games, brought up to 1,000 a day: days saved before #5
+ * were out of 100, so their points count ten times over. Once: `outOf` marks
+ * it (nav.js and stats-view.js read it too).
+ */
+export function upgrade(saved) {
+  if (saved.outOf === 1000) return saved;
+  for (const day of Object.keys(saved.history ?? {})) saved.history[day] *= 10;
+  for (const day of Object.values(saved.days ?? {})) for (const r of day.results ?? []) r.points *= 10;
+  saved.outOf = 1000;
+  return saved;
 }
 
 /** Totals and streaks from a record of finished days: { [day]: total }. */

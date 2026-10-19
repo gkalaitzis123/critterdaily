@@ -73,10 +73,10 @@ export function missed(found, puzzle, limit = 5) {
 /** How far down Clover got, by the day's depth. */
 export const TIERS = [
   { name: "Topsoil", min: 0, blurb: "where the worms live" },
-  { name: "Root Cellar", min: 40, blurb: "down among the carrots" },
-  { name: "Clay Seam", min: 80, blurb: "cool, damp and quiet" },
-  { name: "Bedrock", min: 130, blurb: "where the digging gets hard" },
-  { name: "Glowworm Cave", min: 190, blurb: "the deepest burrow there is" },
+  { name: "Root Cellar", min: 30, blurb: "down among the carrots" },
+  { name: "Clay Seam", min: 60, blurb: "cool, damp and quiet" },
+  { name: "Bedrock", min: 100, blurb: "where the digging gets hard" },
+  { name: "Glowworm Cave", min: 150, blurb: "the deepest burrow there is" },
 ];
 export function tierFor(total) {
   let index = 0;
