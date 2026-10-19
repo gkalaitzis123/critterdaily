@@ -78,12 +78,14 @@ export function homeSummary(today = dayToday()) {
     "deep-cut": { key: "deepcut-v1", result: (h) => `${h} m`, counts: (h) => h !== undefined },
     "mother-tongue": { key: "mothertongue-v1", result: (h) => (h.solved ? `hatched in ${h.guesses}` : "not found"), counts: (h) => h?.solved },
     "ten-numbers": { key: "tennumbers-v1", result: (h) => `${h} acorns`, counts: (h) => h !== undefined },
+    burrow: { key: "burrow-v1", result: (h) => `${h} m`, counts: (h) => h !== undefined, late: 1 }, // its #1 was a day after the others
   };
   const out = {};
   for (const [id, g] of Object.entries(games)) {
     const history = read(g.key);
     if (!Object.keys(history).length) continue;
-    out[id] = { today: history[today] !== undefined ? g.result(history[today]) : null, streak: streakOf((d) => g.counts(history[d]), today) };
+    const day = today - (g.late ?? 0); // the game's own day number
+    out[id] = { today: history[day] !== undefined ? g.result(history[day]) : null, streak: streakOf((d) => g.counts(history[d]), day) };
   }
   return out;
 }

@@ -11,17 +11,17 @@
         if (cd.motion === "less") document.documentElement.dataset.motion = "less";
       } catch (e) {}
     </script>
-    <title>Critter Daily: three little games, new every day</title>
-    <meta name="description" content="Three free daily games with storybook critters: Deep Cut, a science and history game about the Wikipedia pages nobody reads; Mother Tongue, a language family-tree puzzle; and Ten Numbers, an estimation game." />
+    <title>Critter Daily: four little games, new every day</title>
+    <meta name="description" content="Four free daily games with storybook critters: Deep Cut, a science and history game about the Wikipedia pages nobody reads; Mother Tongue, a language family-tree puzzle; Ten Numbers, an estimation game; and Burrow, a word game where rarer words dig deeper." />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Critter Daily" />
-    <meta property="og:title" content="Critter Daily: three little games, new every day" />
-    <meta property="og:description" content="Three free daily games with storybook critters: Deep Cut, a science and history game about the Wikipedia pages nobody reads; Mother Tongue, a language family-tree puzzle; and Ten Numbers, an estimation game." />
+    <meta property="og:title" content="Critter Daily: four little games, new every day" />
+    <meta property="og:description" content="Four free daily games with storybook critters: Deep Cut, a science and history game about the Wikipedia pages nobody reads; Mother Tongue, a language family-tree puzzle; Ten Numbers, an estimation game; and Burrow, a word game where rarer words dig deeper." />
     <meta property="og:url" content="https://critterdaily.com/" />
     <meta property="og:image" content="https://critterdaily.com/og.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Digby the mole, Pip the parrot and Nutmeg the squirrel, with the words Critter Daily: three little games, new every day" />
+    <meta property="og:image:alt" content="Digby the mole, Pip the parrot, Nutmeg the squirrel and Clover the rabbit, with the words Critter Daily: four little games, new every day" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#cfeaff" />
     <link rel="icon" href="icon.svg" type="image/svg+xml" />
@@ -38,7 +38,7 @@
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" /><circle cx="15" cy="7" r="2.4" /><circle cx="9" cy="17" r="2.4" /></svg>
       </button>
       <h1>Critter Daily</h1>
-      <p>Three little games, new every midnight. Free to play, with nothing to sign up for.</p>
+      <p>Four little games, new every midnight. Free to play, with nothing to sign up for.</p>
     </header>
 
     <main class="games">
@@ -112,10 +112,34 @@
         </span>
         <span class="play">Play</span>
       </a>
+
+      <a class="game" href="burrow/">
+        <svg class="mascot" viewBox="-44 -44 88 88" aria-hidden="true">
+          <ellipse cx="-8" cy="-27" rx="5.6" ry="15" fill="#b9a798" transform="rotate(-14 -8 -27)" />
+          <ellipse cx="-8" cy="-26" rx="2.8" ry="10" fill="#ffb3c1" transform="rotate(-14 -8 -26)" />
+          <ellipse cx="8" cy="-27" rx="5.6" ry="15" fill="#b9a798" transform="rotate(14 8 -27)" />
+          <ellipse cx="8" cy="-26" rx="2.8" ry="10" fill="#ffb3c1" transform="rotate(14 8 -26)" />
+          <circle cx="17" cy="26" r="6.5" fill="#f6ecdf" />
+          <ellipse cx="0" cy="19" rx="17" ry="18" fill="#b9a798" /><ellipse cx="0" cy="23" rx="10.5" ry="11.5" fill="#f6ecdf" />
+          <circle cx="0" cy="-5" r="14.5" fill="#b9a798" /><ellipse cx="0" cy="1" rx="8" ry="6" fill="#f6ecdf" />
+          <circle cx="-5.5" cy="-8" r="2.6" fill="#2e2a3b" /><circle cx="5.5" cy="-8" r="2.6" fill="#2e2a3b" />
+          <circle cx="-4.7" cy="-9" r=".9" fill="#fff" /><circle cx="6.3" cy="-9" r=".9" fill="#fff" />
+          <ellipse cx="0" cy="-1.5" rx="2.4" ry="1.8" fill="#ff8fa3" />
+          <path d="M-3 2q3 2.5 6 0" stroke="#6b4e3d" fill="none" stroke-width="1.4" stroke-linecap="round" />
+          <circle cx="-9.5" cy="-1.5" r="2.6" fill="#ffb3c1" /><circle cx="9.5" cy="-1.5" r="2.6" fill="#ffb3c1" />
+          <ellipse cx="-6" cy="14" rx="4.4" ry="3.2" fill="#a8968a" /><ellipse class="wave" cx="17" cy="2" rx="4.4" ry="3.2" fill="#a8968a" />
+          <ellipse cx="-8" cy="36" rx="6.5" ry="3.2" fill="#a8968a" /><ellipse cx="8" cy="36" rx="6.5" ry="3.2" fill="#a8968a" />
+        </svg>
+        <span class="game-text">
+          <span class="game-name">Burrow</span>
+          <span class="game-what">Seven letters, one minute: make words. The rarer the word, the deeper Clover the rabbit digs.</span>
+        </span>
+        <span class="play">Play</span>
+      </a>
     </main>
 
     <footer class="foot">
-      <p>Puzzles are built from <a href="https://www.wikidata.org/" target="_blank" rel="noopener">Wikidata</a> and Wikipedia page views (public domain), and <a href="https://glottolog.org" target="_blank" rel="noopener">Glottolog</a> (CC BY 4.0).</p>
+      <p>Puzzles are built from <a href="https://www.wikidata.org/" target="_blank" rel="noopener">Wikidata</a> and Wikipedia page views (public domain), <a href="https://glottolog.org" target="_blank" rel="noopener">Glottolog</a> (CC BY 4.0), and words from ENABLE (public domain) with <a href="https://github.com/rspeer/wordfreq" target="_blank" rel="noopener">wordfreq</a> (CC BY-SA 4.0).</p>
       <p><a href="privacy.html">Privacy</a></p>
     </footer>
     <script type="module">

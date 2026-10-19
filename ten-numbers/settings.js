@@ -51,7 +51,7 @@ export function settingsButton(button) {
         .join("")}</div>
     </fieldset>
     <label class="setting toggle"><input type="checkbox" name="motion" /><span>Less motion</span><span class="toggle-note">Fewer bounces and wiggles</span></label>
-    <p class="setting-note">These apply to all three games on this device.</p>
+    <p class="setting-note">These apply to all the games on this device.</p>
     <form method="dialog"><button class="primary">Done</button></form>`;
   document.body.append(sheet);
   sheet.addEventListener("change", () => {

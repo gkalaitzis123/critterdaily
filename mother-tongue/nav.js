@@ -13,6 +13,7 @@
     { id: "deep-cut", name: "Deep Cut", key: "deepcut-v1", done: (h) => `${h} m deep` },
     { id: "mother-tongue", name: "Mother Tongue", key: "mothertongue-v1", done: (h) => (h.solved ? `hatched in ${h.guesses}` : "not found") },
     { id: "ten-numbers", name: "Ten Numbers", key: "tennumbers-v1", done: (h) => `${h} acorns` },
+    { id: "burrow", name: "Burrow", key: "burrow-v1", done: (h) => `${h} m deep`, late: 1 }, // its #1 was a day after the others
   ];
   const script = document.currentScript;
   const here = script.dataset.game;
@@ -24,7 +25,7 @@
   /** How today's game went ("92 m deep"), or null if it hasn't been played. */
   const result = (game) => {
     try {
-      const h = JSON.parse(localStorage.getItem(game.key))?.history?.[today()];
+      const h = JSON.parse(localStorage.getItem(game.key))?.history?.[today() - (game.late ?? 0)];
       return h === undefined ? null : game.done(h);
     } catch {
       return null;

@@ -8,8 +8,10 @@
 // the day go" a read of a few hundred rows at most, however many play, well
 // inside D1's free reads.
 
-const DAY_ONE = Date.UTC(2026, 9, 17); // every game's #1
-const BEST = { "deep-cut": 250, "mother-tongue": 20, "ten-numbers": 100 }; // the highest score each can send
+const DAY_ONE = Date.UTC(2026, 9, 17); // the first games' #1
+// The highest score each game can send (Burrow's: every word of its deepest
+// day), and how many days after DAY_ONE its #1 was.
+const GAMES = { "deep-cut": [250, 0], "mother-tongue": [20, 0], "ten-numbers": [100, 0], burrow: [1000, 1] };
 
 let ready; // the tables and the secret, made on first use
 
@@ -59,7 +61,8 @@ export default {
 
     if (request.method === "POST") {
       const { game, day, score } = await request.json().catch(() => ({}));
-      const fits = Object.hasOwn(BEST, game) && Number.isInteger(day) && Math.abs(day - dayNow()) <= 1 && Number.isInteger(score) && score >= 0 && score <= BEST[game];
+      const [best, late] = Object.hasOwn(GAMES, game) ? GAMES[game] : [];
+      const fits = best !== undefined && Number.isInteger(day) && Math.abs(day + late - dayNow()) <= 1 && Number.isInteger(score) && score >= 0 && score <= best;
       if (!fits) return json({ error: "not a score" }, 400);
       const who = await scramble(`${salt}|${day}|${request.headers.get("cf-connecting-ip") ?? ""}`);
       await env.DB.prepare("INSERT OR IGNORE INTO scores (game, day, who, score) VALUES (?, ?, ?, ?)").bind(game, day, who, score).run();
@@ -69,7 +72,7 @@ export default {
     if (request.method === "GET") {
       const game = url.searchParams.get("game");
       const day = Number(url.searchParams.get("day") || NaN);
-      if (!Object.hasOwn(BEST, game) || !Number.isInteger(day) || day < 1) return json({ error: "which game and day?" }, 400);
+      if (!Object.hasOwn(GAMES, game) || !Number.isInteger(day) || day < 1) return json({ error: "which game and day?" }, 400);
       const { results } = await env.DB.prepare("SELECT score, n FROM totals WHERE game = ? AND day = ?").bind(game, day).all();
       return json({ players: results.reduce((total, r) => total + r.n, 0), counts: Object.fromEntries(results.map((r) => [r.score, r.n])) }, 200, 30);
     }

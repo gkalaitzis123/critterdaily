@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <script>
+      // Light or dark, and less motion, before the page draws (settings.js keeps them up to date).
+      try {
+        var cd = JSON.parse(localStorage.getItem("critter-daily-settings")) || {};
+        document.documentElement.dataset.theme = cd.theme === "light" || cd.theme === "dark" ? cd.theme : matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        if (cd.motion === "less") document.documentElement.dataset.motion = "less";
+      } catch (e) {}
+    </script>
+    <title>Burrow: the daily word dig</title>
+    <meta name="description" content="Seven letters a day and one minute to make words. The rarer the word, the deeper Clover the rabbit digs." />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Critter Daily" />
+    <meta property="og:title" content="Burrow: the daily word dig" />
+    <meta property="og:description" content="Seven letters a day and one minute to make words. The rarer the word, the deeper Clover the rabbit digs." />
+    <meta property="og:url" content="https://critterdaily.com/burrow/" />
+    <meta property="og:image" content="https://critterdaily.com/burrow/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Clover the rabbit over letter tiles spelling BURROW, with the words Burrow: the rarer the word, the deeper Clover digs" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#cfeaff" />
+    <link rel="icon" href="icon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;700;800&display=swap" />
+    <link rel="stylesheet" href="style.css" />
+    <!-- Counts visits and games, without cookies or knowing who you are; only on critterdaily.com, so local copies and tests count nothing. -->
+    <script async src="https://cloud.umami.is/script.js" data-website-id="7d7d7ec1-534b-40e2-9401-3c07793fd5ec" data-domains="critterdaily.com,www.critterdaily.com"></script>
+  </head>
+  <body>
+    <script src="nav.js" data-game="burrow"></script>
+    <header class="top">
+      <button id="help-button" class="icon-button" type="button" aria-label="How to play">?</button>
+      <div class="wordmark">
+        <h1>Burrow</h1>
+        <p id="day-label" class="day-label"></p>
+      </div>
+      <div class="top-end">
+        <button id="stats-button" class="icon-button" type="button" aria-label="Your stats">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V11M12 20V4M19 20v-6" /></svg>
+        </button>
+        <button id="settings-button" class="icon-button" type="button" aria-label="Settings">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" /><circle cx="15" cy="7" r="2.4" /><circle cx="9" cy="17" r="2.4" /></svg>
+        </button>
+      </div>
+    </header>
+
+    <main id="app">
+      <section id="loading" class="screen"><p class="muted">Clover is stretching her paws…</p></section>
+
+      <section id="intro" class="screen" hidden>
+        <div class="hello">
+          <p class="bubble">Hi, I'm Clover! Help me dig.</p>
+          <svg class="hello-clover" viewBox="-44 -44 88 88" aria-hidden="true" data-clover="wave"></svg>
+        </div>
+        <h2 class="headline">Seven letters. One minute. Dig!</h2>
+        <p class="lede">Make words from today's letters. Every word digs Clover deeper, and the rarer the word, the deeper it digs.</p>
+        <div class="card example">
+          <p class="muted small">For example, from the letters of CONTENT:</p>
+          <p><span class="w">note</span> <b>4 m</b> · <span class="w">tenon</span> <b>15 m</b> · <span class="w">content</span> <b>21 m</b></p>
+          <p class="muted small">A word using all seven letters digs 10 m more.</p>
+        </div>
+        <button id="start" class="primary" type="button">Start digging</button>
+        <button id="practice-start" class="secondary" type="button">Practice with other letters</button>
+      </section>
+
+      <section id="play" class="screen" hidden>
+        <div class="play-top">
+          <div id="timer" class="timer" role="progressbar" aria-label="Time left"><span></span></div>
+          <span id="time-left" class="time-left">1:00</span>
+        </div>
+        <p class="score-line"><span><span id="depth">0</span> m deep</span><span class="muted"><span id="count">0</span> words</span></p>
+        <div id="word" class="word" aria-live="polite"></div>
+        <div id="tiles" class="tiles" role="group" aria-label="Today's letters"></div>
+        <div class="controls">
+          <button id="delete" class="secondary" type="button" aria-label="Delete a letter">⌫</button>
+          <button id="shuffle" class="secondary" type="button">Shuffle</button>
+          <button id="enter" class="primary" type="button">Enter</button>
+        </div>
+        <p id="feedback" class="feedback" role="status"></p>
+        <div class="dig">
+          <ol id="found" class="found" aria-label="Words found"></ol>
+          <div id="gauge" class="gauge" aria-hidden="true">
+            <div class="tunnel"></div>
+            <svg class="digger" viewBox="-44 -44 88 88" data-clover="dig"></svg>
+            <div class="meters">0 m</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="results" class="screen" hidden>
+        <div class="results-hero"><svg class="hug-clover" viewBox="-44 -44 88 88" aria-hidden="true" data-clover="cheer"></svg></div>
+        <p id="results-label" class="kicker"></p>
+        <p class="kicker">Clover dug down to the</p>
+        <h2 id="tier-name" class="tier-name"></h2>
+        <p id="tier-blurb" class="muted small"></p>
+        <p class="total"><span id="total">0</span> m <span class="muted small">down</span></p>
+        <p id="total-note" class="muted small"></p>
+        <p id="everyone" class="everyone" hidden></p>
+        <div id="finds" class="card finds"></div>
+        <div id="tier-ladder" class="tier-ladder" aria-label="Tiers"></div>
+        <button id="share" class="primary" type="button">Share your dig</button>
+        <p id="share-note" class="feedback ok" role="status"></p>
+        <div class="cd-next"></div>
+        <p class="next-in">Next Burrow in <strong id="countdown"></strong></p>
+        <button id="practice" class="secondary" type="button">Keep digging (practice)</button>
+        <button id="back-today" class="link" type="button" hidden>Back to today's Burrow</button>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <p>Words from <a href="https://github.com/dolph/dictionary" target="_blank" rel="noopener">ENABLE</a> (public domain); how rare each is from <a href="https://github.com/rspeer/wordfreq" target="_blank" rel="noopener">wordfreq</a> (CC BY-SA 4.0); rude words left out using <a href="https://github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words" target="_blank" rel="noopener">LDNOOBW's list</a>.</p>
+      <p class="more"><a href="../">More games from Critter Daily</a> · <a href="../privacy.html">Privacy</a></p>
+    </footer>
+
+    <dialog id="help" class="sheet">
+      <div class="sheet-head">
+        <svg class="sheet-clover" viewBox="-44 -44 88 88" aria-hidden="true" data-clover="wave"></svg>
+        <h2 tabindex="-1" autofocus>How to play</h2>
+      </div>
+      <ul>
+        <li>Seven letters a day, the same for everyone, and one minute once you start.</li>
+        <li>Make words of 4 to 7 letters, using each letter once in a word: tap the letters (or type them), then Enter.</li>
+        <li>Every word digs Clover deeper, and the rarer the word, the deeper: <em>note</em> 4 m, <em>tenon</em> 15 m. How rare comes from how often a word turns up in English. Longer words dig a little more, and a word using all seven letters 10 m more.</li>
+        <li>Stuck? Shuffle the letters.</li>
+        <li>How deep can you get? Topsoil, Root Cellar, Clay Seam, Bedrock, or all the way to the Glowworm Cave.</li>
+        <li>Want more? Practice rounds use other letters, as many as you like, and don't count toward your stats.</li>
+      </ul>
+      <form method="dialog"><button class="primary">Got it</button></form>
+    </dialog>
+
+    <dialog id="stats" class="sheet">
+      <h2 tabindex="-1" autofocus>Your burrow</h2>
+      <div id="stats-grid" class="stats-grid"></div>
+      <h3 class="stats-sub">How your days went</h3>
+      <div id="stats-tiers"></div>
+      <h3 class="stats-sub">The last five weeks</h3>
+      <div id="stats-calendar"></div>
+      <form method="dialog"><button class="primary">Close</button></form>
+    </dialog>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
