@@ -900,12 +900,16 @@ main {
   place-items: center;
   width: 42px;
   height: 54px;
+  padding: 0;
+  border: 0;
   border-radius: 12px;
   background: var(--tile);
   border-bottom: 5px solid var(--tile-edge);
   color: var(--on-sun);
   font: 700 30px var(--display);
   text-transform: uppercase;
+  cursor: pointer; /* tap a letter to put it back */
+  touch-action: manipulation;
   animation: burrow-pop 0.18s ease-out;
 }
 

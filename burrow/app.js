@@ -200,15 +200,20 @@ function play() {
 
 function drawTiles() {
   const letters = run.puzzle.letters;
+  // A used tile stays tappable: tapping it again puts its letter back.
   $("#tiles").innerHTML = order
-    .map((i) => `<button class="tile${typed.includes(i) ? " used" : ""}" type="button" data-i="${i}" aria-label="${letters[i].toUpperCase()}"${typed.includes(i) ? " disabled" : ""}>${letters[i]}</button>`)
+    .map((i) => `<button class="tile${typed.includes(i) ? " used" : ""}" type="button" data-i="${i}" aria-label="${letters[i].toUpperCase()}" aria-pressed="${typed.includes(i)}">${letters[i]}</button>`)
     .join("");
-  for (const b of $("#tiles").querySelectorAll(".tile")) b.addEventListener("click", () => add(Number(b.dataset.i)));
+  for (const b of $("#tiles").querySelectorAll(".tile")) b.addEventListener("click", () => toggle(Number(b.dataset.i)));
 }
 
 function drawWord() {
   const letters = run.puzzle.letters;
-  $("#word").innerHTML = typed.length ? typed.map((i) => `<span class="slot">${letters[i]}</span>`).join("") : '<span class="hint">Tap letters to make a word</span>';
+  // Each letter of the word can be tapped to put it back, too.
+  $("#word").innerHTML = typed.length
+    ? typed.map((i) => `<button class="slot" type="button" data-i="${i}" aria-label="${letters[i].toUpperCase()}: put it back">${letters[i]}</button>`).join("")
+    : '<span class="hint">Tap letters to make a word</span>';
+  for (const b of $("#word").querySelectorAll(".slot")) b.addEventListener("click", () => toggle(Number(b.dataset.i)));
   drawTiles();
 }
 
@@ -216,6 +221,15 @@ function add(i) {
   if (run.done || typed.includes(i)) return;
   typed.push(i);
   drawWord();
+}
+
+/** A tile's letter into the word, or back out of it if it's already there. */
+function toggle(i) {
+  if (run.done) return;
+  if (typed.includes(i)) {
+    typed = typed.filter((k) => k !== i);
+    drawWord();
+  } else add(i);
 }
 
 function shuffleTiles() {
