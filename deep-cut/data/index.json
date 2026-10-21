@@ -72,7 +72,7 @@
  {
   "id": "beetles",
   "prompt": "Name a beetle",
-  "answers": 156
+  "answers": 157
  },
  {
   "id": "bible-books",
@@ -182,7 +182,7 @@
  {
   "id": "chemists",
   "prompt": "Name a chemist",
-  "answers": 758
+  "answers": 759
  },
  {
   "id": "chinese-dynasties",
@@ -262,7 +262,7 @@
  {
   "id": "cities-uk",
   "prompt": "Name a city in the UK",
-  "answers": 77
+  "answers": 87
  },
  {
   "id": "civil-war-battles",
@@ -287,7 +287,7 @@
  {
   "id": "comets",
   "prompt": "Name a comet",
-  "answers": 239
+  "answers": 238
  },
  {
   "id": "composers",
@@ -332,7 +332,7 @@
  {
   "id": "deer",
   "prompt": "Name a deer",
-  "answers": 64
+  "answers": 65
  },
  {
   "id": "deserts",
@@ -357,7 +357,7 @@
  {
   "id": "dog-breeds",
   "prompt": "Name a dog breed",
-  "answers": 628
+  "answers": 627
  },
  {
   "id": "ducks",
@@ -372,12 +372,12 @@
  {
   "id": "eastern-front-battles",
   "prompt": "Name a battle on the Eastern Front of World War II",
-  "answers": 96
+  "answers": 97
  },
  {
   "id": "egyptian-gods",
   "prompt": "Name an Egyptian god or goddess",
-  "answers": 158
+  "answers": 159
  },
  {
   "id": "elements",
@@ -427,7 +427,7 @@
  {
   "id": "gemstones",
   "prompt": "Name a gemstone",
-  "answers": 106
+  "answers": 107
  },
  {
   "id": "geological-time",
@@ -437,7 +437,7 @@
  {
   "id": "greek-gods",
   "prompt": "Name a Greek god or goddess",
-  "answers": 211
+  "answers": 214
  },
  {
   "id": "greek-islands",
@@ -447,12 +447,12 @@
  {
   "id": "greek-letters",
   "prompt": "Name a letter of the Greek alphabet",
-  "answers": 26
+  "answers": 28
  },
  {
   "id": "hindu-gods",
   "prompt": "Name a Hindu god or goddess",
-  "answers": 142
+  "answers": 149
  },
  {
   "id": "holy-roman-emperors",
@@ -462,12 +462,12 @@
  {
   "id": "hormones",
   "prompt": "Name a hormone",
-  "answers": 57
+  "answers": 58
  },
  {
   "id": "horned-dinosaurs",
   "prompt": "Name a horned dinosaur (a ceratopsian)",
-  "answers": 87
+  "answers": 88
  },
  {
   "id": "horse-breeds",
@@ -482,7 +482,7 @@
  {
   "id": "impressionists",
   "prompt": "Name an Impressionist painter",
-  "answers": 235
+  "answers": 232
  },
  {
   "id": "instruments",
@@ -492,7 +492,7 @@
  {
   "id": "inventors",
   "prompt": "Name an inventor",
-  "answers": 350
+  "answers": 348
  },
  {
   "id": "island-countries",
@@ -507,7 +507,7 @@
  {
   "id": "islands-japan",
   "prompt": "Name an island of Japan",
-  "answers": 107
+  "answers": 109
  },
  {
   "id": "japan-prefectures",
@@ -517,12 +517,12 @@
  {
   "id": "lakes-africa",
   "prompt": "Name a lake in Africa",
-  "answers": 143
+  "answers": 145
  },
  {
   "id": "lakes-asia",
   "prompt": "Name a lake in Asia",
-  "answers": 188
+  "answers": 189
  },
  {
   "id": "lakes-europe",
@@ -532,7 +532,7 @@
  {
   "id": "lakes-north-america",
   "prompt": "Name a lake in North America",
-  "answers": 127
+  "answers": 129
  },
  {
   "id": "landlocked-countries",
@@ -602,7 +602,7 @@
  {
   "id": "muscles",
   "prompt": "Name a muscle in the human body",
-  "answers": 219
+  "answers": 221
  },
  {
   "id": "mythical-creatures",
@@ -612,7 +612,7 @@
  {
   "id": "napoleonic-battles",
   "prompt": "Name a battle of the Napoleonic Wars",
-  "answers": 224
+  "answers": 228
  },
  {
   "id": "national-parks-africa",
@@ -652,7 +652,7 @@
  {
   "id": "norse-gods",
   "prompt": "Name a Norse god or goddess",
-  "answers": 64
+  "answers": 65
  },
  {
   "id": "oceania",
@@ -672,22 +672,22 @@
  {
   "id": "pacific-war-battles",
   "prompt": "Name a battle of the Pacific War",
-  "answers": 151
+  "answers": 154
  },
  {
   "id": "painters-american",
   "prompt": "Name an American painter",
-  "answers": 283
+  "answers": 279
  },
  {
   "id": "painters-british",
   "prompt": "Name a British painter",
-  "answers": 213
+  "answers": 210
  },
  {
   "id": "painters-dutch",
   "prompt": "Name a Dutch or Flemish painter",
-  "answers": 278
+  "answers": 277
  },
  {
   "id": "painters-french",
@@ -702,7 +702,7 @@
  {
   "id": "painters-spanish",
   "prompt": "Name a Spanish painter",
-  "answers": 83
+  "answers": 81
  },
  {
   "id": "painters",
@@ -767,7 +767,7 @@
  {
   "id": "pterosaurs",
   "prompt": "Name a pterosaur",
-  "answers": 127
+  "answers": 128
  },
  {
   "id": "punctuation",
@@ -777,7 +777,7 @@
  {
   "id": "revolutionary-war-battles",
   "prompt": "Name a battle of the American Revolutionary War",
-  "answers": 112
+  "answers": 115
  },
  {
   "id": "revolutions",
@@ -787,7 +787,7 @@
  {
   "id": "rivers-africa",
   "prompt": "Name a river in Africa",
-  "answers": 266
+  "answers": 267
  },
  {
   "id": "rivers-asia",
@@ -807,12 +807,12 @@
  {
   "id": "rivers-south-america",
   "prompt": "Name a river in South America",
-  "answers": 166
+  "answers": 164
  },
  {
   "id": "rivers",
   "prompt": "Name a river over 1,000 km long",
-  "answers": 238
+  "answers": 239
  },
  {
   "id": "rodents",
@@ -837,12 +837,12 @@
  {
   "id": "salamanders",
   "prompt": "Name a salamander or newt",
-  "answers": 364
+  "answers": 369
  },
  {
   "id": "sauropods",
   "prompt": "Name a long-necked dinosaur (a sauropod)",
-  "answers": 192
+  "answers": 193
  },
  {
   "id": "sea-reptiles",
@@ -872,12 +872,12 @@
  {
   "id": "sharks",
   "prompt": "Name a shark",
-  "answers": 566
+  "answers": 573
  },
  {
   "id": "ships",
   "prompt": "Name a famous ship",
-  "answers": 360
+  "answers": 361
  },
  {
   "id": "snakes",
@@ -912,7 +912,7 @@
  {
   "id": "supreme-court-cases",
   "prompt": "Name a US Supreme Court case",
-  "answers": 291
+  "answers": 292
  },
  {
   "id": "supreme-court",
@@ -922,7 +922,7 @@
  {
   "id": "surrealists",
   "prompt": "Name a Surrealist artist",
-  "answers": 139
+  "answers": 136
  },
  {
   "id": "terriers",
@@ -987,7 +987,7 @@
  {
   "id": "volcanoes-indonesia",
   "prompt": "Name a volcano in Indonesia",
-  "answers": 122
+  "answers": 123
  },
  {
   "id": "volcanoes-italy",
@@ -1042,7 +1042,7 @@
  {
   "id": "women-scientists",
   "prompt": "Name a woman scientist",
-  "answers": 204
+  "answers": 202
  },
  {
   "id": "writing-systems",
@@ -1052,7 +1052,7 @@
  {
   "id": "ww1-battles",
   "prompt": "Name a battle of World War I",
-  "answers": 194
+  "answers": 200
  },
  {
   "id": "ww2-battles",

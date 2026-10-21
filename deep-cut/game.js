@@ -20,8 +20,9 @@ const ROMAN = (n) => "x".repeat(Math.floor(n / 10)) + ["", "i", "ii", "iii", "iv
 
 /**
  * Lowercase, no accents or punctuation ("D.C." is "dc"), "&" as "and", no
- * leading "the", and a number after a name as a Roman numeral, the way
- * monarchs and missions are named ("John Paul 2" is "john paul ii").
+ * leading "the", "St" as "saint", and a number after a name as a Roman
+ * numeral, the way monarchs and missions are named ("John Paul 2" is "john
+ * paul ii").
  */
 export function normalize(text) {
   return String(text ?? "")
@@ -36,14 +37,38 @@ export function normalize(text) {
     .replace(/[^a-z0-9]+/g, " ")
     .trim()
     .replace(/^the /, "")
+    .replace(/(?<=^| )st(?= |$)/g, "saint") // "St Nicholas" is Saint Nicholas, "St. Louis" Saint Louis
     .replace(/(?<=^| )(vs|versus)(?= |$)/g, "v") // "Roe vs. Wade" is Roe v. Wade
     .replace(/(?<=[a-z] )([1-9]|[1-3][0-9])(?= |$)/g, (n) => ROMAN(Number(n)));
 }
 
 let rows = [new Int32Array(64), new Int32Array(64), new Int32Array(64)];
 
-/** Damerau-Levenshtein (optimal string alignment) distance, stopping early past `max`. */
-export function distance(a, b, max = 3) {
+// Letters easily typed for one another: a vowel for a vowel, a key next to
+// the right one, or a letter that sounds alike ("Iguazu" for Iguaçu,
+// "Kristofer"). Any other swap is more often another name than a slip
+// ("Cronus" isn't Crotus, "Winchester" isn't Manchester), so it counts as two.
+const SLIPS = new Set();
+{
+  const pair = (x, y) => SLIPS.add(x + y).add(y + x);
+  const VOWELS = "aeiouy";
+  for (const x of VOWELS) for (const y of VOWELS) pair(x, y);
+  const ROWS = ["qwertyuiop", "asdfghjkl", "zxcvbnm"];
+  ROWS.forEach((row, r) => {
+    for (let i = 0; i < row.length; i++) {
+      if (i > 0) pair(row[i], row[i - 1]);
+      // Each key sits between two of the row above ("s" under "w" and "e").
+      if (r > 0) for (const j of [i, i + 1]) if (ROWS[r - 1][j]) pair(row[i], ROWS[r - 1][j]);
+    }
+  });
+  for (const [x, y] of ["ck", "cs", "cz", "kq", "cq", "sz", "gj", "gk", "fv", "bp", "dt", "mn", "vw", "ij", "jy"]) pair(x, y);
+}
+
+/**
+ * Damerau-Levenshtein (optimal string alignment) distance, stopping early
+ * past `max`. `slips`: an unlikely letter swap (see SLIPS) counts as two.
+ */
+export function distance(a, b, max = 3, slips = false) {
   if (Math.abs(a.length - b.length) > max) return max + 1;
   if (a === b) return 0;
   const n = b.length;
@@ -54,7 +79,8 @@ export function distance(a, b, max = 3) {
     row[0] = i;
     let best = i;
     for (let j = 1; j <= n; j++) {
-      let d = Math.min(prev[j] + 1, row[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      const swap = a[i - 1] === b[j - 1] ? 0 : !slips || SLIPS.has(a[i - 1] + b[j - 1]) ? 1 : 2;
+      let d = Math.min(prev[j] + 1, row[j - 1] + 1, prev[j - 1] + swap);
       if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1] && before[j - 2] + 1 < d) d = before[j - 2] + 1;
       row[j] = d;
       if (d < best) best = d;
@@ -66,8 +92,9 @@ export function distance(a, b, max = 3) {
 }
 
 // Words a typo mustn't change, since they make it a different answer:
-// numerals ("Elizabeth II" isn't Elizabeth I) and directions ("Northern Song").
-const KEY_WORD = /^(?:[ivx]+|north|northern|south|southern|east|eastern|west|western|upper|lower)$/;
+// numerals ("Elizabeth II" isn't Elizabeth I), directions ("Northern Song")
+// and numbers ("Revolution of 1830" isn't the Revolutions of 1820).
+const KEY_WORD = /^(?:[ivx]+|north|northern|south|southern|east|eastern|west|western|upper|lower)$|\d/;
 const keyWords = (words) => words.filter((w) => KEY_WORD.test(w)).join(" ");
 
 /** How many typos a guess of this many letters may have: none under 5, one up to 8, two from 9. */
@@ -110,7 +137,7 @@ function typos(guess, name, room, most) {
   if (Math.abs(guess.letters.length - name.letters.length) > most) return Infinity;
   if (guess.words.length !== name.words.length) {
     const allowed = Math.min(most - 1, room(guess.letters.length));
-    const d = distance(guess.letters, name.letters, allowed);
+    const d = distance(guess.letters, name.letters, allowed, true);
     return d <= allowed ? d : Infinity;
   }
   let total = 0;
@@ -119,7 +146,7 @@ function typos(guess, name, room, most) {
     const n = name.words[i];
     if (g === n) continue;
     const allowed = room(Math.max(g.length, n.length));
-    const d = distance(g, n, allowed);
+    const d = distance(g, n, allowed, true);
     if (d > allowed || (total += d) > most) return Infinity;
   }
   return total;
