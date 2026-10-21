@@ -522,7 +522,7 @@
  {
   "id": "garden-plants",
   "prompt": "Name a garden plant",
-  "answers": 301
+  "answers": 300
  },
  {
   "id": "gemstones",
@@ -1047,7 +1047,7 @@
  {
   "id": "shakespeare-characters",
   "prompt": "Name a character from Shakespeare",
-  "answers": 91
+  "answers": 90
  },
  {
   "id": "shakespeare",
@@ -1072,7 +1072,7 @@
  {
   "id": "skyscrapers",
   "prompt": "Name a skyscraper",
-  "answers": 170
+  "answers": 141
  },
  {
   "id": "snakes",
