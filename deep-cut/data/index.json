@@ -85,6 +85,11 @@
   "answers": 800
  },
  {
+  "id": "ballets",
+  "prompt": "Name a ballet",
+  "answers": 230
+ },
+ {
   "id": "bats",
   "prompt": "Name a bat",
   "answers": 300
@@ -570,6 +575,11 @@
   "answers": 235
  },
  {
+  "id": "insects",
+  "prompt": "Name an insect",
+  "answers": 302
+ },
+ {
   "id": "instruments",
   "prompt": "Name a musical instrument",
   "answers": 500
@@ -695,6 +705,11 @@
   "answers": 300
  },
  {
+  "id": "mountains",
+  "prompt": "Name a mountain",
+  "answers": 300
+ },
+ {
   "id": "muscles",
   "prompt": "Name a muscle in the human body",
   "answers": 221
@@ -760,6 +775,11 @@
   "answers": 65
  },
  {
+  "id": "novelists",
+  "prompt": "Name a novelist",
+  "answers": 400
+ },
+ {
   "id": "oceania",
   "prompt": "Name a country in Oceania",
   "answers": 16
@@ -818,6 +838,11 @@
   "id": "painters",
   "prompt": "Name a painter born before 1900",
   "answers": 500
+ },
+ {
+  "id": "paintings",
+  "prompt": "Name a famous painting",
+  "answers": 300
  },
  {
   "id": "palaces",
@@ -990,6 +1015,11 @@
   "answers": 300
  },
  {
+  "id": "sea-invertebrates",
+  "prompt": "Name a sea creature with no backbone",
+  "answers": 301
+ },
+ {
   "id": "sea-reptiles",
   "prompt": "Name a prehistoric sea reptile",
   "answers": 143
@@ -1160,6 +1190,11 @@
   "answers": 50
  },
  {
+  "id": "vikings",
+  "prompt": "Name a Viking",
+  "answers": 94
+ },
+ {
   "id": "volcanoes-italy",
   "prompt": "Name a volcano in Italy",
   "answers": 32
@@ -1228,5 +1263,10 @@
   "id": "ww2-battles",
   "prompt": "Name a battle of World War II",
   "answers": 300
+ },
+ {
+  "id": "ww2-commanders",
+  "prompt": "Name a World War II general or admiral",
+  "answers": 301
  }
 ]
