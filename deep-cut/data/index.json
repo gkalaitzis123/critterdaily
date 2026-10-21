@@ -37,7 +37,7 @@
  {
   "id": "apes",
   "prompt": "Name an ape",
-  "answers": 127
+  "answers": 87
  },
  {
   "id": "archaeological-sites",
@@ -48,11 +48,6 @@
   "id": "architects",
   "prompt": "Name an architect",
   "answers": 300
- },
- {
-  "id": "armored-dinosaurs",
-  "prompt": "Name an armored or plated dinosaur",
-  "answers": 102
  },
  {
   "id": "art-movements",
@@ -102,7 +97,7 @@
  {
   "id": "beethoven",
   "prompt": "Name a work by Beethoven",
-  "answers": 152
+  "answers": 150
  },
  {
   "id": "beetles",
@@ -147,7 +142,7 @@
  {
   "id": "borders-china",
   "prompt": "Name a country that borders China",
-  "answers": 18
+  "answers": 14
  },
  {
   "id": "borders-germany",
@@ -157,7 +152,7 @@
  {
   "id": "borders-russia",
   "prompt": "Name a country that borders Russia",
-  "answers": 15
+  "answers": 14
  },
  {
   "id": "bridges",
@@ -173,11 +168,6 @@
   "id": "butterflies",
   "prompt": "Name a butterfly",
   "answers": 300
- },
- {
-  "id": "canada-pms",
-  "prompt": "Name a prime minister of Canada",
-  "answers": 24
  },
  {
   "id": "canada",
@@ -202,7 +192,7 @@
  {
   "id": "capitals-asia",
   "prompt": "Name a capital city in Asia",
-  "answers": 52
+  "answers": 51
  },
  {
   "id": "capitals-europe",
@@ -222,7 +212,7 @@
  {
   "id": "castles",
   "prompt": "Name a castle",
-  "answers": 157
+  "answers": 156
  },
  {
   "id": "cat-breeds",
@@ -302,12 +292,12 @@
  {
   "id": "cities-mexico",
   "prompt": "Name a city in Mexico",
-  "answers": 250
+  "answers": 249
  },
  {
   "id": "cities-russia",
   "prompt": "Name a city in Russia",
-  "answers": 282
+  "answers": 279
  },
  {
   "id": "cities-spain",
@@ -337,7 +327,7 @@
  {
   "id": "civil-wars",
   "prompt": "Name a civil war",
-  "answers": 142
+  "answers": 140
  },
  {
   "id": "clouds",
@@ -348,11 +338,6 @@
   "id": "cognitive-biases",
   "prompt": "Name a cognitive bias",
   "answers": 160
- },
- {
-  "id": "comets",
-  "prompt": "Name a comet",
-  "answers": 238
  },
  {
   "id": "composers",
@@ -402,12 +387,12 @@
  {
   "id": "deserts",
   "prompt": "Name a desert",
-  "answers": 161
+  "answers": 160
  },
  {
   "id": "dickens",
   "prompt": "Name a book by Charles Dickens",
-  "answers": 40
+  "answers": 39
  },
  {
   "id": "dinosaurs",
@@ -435,11 +420,6 @@
   "answers": 300
  },
  {
-  "id": "eastern-front-battles",
-  "prompt": "Name a battle on the Eastern Front of World War II",
-  "answers": 104
- },
- {
   "id": "egyptian-gods",
   "prompt": "Name an Egyptian god or goddess",
   "answers": 161
@@ -462,7 +442,7 @@
  {
   "id": "euro-countries",
   "prompt": "Name a country that uses the euro",
-  "answers": 28
+  "answers": 27
  },
  {
   "id": "europe",
@@ -492,7 +472,7 @@
  {
   "id": "first-ladies",
   "prompt": "Name a First Lady of the United States",
-  "answers": 57
+  "answers": 56
  },
  {
   "id": "fish",
@@ -507,7 +487,7 @@
  {
   "id": "french-monarchs",
   "prompt": "Name a king or emperor of France",
-  "answers": 118
+  "answers": 90
  },
  {
   "id": "frogs",
@@ -557,12 +537,7 @@
  {
   "id": "hindu-gods",
   "prompt": "Name a Hindu god or goddess",
-  "answers": 152
- },
- {
-  "id": "holy-roman-emperors",
-  "prompt": "Name a Holy Roman Emperor",
-  "answers": 45
+  "answers": 151
  },
  {
   "id": "hormones",
@@ -570,9 +545,9 @@
   "answers": 65
  },
  {
-  "id": "horned-dinosaurs",
-  "prompt": "Name a horned dinosaur (a ceratopsian)",
-  "answers": 88
+  "id": "horned-armored-dinosaurs",
+  "prompt": "Name a horned or armored dinosaur",
+  "answers": 190
  },
  {
   "id": "horse-breeds",
@@ -607,7 +582,7 @@
  {
   "id": "island-countries",
   "prompt": "Name an island country",
-  "answers": 54
+  "answers": 49
  },
  {
   "id": "islands-indonesia",
@@ -617,7 +592,7 @@
  {
   "id": "islands-japan",
   "prompt": "Name an island of Japan",
-  "answers": 111
+  "answers": 109
  },
  {
   "id": "islands",
@@ -637,12 +612,12 @@
  {
   "id": "lakes-asia",
   "prompt": "Name a lake in Asia",
-  "answers": 194
+  "answers": 193
  },
  {
   "id": "lakes-europe",
   "prompt": "Name a lake in Europe",
-  "answers": 279
+  "answers": 277
  },
  {
   "id": "lakes-north-america",
@@ -652,7 +627,7 @@
  {
   "id": "landlocked-countries",
   "prompt": "Name a landlocked country",
-  "answers": 46
+  "answers": 45
  },
  {
   "id": "languages",
@@ -690,11 +665,6 @@
   "answers": 400
  },
  {
-  "id": "modern-composers",
-  "prompt": "Name a composer born after 1870",
-  "answers": 303
- },
- {
   "id": "monet",
   "prompt": "Name a painting by Monet",
   "answers": 69
@@ -713,11 +683,6 @@
   "id": "mountain-ranges",
   "prompt": "Name a mountain range",
   "answers": 300
- },
- {
-  "id": "mountains-nepal",
-  "prompt": "Name a mountain in Nepal",
-  "answers": 60
  },
  {
   "id": "mountains-switzerland",
@@ -747,12 +712,12 @@
  {
   "id": "napoleonic-battles",
   "prompt": "Name a battle of the Napoleonic Wars",
-  "answers": 228
+  "answers": 227
  },
  {
   "id": "national-parks-africa",
   "prompt": "Name a national park in Africa",
-  "answers": 284
+  "answers": 283
  },
  {
   "id": "national-parks",
@@ -862,7 +827,7 @@
  {
   "id": "pandemics",
   "prompt": "Name an epidemic or pandemic",
-  "answers": 46
+  "answers": 45
  },
  {
   "id": "parrots",
@@ -957,7 +922,7 @@
  {
   "id": "rivers-africa",
   "prompt": "Name a river in Africa",
-  "answers": 269
+  "answers": 268
  },
  {
   "id": "rivers-asia",
@@ -997,7 +962,7 @@
  {
   "id": "roman-gods",
   "prompt": "Name a Roman god or goddess",
-  "answers": 208
+  "answers": 207
  },
  {
   "id": "saints",
@@ -1067,7 +1032,7 @@
  {
   "id": "ships",
   "prompt": "Name a famous ship",
-  "answers": 365
+  "answers": 364
  },
  {
   "id": "skyscrapers",
@@ -1082,7 +1047,7 @@
  {
   "id": "space-probes",
   "prompt": "Name a space probe",
-  "answers": 197
+  "answers": 196
  },
  {
   "id": "space-telescopes",
@@ -1195,24 +1160,14 @@
   "answers": 50
  },
  {
-  "id": "volcanoes-indonesia",
-  "prompt": "Name a volcano in Indonesia",
-  "answers": 123
- },
- {
   "id": "volcanoes-italy",
   "prompt": "Name a volcano in Italy",
   "answers": 32
  },
  {
-  "id": "volcanoes-japan",
-  "prompt": "Name a volcano in Japan",
-  "answers": 114
- },
- {
   "id": "volcanoes-us",
   "prompt": "Name a volcano in the US",
-  "answers": 133
+  "answers": 132
  },
  {
   "id": "volcanoes",
@@ -1251,8 +1206,8 @@
  },
  {
   "id": "women-astronauts",
-  "prompt": "Name a woman who's been to space",
-  "answers": 96
+  "prompt": "Name a woman astronaut",
+  "answers": 93
  },
  {
   "id": "women-scientists",
@@ -1267,7 +1222,7 @@
  {
   "id": "ww1-battles",
   "prompt": "Name a battle of World War I",
-  "answers": 201
+  "answers": 200
  },
  {
   "id": "ww2-battles",
