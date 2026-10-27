@@ -61,6 +61,17 @@ export function streakOf(counts, today) {
   return streak;
 }
 
+/**
+ * For the finish event of a day's game: on how many days this device has
+ * played it (today included), and how many in a row up to today. Just two
+ * numbers, counted here, so the site's stats can say how many players come
+ * back without knowing who anyone is.
+ */
+export function habit(history, today) {
+  const days = new Set([...Object.keys(history ?? {}).map(Number), today]);
+  return { played: days.size, streak: streakOf((d) => days.has(d), today) };
+}
+
 function read(key) {
   try {
     return JSON.parse(localStorage.getItem(key)) ?? {};

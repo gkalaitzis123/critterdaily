@@ -3,7 +3,7 @@
 // rounds. The rules live in game.js.
 import { MAX_POINTS, MAX_YEARS, QUESTIONS_PER_DAY, SIZES, SMOOTH_FROM, TIERS, UNITS, dayNumber, formatAmount, formatNumber, hasEra, hasSize, howClose, parseGuess, points, questionsFor, ranges, shareText, sizeOf, stats, tierFor, upgrade, verdict } from "./game.js";
 import { settingsButton } from "./settings.js";
-import { calendar, tierBars } from "./stats-view.js";
+import { calendar, habit, tierBars } from "./stats-view.js";
 import { averageOf, beatShare, count, howEveryoneDid, sendScore } from "./everyone.js";
 
 const $ = (sel) => document.querySelector(sel);
@@ -416,7 +416,7 @@ function countUp(el, to, ms = 900, from = 0, delay = 0) {
 function next() {
   if (run.index >= run.ids.length) {
     const total = totalOf(run.results);
-    track("finish", { game: "ten-numbers", mode, ...(mode === "daily" ? { day: run.day } : {}), points: total, tier: tierFor(total).name });
+    track("finish", { game: "ten-numbers", mode, ...(mode === "daily" ? { day: run.day, ...habit(load().history, run.day) } : {}), points: total, tier: tierFor(total).name });
     showResults();
     if (mode === "daily") {
       window.critterNav?.refresh(); // tick it in the bar

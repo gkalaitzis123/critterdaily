@@ -3,7 +3,7 @@
 // the hatching, sharing and stats. The rules live in game.js.
 import { MAX_GUESSES, HINTS, MISSED, TIERS, branchMatch, compare, cracks, dayNumber, find, hintsFor, lineage, mysteryFor, normalize, roughly, shareText, stats, suggest, tierFor, whereShort, whereText } from "./game.js";
 import { settingsButton } from "./settings.js";
-import { calendar, tierBars } from "./stats-view.js";
+import { calendar, habit, tierBars } from "./stats-view.js";
 import { averageOf, beatShare, count, howEveryoneDid, sendScore } from "./everyone.js";
 
 const $ = (sel) => document.querySelector(sel);
@@ -404,7 +404,7 @@ function render(latest = null) {
 function finish(outcome) {
   finished = outcome;
   const solved = outcome === "solved";
-  track("finish", { game: "mother-tongue", mode, ...(mode === "daily" ? { day: today } : {}), solved, guesses: results.length, tier: tierFor(results.length, solved).name });
+  track("finish", { game: "mother-tongue", mode, ...(mode === "daily" ? { day: today, ...habit(load().history, today) } : {}), solved, guesses: results.length, tier: tierFor(results.length, solved).name });
   if (mode === "daily")
     save((s) => {
       (s.days ??= {})[today] = { mystery: mystery.id, guesses: results.map((r) => r.lang.id), finished: outcome };

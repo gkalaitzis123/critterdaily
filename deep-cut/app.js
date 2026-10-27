@@ -3,7 +3,7 @@
 // stats. The rules live in game.js.
 import { PERIODS, PROMPTS_PER_DAY, SECONDS_PER_PROMPT, compact, dayNumber, match, nearest, normalize, periodFor, periodsFor, promptsFor, shareText, stats } from "./game.js";
 import { settingsButton } from "./settings.js";
-import { calendar, tierBars } from "./stats-view.js";
+import { calendar, habit, tierBars } from "./stats-view.js";
 import { averageOf, beatShare, count, howEveryoneAnswered, howEveryoneDid, sendPlay, sendScore } from "./everyone.js";
 
 const $ = (sel) => document.querySelector(sel);
@@ -519,7 +519,7 @@ function countUp(el, to, ms = 900, from = 0) {
 async function next() {
   if (run.index >= run.ids.length) {
     const total = totalOf(run.results);
-    track("finish", { game: "deep-cut", mode, ...(mode === "daily" ? { day: run.day } : {}), depth: total, period: periodOf(total).name, answered: run.results.filter((r) => r.answer).length });
+    track("finish", { game: "deep-cut", mode, ...(mode === "daily" ? { day: run.day, ...habit(load().history, run.day) } : {}), depth: total, period: periodOf(total).name, answered: run.results.filter((r) => r.answer).length });
     await showResults();
     if (mode === "daily") {
       window.critterNav?.refresh(); // tick it in the bar

@@ -3,7 +3,7 @@
 // stats and practice rounds. The rules live in game.js.
 import { SECONDS, TIERS, check, dayNumber, metersOf, missed, puzzleFor, rarestOf, sevens, shareText, stats, tierFor, totalOf } from "./game.js";
 import { settingsButton } from "./settings.js";
-import { calendar, tierBars } from "./stats-view.js";
+import { calendar, habit, tierBars } from "./stats-view.js";
 import { averageOf, beatShare, count, howEveryoneDid, sendScore } from "./everyone.js";
 
 const $ = (sel) => document.querySelector(sel);
@@ -315,7 +315,7 @@ function finish() {
       s.days[run.day].done = true;
       (s.history ??= {})[run.day] = total;
     });
-    track("finish", { game: "burrow", mode, day: run.day, meters: total, words: run.found.length, tier: tierFor(total).name });
+    track("finish", { game: "burrow", mode, day: run.day, ...habit(load().history, run.day), meters: total, words: run.found.length, tier: tierFor(total).name });
     window.critterNav?.refresh(); // tick it in the bar
   } else if (first) track("finish", { game: "burrow", mode, meters: total, words: run.found.length });
   showResults(first);
