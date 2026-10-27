@@ -1,13 +1,13 @@
 // Deep Cut's rules, with no page or network code, so they're unit-tested in
 // Node and shared by the data builder and the game.
 //
-// Each day has five prompts ("Name a Roman emperor"). Any answer on the list
-// counts, and the less it's read on Wikipedia, the deeper Digby digs: an
-// answer's rarity is its share of everyone reading the list's articles ("1 in
-// 2,769"), and every ten times rarer digs 10 m deeper, down through the
-// periods of Earth's history.
+// Each day has eight prompts ("Name a Roman emperor"; the first eleven days
+// had five). Any answer on the list counts, and the less it's read on
+// Wikipedia, the deeper Digby digs: an answer's rarity is its share of
+// everyone reading the list's articles ("1 in 2,769"), and every ten times
+// rarer digs 10 m deeper, down through the periods of Earth's history.
 
-export const PROMPTS_PER_DAY = 5;
+export const PROMPTS_PER_DAY = 8;
 export const SECONDS_PER_PROMPT = 30;
 export const LAUNCH = "2026-10-17"; // Deep Cut #1
 
@@ -300,15 +300,16 @@ export function dayNumber(date = new Date()) {
   return Math.floor((today - start) / 86400000) + 1;
 }
 
-/** The five category ids for a day. The schedule repeats once it runs out. */
+/** The category ids for a day (five a day at first, eight since #12). The schedule repeats once it runs out. */
 export function promptsFor(day, schedule) {
   return schedule[(((day - 1) % schedule.length) + schedule.length) % schedule.length];
 }
 
 /**
- * The periods of Earth's history Digby digs back through. A day's total
- * lands in one of them: famous answers all day stay in the Holocene, and
- * five deep cuts reach the Cambrian.
+ * The periods of Earth's history Digby digs back through, for a day of five
+ * prompts. A day's total lands in one of them: famous answers all day stay
+ * in the Holocene, and five deep cuts reach the Cambrian. A day with more
+ * prompts goes deeper in proportion (periodsFor).
  */
 export const PERIODS = [
   { name: "Holocene", min: 0, ago: "today" },
@@ -318,19 +319,32 @@ export const PERIODS = [
   { name: "Permian", min: 125, ago: "270 million years ago" },
   { name: "Cambrian", min: 150, ago: "510 million years ago" },
 ];
+const PERIOD_PROMPTS = 5; // the day PERIODS is measured for
 
-/** The period for a total, with the next one and how far it is: { name, min, ago, index, next: { name, toGo } | null }. */
-export function periodFor(total) {
-  const index = Math.max(0, PERIODS.findLastIndex((p) => total >= p.min));
-  const next = PERIODS[index + 1];
-  return { ...PERIODS[index], index, next: next ? { name: next.name, toGo: next.min - total } : null };
+/** The periods for a day of `prompts` prompts: each is reached by the same depth per prompt. */
+export function periodsFor(prompts = PERIOD_PROMPTS) {
+  return PERIODS.map((p) => ({ ...p, min: Math.round((p.min * prompts) / PERIOD_PROMPTS) }));
 }
 
-/** The text players share: how deep, and how rare each answer was, never the answers. */
+/** The period for a day's total out of `prompts` prompts, with the next one and how far it is: { name, min, ago, index, next: { name, toGo } | null }. */
+export function periodFor(total, prompts = PERIOD_PROMPTS) {
+  const periods = periodsFor(prompts);
+  const index = Math.max(0, periods.findLastIndex((p) => total >= p.min));
+  const next = periods[index + 1];
+  return { ...periods[index], index, next: next ? { name: next.name, toGo: next.min - total } : null };
+}
+
+// One square per answer in the color of the period it would reach if every
+// answer that day were as deep, from the Holocene's brown to the Cambrian's
+// purple; black for no answer.
+const SQUARES = ["🟫", "🟦", "🟨", "🟧", "🟥", "🟪"];
+
+/** The text players share: how deep, a square for each answer and the rarest, never the answers. */
 export function shareText(day, results, url) {
   const total = results.reduce((n, r) => n + (r.depth ?? 0), 0);
-  const rare = results.map((r) => (r.depth ? (r.oneIn ? `1 in ${compact(r.oneIn)}` : `${r.depth} m`) : "✗")).join(" · ");
-  return `Deep Cut #${day} ⛏️ ${total} m · ${periodFor(total).name}\n${rare}\n${url}`;
+  const squares = results.map((r) => (r.depth ? SQUARES[periodFor(r.depth, 1).index] : "⬛")).join("");
+  const rarest = results.filter((r) => r.depth && r.oneIn).reduce((best, r) => (!best || r.oneIn > best.oneIn ? r : best), null);
+  return `Deep Cut #${day} ⛏️ ${total} m · ${periodFor(total, results.length).name}\n${squares}${rarest ? `\nRarest find: 1 in ${compact(rarest.oneIn)}` : ""}\n${url}`;
 }
 
 /** Streaks and totals from a record of finished days: { [day]: totalDepth }. */

@@ -62,7 +62,8 @@
           <svg class="hello-digby" viewBox="-40 -40 80 80" aria-hidden="true" data-digby="wave"></svg>
         </div>
         <h2 class="headline">Name the pages nobody reads.</h2>
-        <p>Five prompts a day, mostly science and history, 30 seconds each. Any right answer counts. Then we look at how many people read its Wikipedia page: the rarer the read, the deeper Digby digs, back through Earth's history.</p>
+        <p id="intro-short" class="intro-short"></p>
+        <p><span id="intro-count">Eight</span> prompts a day, mostly science and history, 30 seconds each. Any right answer counts. Then we look at how many people read its Wikipedia page: the rarer the read, the deeper Digby digs, back through Earth's history.</p>
         <div id="example" class="card example" aria-label="Example"></div>
         <div id="strata-key" class="strata" aria-label="The periods you can reach"></div>
         <button id="start" class="primary" type="button">Start digging</button>
@@ -97,6 +98,7 @@
           </div>
           <p id="reveal-one-in" class="reveal-one-in"></p>
           <p id="reveal-note" class="reveal-note"></p>
+          <p id="reveal-crowd" class="reveal-crowd" hidden></p>
         </div>
         <div id="scene" class="scene"></div>
         <div class="dig-total">
@@ -148,11 +150,11 @@
         <h2 tabindex="-1" autofocus>How to play</h2>
       </div>
       <ul>
-        <li>Each day has five prompts, like <em>Name a Roman emperor</em> or <em>Name a bone in the human body</em>. Everyone gets the same ones.</li>
+        <li>Each day has eight prompts, like <em>Name a Roman emperor</em> or <em>Name a bone in the human body</em>. Everyone gets the same ones.</li>
         <li>You have 30 seconds to type any answer that fits. Spelling needn't be perfect: small typos count, and if you're close, Digby asks "Did you mean…?" Wrong guesses cost nothing but time. Your first right answer is locked in.</li>
         <li>Then we look at its Wikipedia page. Of everyone who read the pages of all the prompt's answers over the last 60 days, what share read yours? Augustus is 1 in 11; Trebonianus Gallus is 1 in 240.</li>
         <li>The rarer your answer among the prompt's answers, the deeper Digby digs: the most-read one digs 1 m and the rarest dig 50 m, so every prompt can go just as deep.</li>
-        <li>Your five answers add up, and Digby digs back through Earth's history: the Holocene, the Pleistocene, the Cretaceous, the Jurassic, the Permian and, deepest of all, the Cambrian.</li>
+        <li>Your answers add up, and Digby digs back through Earth's history: the Holocene, the Pleistocene, the Cretaceous, the Jurassic, the Permian and, deepest of all, the Cambrian.</li>
         <li>Want more? Practice rounds use random prompts, as many as you like, and don't count toward your stats.</li>
       </ul>
       <form method="dialog"><button class="primary">Got it</button></form>

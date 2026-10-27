@@ -7,11 +7,24 @@
 // from one day to the next. Running totals per score keep each "how did
 // the day go" a read of a few hundred rows at most, however many play, well
 // inside D1's free reads.
+//
+// Deep Cut also sends each prompt of a daily game: the answer that counted
+// (if any) and the guesses that didn't, kept with the same scrambled code.
+// The reveal asks how many players named each answer (running totals again,
+// one prompt at a time), and /api/misses lists the guesses several players
+// tried that aren't on a list, so the lists can be fixed.
 
 const DAY_ONE = Date.UTC(2026, 9, 17); // the first games' #1
 // The highest score each game can send (Burrow's: every word of its deepest
 // day), and how many days after DAY_ONE its #1 was.
-const GAMES = { "deep-cut": [250, 0], "mother-tongue": [20, 0], "ten-numbers": [1000, 0], burrow: [1000, 1] };
+const GAMES = { "deep-cut": [400, 0], "mother-tongue": [20, 0], "ten-numbers": [1000, 0], burrow: [1000, 1] };
+// Games that send their prompts, and what a prompt, an answer and a guess can be.
+const PROMPTED = new Set(["deep-cut"]);
+const PROMPT = /^[a-z0-9-]{1,40}$/;
+const MAX_ANSWER = 120;
+const MAX_GUESS = 60;
+const MAX_MISSES = 12;
+const MISSED_BY = 2; // players who tried a guess before /api/misses shows it
 
 let ready; // the tables and the secret, made on first use
 
@@ -23,6 +36,14 @@ async function setUp(db) {
     db.prepare(
       "CREATE TRIGGER IF NOT EXISTS count_score AFTER INSERT ON scores BEGIN INSERT INTO totals (game, day, score, n) VALUES (NEW.game, NEW.day, NEW.score, 1) ON CONFLICT (game, day, score) DO UPDATE SET n = n + 1; END",
     ),
+    // Each player's answer to each prompt ("" for none), and how many gave each answer.
+    db.prepare("CREATE TABLE IF NOT EXISTS plays (game TEXT NOT NULL, day INTEGER NOT NULL, prompt TEXT NOT NULL, who TEXT NOT NULL, answer TEXT NOT NULL, PRIMARY KEY (game, day, prompt, who))"),
+    db.prepare("CREATE TABLE IF NOT EXISTS play_totals (game TEXT NOT NULL, day INTEGER NOT NULL, prompt TEXT NOT NULL, answer TEXT NOT NULL, n INTEGER NOT NULL, PRIMARY KEY (game, day, prompt, answer))"),
+    db.prepare(
+      "CREATE TRIGGER IF NOT EXISTS count_play AFTER INSERT ON plays BEGIN INSERT INTO play_totals (game, day, prompt, answer, n) VALUES (NEW.game, NEW.day, NEW.prompt, NEW.answer, 1) ON CONFLICT (game, day, prompt, answer) DO UPDATE SET n = n + 1; END",
+    ),
+    // Guesses that weren't on the list.
+    db.prepare("CREATE TABLE IF NOT EXISTS misses (game TEXT NOT NULL, day INTEGER NOT NULL, prompt TEXT NOT NULL, who TEXT NOT NULL, guess TEXT NOT NULL, PRIMARY KEY (game, day, prompt, who, guess))"),
     db.prepare("CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT NOT NULL)"),
     db.prepare("INSERT OR IGNORE INTO meta (key, value) VALUES ('salt', ?)").bind(crypto.randomUUID()),
   ]);
@@ -50,7 +71,7 @@ export const dayNow = (now = Date.now()) => Math.floor((now - DAY_ONE) / 8640000
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    if (url.pathname !== "/api/scores") return env.ASSETS ? env.ASSETS.fetch(request) : json({ error: "not found" }, 404);
+    if (!["/api/scores", "/api/plays", "/api/misses"].includes(url.pathname)) return env.ASSETS ? env.ASSETS.fetch(request) : json({ error: "not found" }, 404);
     let salt;
     try {
       salt = await (ready ??= setUp(env.DB));
@@ -58,6 +79,9 @@ export default {
       ready = undefined; // try again next time
       return json({ error: "storage unavailable" }, 503);
     }
+
+    if (url.pathname === "/api/plays") return plays(request, url, env, salt);
+    if (url.pathname === "/api/misses") return misses(request, url, env);
 
     if (request.method === "POST") {
       const { game, day, score } = await request.json().catch(() => ({}));
@@ -80,3 +104,51 @@ export default {
     return json({ error: "method not allowed" }, 405);
   },
 };
+
+/** A daily game's day, if it's today give or take a day. */
+const today = (game, day) => Number.isInteger(day) && Math.abs(day + GAMES[game][1] - dayNow()) <= 1;
+
+/** POST: one prompt of a daily game, { game, day, prompt, answer, misses }. GET: how everyone answered a prompt, { players, counts: { [answer]: players } }. */
+async function plays(request, url, env, salt) {
+  if (request.method === "POST") {
+    const { game, day, prompt, answer = null, misses = [] } = await request.json().catch(() => ({}));
+    const fits =
+      PROMPTED.has(game) &&
+      today(game, day) &&
+      typeof prompt === "string" &&
+      PROMPT.test(prompt) &&
+      (answer === null || (typeof answer === "string" && answer.trim() && answer.length <= MAX_ANSWER)) &&
+      Array.isArray(misses) &&
+      misses.length <= MAX_MISSES &&
+      misses.every((m) => typeof m === "string" && m.trim() && m.length <= MAX_GUESS);
+    if (!fits) return json({ error: "not a play" }, 400);
+    const who = await scramble(`${salt}|${day}|${request.headers.get("cf-connecting-ip") ?? ""}`);
+    const guesses = [...new Set(misses.map((m) => m.trim().toLowerCase()))];
+    await env.DB.batch([
+      env.DB.prepare("INSERT OR IGNORE INTO plays (game, day, prompt, who, answer) VALUES (?, ?, ?, ?, ?)").bind(game, day, prompt, who, answer?.trim() ?? ""),
+      ...guesses.map((g) => env.DB.prepare("INSERT OR IGNORE INTO misses (game, day, prompt, who, guess) VALUES (?, ?, ?, ?, ?)").bind(game, day, prompt, who, g)),
+    ]);
+    return json({ ok: true });
+  }
+  if (request.method === "GET") {
+    const game = url.searchParams.get("game");
+    const day = Number(url.searchParams.get("day") || NaN);
+    const prompt = url.searchParams.get("prompt") ?? "";
+    if (!PROMPTED.has(game) || !Number.isInteger(day) || day < 1 || !PROMPT.test(prompt)) return json({ error: "which game, day and prompt?" }, 400);
+    const { results } = await env.DB.prepare("SELECT answer, n FROM play_totals WHERE game = ? AND day = ? AND prompt = ?").bind(game, day, prompt).all();
+    return json({ players: results.reduce((total, r) => total + r.n, 0), counts: Object.fromEntries(results.filter((r) => r.answer).map((r) => [r.answer, r.n])) }, 200, 30);
+  }
+  return json({ error: "method not allowed" }, 405);
+}
+
+/** GET: the day's guesses that weren't on a list, tried by several players: { misses: [{ prompt, guess, players }] }. */
+async function misses(request, url, env) {
+  if (request.method !== "GET") return json({ error: "method not allowed" }, 405);
+  const game = url.searchParams.get("game");
+  const day = Number(url.searchParams.get("day") || NaN);
+  if (!PROMPTED.has(game) || !Number.isInteger(day) || day < 1) return json({ error: "which game and day?" }, 400);
+  const { results } = await env.DB.prepare("SELECT prompt, guess, COUNT(*) AS players FROM misses WHERE game = ? AND day = ? GROUP BY prompt, guess HAVING COUNT(*) >= ? ORDER BY players DESC, prompt, guess LIMIT 500")
+    .bind(game, day, MISSED_BY)
+    .all();
+  return json({ misses: results }, 200, 300);
+}

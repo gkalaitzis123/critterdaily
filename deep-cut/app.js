@@ -1,10 +1,10 @@
-// Deep Cut in the browser: today's five prompts, the timer, saving progress
-// on this device, Digby's dig back through Earth's history, the results and
-// the stats. The rules live in game.js.
-import { PERIODS, PROMPTS_PER_DAY, SECONDS_PER_PROMPT, compact, dayNumber, match, nearest, normalize, periodFor, promptsFor, shareText, stats } from "./game.js";
+// Deep Cut in the browser: today's prompts, the timer, saving progress on
+// this device, Digby's dig back through Earth's history, the results and the
+// stats. The rules live in game.js.
+import { PERIODS, PROMPTS_PER_DAY, SECONDS_PER_PROMPT, compact, dayNumber, match, nearest, normalize, periodFor, periodsFor, promptsFor, shareText, stats } from "./game.js";
 import { settingsButton } from "./settings.js";
 import { calendar, tierBars } from "./stats-view.js";
-import { averageOf, beatShare, count, howEveryoneDid, sendScore } from "./everyone.js";
+import { averageOf, beatShare, count, howEveryoneAnswered, howEveryoneDid, sendPlay, sendScore } from "./everyone.js";
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -28,6 +28,15 @@ let today;
 let categories = new Map(); // id -> the category, loading (as needed)
 let mode = "daily"; // or "practice"
 let run; // { day?, ids, results: [{ id, prompt, guess, answer, depth, oneIn, perDay }], index, startedAt }
+// The periods for the round on screen: a day of eight prompts goes deeper than one of five.
+let periods = periodsFor(PROMPTS_PER_DAY);
+/** Start a round: the prompts it has set how deep each period is. */
+function begin(round) {
+  run = round;
+  periods = periodsFor(run.ids.length);
+}
+/** The period a total reaches in the round on screen. */
+const periodOf = (total) => periodFor(total, run?.ids.length ?? PROMPTS_PER_DAY);
 let timer = null;
 let offered = null; // after a near miss: { typed, answers } for "Did you mean ...?"
 // For now anyone can play unlimited practice rounds, which is handy for testing.
@@ -110,8 +119,8 @@ function digby({ digging = false, wave = false } = {}) {
 
 /** The periods as rows. `now` marks one, and `total` says how far the next is. */
 function strata(now = -1, total = 0) {
-  return PERIODS.map((p, i) => {
-    const range = i < PERIODS.length - 1 ? `${p.min}–${PERIODS[i + 1].min - 1}\u00a0m` : `${p.min}+\u00a0m`;
+  return periods.map((p, i) => {
+    const range = i < periods.length - 1 ? `${p.min}–${periods[i + 1].min - 1}\u00a0m` : `${p.min}+\u00a0m`;
     const right = i === now ? `<svg viewBox="-34 -34 68 68" aria-hidden="true">${digby()}</svg>` : `<span>${now >= 0 && i === now + 1 ? `${p.min - total}\u00a0m to go` : range}</span>`;
     return `<div class="stratum${i === now ? " now" : ""}" style="--c:${LAYERS[i]}"><span>${p.name}${i === now ? " · you" : ""}</span>${right}</div>`;
   }).join("");
@@ -119,17 +128,18 @@ function strata(now = -1, total = 0) {
 
 // The hillside on the reveal screen: one band per period, each the same
 // height, so the thin deep periods aren't squeezed. Within a band, depth is
-// linear; the last band shows 40 m.
+// linear; the last band shows a quarter more than the depth that reaches it
+// (40 m on a day of five prompts).
 const SCENE_TOP = 40;
 const BAND = 72;
 const SCENE_H = SCENE_TOP + PERIODS.length * BAND;
 const SHAFT_X = 150;
 const SIGN_X = SHAFT_X + 24;
 const SIGN_CHARS = 30; // what fits on a signpost between the tunnel and the edge
-const bandEnd = (i) => (i < PERIODS.length - 1 ? PERIODS[i + 1].min : PERIODS[i].min + 40);
+const bandEnd = (i) => (i < periods.length - 1 ? periods[i + 1].min : Math.round((periods[i].min * 19) / 15));
 function yAt(m) {
-  const i = Math.max(0, PERIODS.findLastIndex((p) => m >= p.min));
-  const share = Math.min(1, (m - PERIODS[i].min) / (bandEnd(i) - PERIODS[i].min));
+  const i = Math.max(0, periods.findLastIndex((p) => m >= p.min));
+  const share = Math.min(1, (m - periods[i].min) / (bandEnd(i) - periods[i].min));
   return SCENE_TOP + (i + share) * BAND;
 }
 const ridge = (y) => `M0 ${y}Q32 ${y - 7} 65 ${y}T130 ${y}T195 ${y}T260 ${y}T325 ${y}T390 ${y}L390 ${SCENE_H}L0 ${SCENE_H}Z`;
@@ -162,7 +172,11 @@ function fossils(signs) {
 
 /** The hillside: the periods, Digby's tunnel so far, and a signpost at each answer's running total. */
 function hillside(results, before, after) {
-  const now = periodFor(after).index;
+  const now = periodOf(after).index;
+  // On a phone the hillside stops a period below Digby (three at least), so the
+  // answer, the dig and Next fit on one screen.
+  const bands = matchMedia("(max-width: 600px)").matches ? Math.min(PERIODS.length, Math.max(3, now + 2)) : PERIODS.length;
+  const height = SCENE_TOP + bands * BAND;
   const layers = LAYERS.map((c, i) => `<path d="${ridge(SCENE_TOP + i * BAND)}" fill="${c}"/>`).join("");
   const labels = PERIODS.map((p, i) => {
     const y = SCENE_TOP + i * BAND + 8;
@@ -177,7 +191,7 @@ function hillside(results, before, after) {
       sum += r.depth;
       if (!r.depth) return "";
       const at = yAt(sum);
-      const y = Math.min(SCENE_H - 14, Math.max(at, lastY + 24)); // nudged apart when they'd overlap
+      const y = Math.min(height - 14, Math.max(at, lastY + 24)); // nudged apart when they'd overlap
       lastY = y;
       signYs.push(y);
       const tail = ` · ${r.depth}\u00a0m`;
@@ -189,7 +203,7 @@ function hillside(results, before, after) {
     .join("");
   const from = yAt(before);
   const to = yAt(after);
-  return `<svg viewBox="0 0 390 ${SCENE_H}" role="img" aria-label="Digby has dug ${after} metres down, into the ${PERIODS[now].name}.">
+  return `<svg viewBox="0 0 390 ${height}" role="img" aria-label="Digby has dug ${after} metres down, into the ${PERIODS[now].name}.">
     <path d="M0 30Q20 22 40 30T80 30T120 30T160 30T200 30T240 30T280 30T320 30T360 30T400 30L400 44L0 44Z" fill="#7bc96f"/>
     <path d="M${SHAFT_X + 34} 30V6" stroke="#7a4e2e" stroke-width="3" stroke-linecap="round"/><path d="M${SHAFT_X + 35} 7l20 6l-20 6Z" fill="#ff6f61"/>
     ${layers}
@@ -223,7 +237,7 @@ function medal(index) {
 
 /** Where Digby is between prompts. */
 function digbyStatus(total) {
-  const p = periodFor(total);
+  const p = periodOf(total);
   const where = total ? `Digby is <strong>${total}\u00a0m</strong> down, in the <strong>${p.name}</strong>.` : "Digby is at the surface, ready to dig.";
   return `<svg viewBox="-36 -36 72 72" aria-hidden="true">${digby({ wave: !total })}</svg><p>${where}${p.next ? ` ${p.next.toGo}\u00a0m to the ${p.next.name}.` : ""}</p>`;
 }
@@ -258,12 +272,12 @@ async function init() {
   // rebuilt since (and one of them retired): the rest come from the schedule.
   const answered = saved?.results ?? [];
   if (saved?.done) {
-    run = { day: today, ids: answered.map((r) => r.id), results: answered, index: PROMPTS_PER_DAY };
+    begin({ day: today, ids: answered.map((r) => r.id), results: answered, index: answered.length });
     showResults();
     everyoneToday(today, totalOf(answered));
   } else if (answered.length || saved?.startedAt) {
     // Back mid-game, even mid-prompt: pick up where it was, with the clock still running.
-    run = { day: today, ids: [...answered.map((r) => r.id), ...ids.slice(answered.length)], results: answered, index: answered.length, startedAt: saved.startedAt };
+    begin({ day: today, ids: [...answered.map((r) => r.id), ...ids.slice(answered.length)], results: answered, index: answered.length, startedAt: saved.startedAt });
     await showPrompt();
   } else {
     await showIntro();
@@ -285,7 +299,15 @@ async function showIntro() {
   } catch {
     box.hidden = true;
   }
+  const prompts = promptsFor(today, schedule).length;
+  periods = periodsFor(prompts); // today's depths, before a round begins
   $("#strata-key").innerHTML = strata();
+  // Someone who has played before gets straight to it; How to play has the rest.
+  const returning = Object.keys(load().history ?? {}).length > 0;
+  $("#intro").classList.toggle("returning", returning);
+  $("#intro .bubble").textContent = returning ? "Welcome back! Ready to dig?" : "Hi, I'm Digby! Help me dig.";
+  $("#intro-short").textContent = `${prompts} prompts today, 30 seconds each. The rarer your answers, the deeper Digby digs.`;
+  $("#intro-count").textContent = ["Five", "Six", "Seven", "Eight"][prompts - 5] ?? String(prompts);
   $("#start").textContent = `Start Deep Cut #${today}`;
   $("#practice-start").hidden = !PRACTICE_FOR_ALL;
   show("intro");
@@ -294,7 +316,7 @@ async function showIntro() {
 function wire() {
   $("#start").addEventListener("click", async () => {
     mode = "daily";
-    run = { day: today, ids: promptsFor(today, schedule), results: [], index: 0 };
+    begin({ day: today, ids: promptsFor(today, schedule), results: [], index: 0 });
     track("start", { game: "deep-cut", mode, day: today });
     await showPrompt();
   });
@@ -345,6 +367,7 @@ async function showPrompt() {
   $("#guess").value = "";
   $("#digby-status").innerHTML = digbyStatus(totalOf(run.results));
   run.locked = false;
+  run.missed = []; // guesses that weren't on the list, sent with the answer
   show("prompt");
   $("#guess").focus();
   // A refresh doesn't reset the clock: the start time is saved.
@@ -391,6 +414,7 @@ async function guess(text) {
     $("#feedback").classList.toggle("ask", near.length > 0);
     $("#feedback").classList.remove("ok");
     if (near.length) return; // not wrong, just not sure: no shake, and the spelling stays to fix
+    if (run.missed && run.missed.length < 12) run.missed.push(normalize(text).slice(0, 60));
     $("#guess-form").classList.remove("shake");
     void $("#guess-form").offsetWidth; // restart the animation
     $("#guess-form").classList.add("shake");
@@ -408,10 +432,12 @@ async function finishPrompt(answer, typed = null) {
   const id = run.ids[run.index];
   const { prompt } = await category(id);
   run.results.push({ id, prompt, guess: typed, answer: answer?.name ?? null, depth: answer?.depth ?? 0, oneIn: answer?.oneIn ?? null, perDay: answer?.perDay ?? null });
+  // Today's answers (and misses) go to everyone's counts; practice rounds don't.
+  const sent = mode === "daily" ? sendPlay("deep-cut", run.day, id, answer?.name ?? null, [...new Set(run.missed ?? [])].filter(Boolean)) : null;
   run.startedAt = null;
   run.index++;
   if (mode === "daily") {
-    const done = run.index >= PROMPTS_PER_DAY;
+    const done = run.index >= run.ids.length;
     const total = totalOf(run.results);
     save((s) => {
       (s.days ??= {})[run.day] = { results: run.results, done };
@@ -419,6 +445,24 @@ async function finishPrompt(answer, typed = null) {
     });
   }
   await showReveal(await category(id), run.results.at(-1));
+  crowd(id, run.results.at(-1).answer, sent);
+}
+
+/** Under the answer: how many of today's players named it too, once enough have played that prompt. */
+async function crowd(id, answer, sent) {
+  const el = $("#reveal-crowd");
+  el.hidden = true;
+  if (mode !== "daily" || !answer) return;
+  await sent; // so the count includes this answer
+  const all = await howEveryoneAnswered("deep-cut", run.day, id);
+  if (!all || all.players < 10 || $("#reveal").hidden || $("#reveal-answer").textContent !== answer) return;
+  const n = all.counts[answer] ?? 0;
+  const share = (100 * n) / all.players;
+  el.innerHTML =
+    n <= 1
+      ? `You're the only one of today's ${count(all.players)} diggers to name it so far.`
+      : `<strong>${share < 1 ? "Under 1" : Math.round(share)}%</strong> of today's ${count(all.players)} diggers named it.`;
+  el.hidden = false;
 }
 
 async function showReveal(c, result) {
@@ -443,7 +487,7 @@ async function showReveal(c, result) {
 
   const after = totalOf(run.results);
   const before = after - result.depth;
-  const p = periodFor(after);
+  const p = periodOf(after);
   $("#scene").innerHTML = hillside(run.results, before, after);
   $("#dig-tier").innerHTML = `In the <strong>${p.name}</strong><br>${p.next ? `${p.next.toGo}\u00a0m to the ${p.next.name}` : "The deepest period there is!"}`;
   show("reveal");
@@ -458,7 +502,7 @@ async function showReveal(c, result) {
   );
   countUp($("#reveal-depth"), result.depth);
   countUp($("#dig-total"), after, 1600, before);
-  $("#next").focus();
+  $("#next").focus({ preventScroll: true }); // Enter goes on, and the answer stays in view
 }
 
 function countUp(el, to, ms = 900, from = 0) {
@@ -475,7 +519,7 @@ function countUp(el, to, ms = 900, from = 0) {
 async function next() {
   if (run.index >= run.ids.length) {
     const total = totalOf(run.results);
-    track("finish", { game: "deep-cut", mode, ...(mode === "daily" ? { day: run.day } : {}), depth: total, period: periodFor(total).name, answered: run.results.filter((r) => r.answer).length });
+    track("finish", { game: "deep-cut", mode, ...(mode === "daily" ? { day: run.day } : {}), depth: total, period: periodOf(total).name, answered: run.results.filter((r) => r.answer).length });
     await showResults();
     if (mode === "daily") {
       window.critterNav?.refresh(); // tick it in the bar
@@ -508,7 +552,7 @@ async function everyoneToday(day, depth, { send = false } = {}) {
 async function showResults() {
   const total = totalOf(run.results);
   const daily = mode === "daily";
-  const p = periodFor(total);
+  const p = periodOf(total);
   $("#results-label").textContent = daily ? `Deep Cut #${run.day}` : "Practice round";
   $("#medal").innerHTML = medal(p.index);
   $("#tier-name").textContent = p.name;
@@ -577,24 +621,26 @@ async function share() {
 }
 
 function showStats() {
-  const s = stats(load().history ?? {}, today);
+  const history = load().history ?? {};
+  const s = stats(history, today);
+  // Each day by its own count of prompts: five at first, eight since.
+  const periodOn = (d) => periodFor(history[d], promptsFor(d, schedule).length).index;
+  const deepestDay = Object.keys(history).map(Number).reduce((best, d) => (best === null || history[d] > history[best] ? d : best), null);
   const stat = (n, label, wide = false) => `<div class="stat${wide ? " wide" : ""}"><strong>${n}</strong><span>${label}</span></div>`;
   $("#stats-grid").innerHTML = [
     stat(s.played, "Played"),
     stat(s.streak, "Streak"),
     stat(s.bestStreak, "Best streak"),
     stat(`${s.average}\u00a0m`, "Average", true),
-    stat(`${s.deepest}\u00a0m`, s.played ? `Deepest, in the ${periodFor(s.deepest).name}` : "Deepest", true),
+    stat(`${s.deepest}\u00a0m`, s.played ? `Deepest, in the ${PERIODS[periodOn(deepestDay)].name}` : "Deepest", true),
   ].join("");
   // Which period each day ended in, and the last five weeks in those colors.
-  const history = load().history ?? {};
-  const periodOf = (d) => periodFor(history[d]).index;
   const days = Object.keys(history).map(Number);
   $("#stats-tiers").innerHTML = tierBars(
-    PERIODS.map((p, i) => ({ label: p.name, count: days.filter((d) => periodOf(d) === i).length, color: LAYERS[i] })),
-    history[today] !== undefined ? periodOf(today) : -1,
+    PERIODS.map((p, i) => ({ label: p.name, count: days.filter((d) => periodOn(d) === i).length, color: LAYERS[i] })),
+    history[today] !== undefined ? periodOn(today) : -1,
   );
-  $("#stats-calendar").innerHTML = calendar((d) => (history[d] !== undefined ? LAYERS[periodOf(d)] : null), today);
+  $("#stats-calendar").innerHTML = calendar((d) => (history[d] !== undefined ? LAYERS[periodOn(d)] : null), today);
   $("#stats").showModal();
 }
 
@@ -613,7 +659,7 @@ async function startPractice() {
     }
     deck = [...deck, ...fresh];
   }
-  run = { ids: deck.splice(0, PROMPTS_PER_DAY), results: [], index: 0 };
+  begin({ ids: deck.splice(0, PROMPTS_PER_DAY), results: [], index: 0 });
   $("#day-label").textContent = "Practice round · doesn't count";
   await showPrompt();
 }

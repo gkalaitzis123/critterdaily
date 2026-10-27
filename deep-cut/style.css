@@ -326,6 +326,19 @@ main {
   color: var(--ink-2);
 }
 
+/* Back for another day: just the headline, a line on today and Start. */
+.intro-short {
+  display: none;
+}
+#intro.returning .intro-short {
+  display: block;
+}
+#intro.returning > p:not(.intro-short),
+#intro.returning #example,
+#intro.returning #strata-key {
+  display: none;
+}
+
 #intro > .fine {
   font-size: 13px;
 }
@@ -672,6 +685,14 @@ main {
   }
 }
 
+/* How many of today's players named the same answer. */
+.reveal-crowd {
+  margin: 10px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--line, rgba(127, 127, 127, 0.25));
+  font-size: 0.95rem;
+}
+
 .scene svg {
   display: block;
   width: 100%;
@@ -682,7 +703,7 @@ main {
   font-family: var(--display);
   font-weight: 600;
   font-size: 11.5px;
-  fill: var(--ink);
+  fill: #2e2a3b; /* on a light pill in either theme */
 }
 
 .scene-sign {

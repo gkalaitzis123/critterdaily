@@ -4,7 +4,9 @@
 // tests) it quietly does nothing. Published next to each page (see
 // ../scripts/publish-site.mjs).
 
-const API = /(^|\.)critterdaily\.com$/.test(location.hostname) ? "/api/scores" : null;
+const ON_SITE = /(^|\.)critterdaily\.com$/.test(location.hostname);
+const API = ON_SITE ? "/api/scores" : null;
+const PLAYS = ON_SITE ? "/api/plays" : null;
 
 /** Sends a finished daily game's score; resolves once it's in, or has failed. */
 export async function sendScore(game, day, score) {
@@ -21,6 +23,30 @@ export async function howEveryoneDid(game, day) {
   if (!API) return null;
   try {
     const res = await fetch(`${API}?game=${game}&day=${day}`, { cache: "no-store" });
+    return res.ok ? await res.json() : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Sends one prompt of a daily game: the answer that counted (or null) and the
+ * guesses that weren't on the list. Resolves once it's in, or has failed.
+ */
+export async function sendPlay(game, day, prompt, answer, misses = []) {
+  if (!PLAYS) return;
+  try {
+    await fetch(PLAYS, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ game, day, prompt, answer, misses }), keepalive: true });
+  } catch {
+    // Offline: today's counts just won't include this answer.
+  }
+}
+
+/** How everyone answered a prompt today: { players, counts: { [answer]: players } }, or null when it can't be had. */
+export async function howEveryoneAnswered(game, day, prompt) {
+  if (!PLAYS) return null;
+  try {
+    const res = await fetch(`${PLAYS}?game=${game}&day=${day}&prompt=${prompt}`, { cache: "no-store" });
     return res.ok ? await res.json() : null;
   } catch {
     return null;
