@@ -91,6 +91,7 @@ export function homeSummary(today = dayToday()) {
     // Days saved before its #5 were out of 100, and count ten times over (until the game converts them and marks `outOf`).
     "ten-numbers": { key: "tennumbers-v1", result: (h, saved) => `${saved.outOf === 1000 ? h : h * 10} points`, counts: (h) => h !== undefined },
     burrow: { key: "burrow-v1", result: (h) => `${h} m`, counts: (h) => h !== undefined, late: 1 }, // its #1 was a day after the others
+    crisscross: { key: "crisscross-v1", result: (h) => `solved in ${Math.floor(h.time / 60)}:${String(h.time % 60).padStart(2, "0")}`, counts: (h) => h !== undefined, late: 10 }, // its #1 was ten days after the others'
   };
   const out = {};
   for (const [id, g] of Object.entries(games)) {

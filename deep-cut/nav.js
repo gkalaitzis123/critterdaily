@@ -15,6 +15,7 @@
     // Ten Numbers days saved before its #5 were out of 100, and count ten times over (until the game converts them and marks `outOf`).
     { id: "ten-numbers", name: "Ten Numbers", key: "tennumbers-v1", done: (h, saved) => `${saved.outOf === 1000 ? h : h * 10} points` },
     { id: "burrow", name: "Burrow", key: "burrow-v1", done: (h) => `${h} m deep`, late: 1 }, // its #1 was a day after the others
+    { id: "crisscross", name: "Crisscross", key: "crisscross-v1", done: (h) => `solved in ${Math.floor(h.time / 60)}:${String(h.time % 60).padStart(2, "0")}`, late: 10 }, // its #1 was ten days after the others'
   ];
   const script = document.currentScript;
   const here = script.dataset.game;
@@ -58,11 +59,24 @@
       .cd-row small { color: var(--muted); font-size: 14px; font-weight: 700; }
       .cd-row .cd-go { flex: none; padding: 6px 16px 8px; border-radius: 999px; background: var(--sun); box-shadow: 0 3px 0 var(--sun-edge); color: var(--on-sun); font: 700 15px var(--display); }
       .cd-row.played .cd-go { background: var(--track); box-shadow: none; color: var(--ink-2); }
+      /* Five games' buttons and the way home, on one line on a phone. */
+      @media (max-width: 440px) {
+        .cd-nav { gap: 8px; padding: 10px 10px 2px; }
+        .cd-home { gap: 6px; padding: 4px 12px 4px 4px; font-size: 15px; }
+        .cd-home img { width: 26px; height: 26px; }
+        .cd-games { gap: 4px; }
+        .cd-game { width: 35px; height: 35px; border-radius: 11px; }
+        .cd-game img { width: 27px; height: 27px; border-radius: 8px; }
+      }
+      @media (max-width: 350px) {
+        .cd-home { padding-right: 4px; }
+        .cd-home-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+      }
     </style>`,
   );
 
   const bar = () => `<nav class="cd-nav" aria-label="Critter Daily games">
-      <a class="cd-home" href="../"><img src="../icon.svg" alt="" width="30" height="30" onerror="this.style.visibility='hidden'">All games</a>
+      <a class="cd-home" href="../"><img src="../icon.svg" alt="" width="30" height="30" onerror="this.style.visibility='hidden'"><span class="cd-home-text">All games</span></a>
       <span class="cd-games">${GAMES.map((g) => {
         const done = result(g) !== null;
         return `<a class="cd-game" href="../${g.id}/"${g.id === here ? ' aria-current="page"' : ""} aria-label="${g.name}${done ? ", played today" : ""}" title="${g.name}">${icon(g, 30)}${done ? '<span class="cd-tick" aria-hidden="true">✓</span>' : ""}</a>`;

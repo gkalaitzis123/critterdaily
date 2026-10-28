@@ -1,4 +1,6 @@
-/* Critter Daily: the home page for the three games, in their storybook look. */
+/* Critter Daily: the home page for the games, in their storybook look. Every
+   game fits on the screen at once, phone or computer: a short card each, one
+   to a row on a phone and two on a wider screen. */
 
 :root {
   color-scheme: light;
@@ -64,7 +66,7 @@ a {
 }
 
 .hero {
-  padding-top: 40px;
+  padding-top: 22px;
   text-align: center;
 }
 
@@ -72,31 +74,43 @@ a {
   margin: 0;
   font-family: var(--display);
   font-weight: 700;
-  font-size: clamp(38px, 11vw, 52px);
+  font-size: clamp(34px, 10vw, 52px);
   line-height: 1.05;
 }
 
 .hero p {
-  margin: 10px 0 0;
-  font-size: 18px;
+  margin: 6px 0 0;
+  font-size: 16px;
   color: var(--ink-2);
 }
 
 .games {
   display: grid;
-  gap: 16px;
-  margin-top: 28px;
-  margin-bottom: 28px;
+  gap: 10px;
+  margin-top: 16px;
+  margin-bottom: 24px;
 }
 
+/* Phones, one game a row: Crisscross right under Deep Cut. */
+@media (max-width: 719.98px) {
+  .game[href="deep-cut/"] {
+    order: -2;
+  }
+
+  .game[href="crisscross/"] {
+    order: -1;
+  }
+}
+
+/* A game: its critter, its name and what it is, and Play. */
 .game {
   display: grid;
-  grid-template-columns: 84px minmax(0, 1fr);
-  grid-template-rows: auto auto;
+  grid-template-columns: 58px minmax(0, 1fr) auto;
   align-items: center;
-  gap: 4px 14px;
-  padding: 16px;
-  border-radius: 22px;
+  gap: 12px;
+  min-height: 84px;
+  padding: 10px 14px 10px 10px;
+  border-radius: 20px;
   background: var(--card);
   box-shadow: 0 5px 0 var(--card-edge);
   color: var(--ink);
@@ -110,32 +124,44 @@ a {
 }
 
 .mascot {
-  grid-row: 1 / span 2;
-  width: 84px;
-  height: 84px;
+  width: 58px;
+  height: 58px;
   overflow: visible; /* hops and waves reach past the box */
 }
 
 .game-text {
   display: grid;
-  gap: 2px;
+  gap: 1px;
 }
 
 .game-name {
   font-family: var(--display);
   font-weight: 700;
-  font-size: 24px;
+  font-size: 21px;
   line-height: 1.1;
 }
 
+/* On a phone, the one-line version of what a game is; once it's been played, today's result and streak instead. */
 .game-what {
+  display: none;
   font-size: 15px;
+  line-height: 1.35;
   color: var(--ink-2);
 }
 
+.game-short {
+  font-size: 14px;
+  line-height: 1.3;
+  color: var(--ink-2);
+}
+
+.game.known .game-short {
+  display: none;
+}
+
 .play {
-  justify-self: start;
-  padding: 6px 18px;
+  justify-self: end;
+  padding: 6px 16px;
   border-radius: 14px;
   background: var(--sun);
   color: var(--on-sun);
@@ -243,39 +269,60 @@ a {
   color: var(--ink-2);
 }
 
-/* Wide screens: the four games in a two-by-two square, each a tall card. */
+/* Wide screens: two games to a row, with room for the whole story of each. An odd one out sits in the middle. */
 @media (min-width: 720px) {
+  .hero {
+    padding-top: 34px;
+  }
+
+  .hero p {
+    font-size: 18px;
+  }
+
   .games {
-    width: min(800px, 100%);
+    width: min(880px, 100%);
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 20px;
-    margin-top: 36px;
+    gap: 16px;
+    margin-top: 26px;
   }
 
   .game {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr auto;
-    justify-items: center;
-    align-items: start;
-    gap: 10px;
-    padding: 24px 22px 24px;
-    text-align: center;
+    grid-template-columns: 76px minmax(0, 1fr) auto;
+    gap: 14px;
+    min-height: 120px;
+    padding: 14px 18px 14px 14px;
+  }
+
+  .game:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: calc(50% - 8px);
   }
 
   .mascot {
-    grid-row: auto;
-    width: 110px;
-    height: 110px;
+    width: 76px;
+    height: 76px;
   }
 
-  .game-text {
-    justify-items: center;
-    gap: 6px;
+  .game-name {
+    font-size: 23px;
   }
 
-  .play {
-    justify-self: center;
-    margin-top: 6px;
+  .game-what {
+    display: block;
+  }
+
+  .game-short {
+    display: none;
+  }
+
+  /* A game already played: the one-line version, and today's result under it. */
+  .game.known .game-what {
+    display: none;
+  }
+
+  .game.known .game-short {
+    display: block;
   }
 }
 
@@ -291,6 +338,10 @@ a {
 
 .game-today.done {
   color: var(--good);
+}
+
+.game-today .streak {
+  white-space: nowrap;
 }
 
 /* The settings button, in the corner, and its sheet (settings.js) */

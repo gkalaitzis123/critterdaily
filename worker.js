@@ -17,7 +17,8 @@
 const DAY_ONE = Date.UTC(2026, 9, 17); // the first games' #1
 // The highest score each game can send (Burrow's: every word of its deepest
 // day), and how many days after DAY_ONE its #1 was.
-const GAMES = { "deep-cut": [400, 0], "mother-tongue": [20, 0], "ten-numbers": [1000, 0], burrow: [1000, 1] };
+// Crisscross sends its time in seconds (lower is better), at most an hour.
+const GAMES = { "deep-cut": [400, 0], "mother-tongue": [20, 0], "ten-numbers": [1000, 0], burrow: [1000, 1], crisscross: [3600, 10] };
 // Games that send their prompts, and what a prompt, an answer and a guess can be.
 const PROMPTED = new Set(["deep-cut"]);
 const PROMPT = /^[a-z0-9-]{1,40}$/;

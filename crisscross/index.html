@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <script>
+      // Light or dark, and less motion, before the page draws (settings.js keeps them up to date).
+      try {
+        var cd = JSON.parse(localStorage.getItem("critter-daily-settings")) || {};
+        document.documentElement.dataset.theme = cd.theme === "light" || cd.theme === "dark" ? cd.theme : matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        if (cd.motion === "less") document.documentElement.dataset.motion = "less";
+      } catch (e) {}
+    </script>
+    <title>Crisscross: a free daily mini crossword</title>
+    <meta name="description" content="A free 5x5 crossword every day, with fresh clues and nothing to sign up for. Fill it fast, and Webster the spider spins her finest web." />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Critter Daily" />
+    <meta property="og:title" content="Crisscross: a free daily mini crossword" />
+    <meta property="og:description" content="A free 5x5 crossword every day, with fresh clues and nothing to sign up for. Fill it fast, and Webster the spider spins her finest web." />
+    <meta property="og:url" content="https://critterdaily.com/crisscross/" />
+    <meta property="og:image" content="https://critterdaily.com/crisscross/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Webster the spider in her web beside a little crossword, with the words Crisscross: a mini crossword a day" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#cfeaff" />
+    <link rel="icon" href="icon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;700;800&display=swap" />
+    <link rel="stylesheet" href="style.css" />
+    <!-- Counts visits and games, without cookies or knowing who you are; only on critterdaily.com, so local copies and tests count nothing. -->
+    <script async src="https://cloud.umami.is/script.js" data-website-id="7d7d7ec1-534b-40e2-9401-3c07793fd5ec" data-domains="critterdaily.com,www.critterdaily.com"></script>
+  </head>
+  <body>
+    <script src="nav.js" data-game="crisscross"></script>
+    <header class="top">
+      <button id="help-button" class="icon-button" type="button" aria-label="How to play">?</button>
+      <div class="wordmark">
+        <h1>Crisscross</h1>
+        <p id="day-label" class="day-label"></p>
+      </div>
+      <div class="top-end">
+        <button id="stats-button" class="icon-button" type="button" aria-label="Your stats">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V11M12 20V4M19 20v-6" /></svg>
+        </button>
+        <button id="settings-button" class="icon-button" type="button" aria-label="Settings">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" /><circle cx="15" cy="7" r="2.4" /><circle cx="9" cy="17" r="2.4" /></svg>
+        </button>
+      </div>
+    </header>
+
+    <main id="app">
+      <section id="loading" class="screen"><p class="muted">Webster is spinning today's grid…</p></section>
+
+      <section id="intro" class="screen" hidden>
+        <div class="hello">
+          <p class="bubble">Hi, I'm Webster! Let's spin some words.</p>
+          <svg class="hello-webster" viewBox="-44 -44 88 88" aria-hidden="true" data-webster="dangle"></svg>
+        </div>
+        <h2 class="headline">A tiny crossword. How fast can you fill it?</h2>
+        <p class="lede">Five squares across, five down, and about ten clues. The clock starts when you do.</p>
+        <div class="card example">
+          <div class="example-grid" aria-hidden="true">
+            <span><i>1</i>K</span><span><i>2</i>E</span><span><i>3</i>Y</span><span class="black"></span><span class="black"></span>
+            <span><i>4</i>I</span><span>D</span><span>E</span><span><i>5</i>A</span><span class="black"></span>
+            <span><i>6</i>D</span><span>I</span><span>A</span><span>R</span><span><i>7</i>Y</span>
+          </div>
+          <div class="example-clues">
+            <p><b>1 Across</b> It might be under the doormat</p>
+            <p><b>4 Across</b> Lightbulb moment</p>
+            <p><b>6 Across</b> Book with a lock and a lot of secrets</p>
+            <p class="muted small">Tap a square and type. Tap it again to switch between across and down.</p>
+          </div>
+        </div>
+        <button id="start" class="primary" type="button">Start the clock</button>
+        <button id="practice-start" class="secondary" type="button">Practice with another puzzle</button>
+      </section>
+
+      <section id="play" class="screen" hidden>
+        <div class="play-top">
+          <span class="clock-box"><svg id="mini-web" class="mini-web" viewBox="-50 -50 100 100" aria-hidden="true"></svg><span id="clock" class="clock" role="timer" aria-label="Time">0:00</span></span>
+          <span class="helpers">
+            <button id="check" class="pill" type="button" title="Marks wrong letters; adds 10 seconds">Check</button>
+            <button id="reveal" class="pill" type="button" title="Fills in the square you're on; adds 10 seconds">Reveal</button>
+          </span>
+        </div>
+        <div id="grid" class="grid" role="grid" aria-label="The crossword"></div>
+        <div class="clue-bar">
+          <button id="prev-clue" class="clue-step" type="button" aria-label="Previous clue">‹</button>
+          <button id="clue-now" class="clue-now" type="button" aria-label="Switch between across and down">
+            <span id="clue-line" class="clue-line"><span id="clue-tag" class="clue-tag"></span> <span id="clue-text" class="clue-text"></span></span>
+          </button>
+          <button id="next-clue" class="clue-step" type="button" aria-label="Next clue">›</button>
+        </div>
+        <p id="feedback" class="feedback" role="status"></p>
+        <div id="keyboard" class="keyboard" aria-label="Keyboard"></div>
+        <div class="clue-lists">
+          <section><h3>Across</h3><ol id="list-across"></ol></section>
+          <section><h3>Down</h3><ol id="list-down"></ol></section>
+        </div>
+        <p id="sr-clue" class="sr-only" aria-live="polite"></p>
+      </section>
+
+      <section id="results" class="screen" hidden>
+        <div class="results-hero"><svg id="results-art" class="results-art" viewBox="-52 -52 104 104" aria-hidden="true"></svg></div>
+        <p id="results-label" class="kicker"></p>
+        <p class="kicker">You're a</p>
+        <h2 id="tier-name" class="tier-name"></h2>
+        <p id="tier-blurb" class="muted small"></p>
+        <p class="total"><span id="total">0:00</span></p>
+        <p id="total-note" class="muted small"></p>
+        <p id="everyone" class="everyone" hidden></p>
+        <div id="solved" class="solved-grid" aria-label="The solved grid"></div>
+        <div id="tier-ladder" class="tier-ladder" aria-label="Tiers"></div>
+        <button id="share" class="primary" type="button">Share your time</button>
+        <p id="share-note" class="feedback ok" role="status"></p>
+        <div class="cd-next"></div>
+        <p class="next-in">Next Crisscross in <strong id="countdown"></strong></p>
+        <button id="practice" class="secondary" type="button">Another puzzle (practice)</button>
+        <button id="back-today" class="link" type="button" hidden>Back to today's Crisscross</button>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <p>Clues written for Crisscross. Words from <a href="https://github.com/dolph/dictionary" target="_blank" rel="noopener">ENABLE</a> (public domain), chosen with <a href="https://github.com/rspeer/wordfreq" target="_blank" rel="noopener">wordfreq</a> (CC BY-SA 4.0); rude words left out using <a href="https://github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words" target="_blank" rel="noopener">LDNOOBW's list</a>.</p>
+      <p class="more"><a href="../">More games from Critter Daily</a> · <a href="../privacy.html">Privacy</a></p>
+    </footer>
+
+    <dialog id="help" class="sheet">
+      <div class="sheet-head">
+        <svg class="sheet-webster" viewBox="-44 -44 88 88" aria-hidden="true" data-webster="wave"></svg>
+        <h2 tabindex="-1" autofocus>How to play</h2>
+      </div>
+      <ul>
+        <li>A 5x5 crossword a day, the same for everyone. The clock starts when you press Start, and stops when every square is right.</li>
+        <li>Tap a square to choose it, and tap it again to switch between across and down. Then type: the keyboard on screen, or your own.</li>
+        <li>The clue you're on shows under the grid; ‹ and › go to the clue before and after.</li>
+        <li>Stuck? <b>Check</b> marks the letters that are wrong, and <b>Reveal</b> fills in the square you're on. Each adds 10 seconds to your time.</li>
+        <li>The clock pauses while you're away from the page.</li>
+        <li>The quicker you solve it, the finer Webster's web, and the better your title: Hatchling, Thread Spinner, Web Weaver, Master Weaver, or Silk Sprinter.</li>
+        <li>On a computer, the arrow keys move, Tab and Enter go to the next clue, and Space switches direction.</li>
+        <li>Want more? Practice puzzles are as many as you like, and don't count toward your stats.</li>
+      </ul>
+      <form method="dialog"><button class="primary">Got it</button></form>
+    </dialog>
+
+    <dialog id="stats" class="sheet">
+      <h2 tabindex="-1" autofocus>Your webs</h2>
+      <div id="stats-grid" class="stats-grid"></div>
+      <h3 class="stats-sub">How your days went</h3>
+      <div id="stats-tiers"></div>
+      <h3 class="stats-sub">The last five weeks</h3>
+      <div id="stats-calendar"></div>
+      <form method="dialog"><button class="primary">Close</button></form>
+    </dialog>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

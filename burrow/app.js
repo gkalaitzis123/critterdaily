@@ -418,7 +418,8 @@ function showStats() {
     TIERS.map((t, i) => ({ label: t.name, count: days.filter((d) => tierOf(d) === i).length, color: SOIL[i] })),
     history[today] !== undefined ? tierOf(today) : -1,
   );
-  $("#stats-calendar").innerHTML = calendar((d) => (history[d] !== undefined ? SOIL[tierOf(d)] : null), today);
+  // The calendar counts the site's days, and Burrow's run one behind (its #1 was the site's day 2).
+  $("#stats-calendar").innerHTML = calendar((d) => (history[d - 1] !== undefined ? SOIL[tierOf(d - 1)] : null), today + 1);
   $("#stats").showModal();
 }
 
