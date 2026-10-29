@@ -11,8 +11,8 @@
         if (cd.motion === "less") document.documentElement.dataset.motion = "less";
       } catch (e) {}
     </script>
-    <title>Deep Cut: name the pages nobody reads</title>
-    <meta name="description" content="A daily science and history game. Name anything that fits the prompt; the fewer people read its Wikipedia page, the deeper Digby the mole digs back through Earth's history." />
+    <title>Deep Cut: a daily Wikipedia trivia game</title>
+    <meta name="description" content="A free daily trivia game: eight prompts, and the most obscure answer wins. The fewer people read its Wikipedia page, the deeper Digby the mole digs." />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Critter Daily" />
     <meta property="og:title" content="Deep Cut: name the pages nobody reads" />
@@ -24,6 +24,7 @@
     <meta property="og:image:alt" content="Digby the mole in his miner’s hat, with the words Deep Cut: name the Wikipedia pages nobody reads" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#cfeaff" />
+    <link rel="canonical" href="https://critterdaily.com/deep-cut/" />
     <link rel="icon" href="icon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -140,6 +141,17 @@
         <button id="back-today" class="link" type="button" hidden>Back to today's Deep Cut</button>
       </section>
     </main>
+
+    <section class="about" aria-labelledby="about-title">
+        <h2 id="about-title">How to play Deep Cut, the daily Wikipedia trivia game</h2>
+        <p>Each day has eight prompts, the same for everyone, like "Name a Roman emperor", with 30 seconds for each. Any answer that fits counts, but the fewer people read its Wikipedia page, the deeper Digby the mole digs, back through Earth's history from the Holocene to the Cambrian.</p>
+        <h3>How is an answer's rarity measured?</h3>
+        <p>By Wikipedia page views: an answer's share of everyone reading the articles on that prompt's list. An answer read by 1 in 2,769 of them digs far deeper than one everybody reads, and every ten times rarer digs another 10 meters.</p>
+        <h3>What counts as an answer?</h3>
+        <p>Anything on the prompt's list, built from Wikipedia and Wikidata. Accents, punctuation and a leading "the" don't matter, and common other names count too.</p>
+        <h3>Is it free?</h3>
+        <p>Yes, every day, with nothing to sign up for. Practice rounds use other prompts and don't count toward your stats.</p>
+    </section>
 
     <footer class="foot">
       <p>Answers from <a href="https://www.wikidata.org/" target="_blank" rel="noopener">Wikidata</a>; how rare they are from <a href="https://en.wikipedia.org/wiki/Wikipedia:Pageview_statistics" target="_blank" rel="noopener">Wikipedia page views</a>. Both public domain.</p>

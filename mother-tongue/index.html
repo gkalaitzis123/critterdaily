@@ -11,8 +11,8 @@
         if (cd.motion === "less") document.documentElement.dataset.motion = "less";
       } catch (e) {}
     </script>
-    <title>Mother Tongue: the daily language family game</title>
-    <meta name="description" content="Guess today's mystery language. Every guess shows how closely it's related on the family tree of the world's languages, and how far away it's spoken." />
+    <title>Mother Tongue: a daily guess-the-language game</title>
+    <meta name="description" content="Guess today's mystery language in 20 tries. Each guess shows how close it is on the world's language family tree, and how far away it's spoken. Free." />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Critter Daily" />
     <meta property="og:title" content="Mother Tongue: the daily language family game" />
@@ -24,6 +24,7 @@
     <meta property="og:image:alt" content="Pip the parrot beside an egg in a nest, with the words Mother Tongue: guess the mystery language" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#cfeaff" />
+    <link rel="canonical" href="https://critterdaily.com/mother-tongue/" />
     <link rel="icon" href="icon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -123,6 +124,17 @@
         <button id="back-today-game" class="link" type="button" hidden>Back to today's mystery</button>
       </section>
     </main>
+
+    <section class="about" aria-labelledby="about-title">
+        <h2 id="about-title">How to play Mother Tongue, the daily guess-the-language game</h2>
+        <p>Each day there's one mystery language, the same for everyone, and you have 20 guesses. Guess any language: each guess shows the deepest branch of the family tree it shares with the mystery one (guess Spanish when it's Portuguese, and you learn they're both West Iberian), and how far away and in which direction the mystery language is spoken. Pip the parrot climbs the tree as you get closer.</p>
+        <h3>Are there hints?</h3>
+        <p>Yes. After 5 guesses you learn how many people speak it, after 10 the countries where it's spoken, and after 15 its first letter.</p>
+        <h3>Do I need to know linguistics?</h3>
+        <p>Not at all. Start with any language you know, and each guess tells you which branch to try next.</p>
+        <h3>Where does the family tree come from?</h3>
+        <p>From Glottolog, the scholarly catalog of the world's languages (CC BY 4.0).</p>
+    </section>
 
     <footer class="foot">
       <p>Family trees and places from <a href="https://glottolog.org" target="_blank" rel="noopener">Glottolog</a> (CC BY 4.0). Names, speaker counts and languages' own names from <a href="https://www.wikidata.org/" target="_blank" rel="noopener">Wikidata</a>.</p>

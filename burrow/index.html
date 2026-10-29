@@ -11,8 +11,8 @@
         if (cd.motion === "less") document.documentElement.dataset.motion = "less";
       } catch (e) {}
     </script>
-    <title>Burrow: the daily word dig</title>
-    <meta name="description" content="Seven letters a day and one minute to make words. The rarer the word, the deeper Clover the rabbit digs." />
+    <title>Burrow: a free daily word game</title>
+    <meta name="description" content="A free daily word game: make words from seven letters in one minute. The rarer the word, the deeper Clover the rabbit digs. New letters every day." />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Critter Daily" />
     <meta property="og:title" content="Burrow: the daily word dig" />
@@ -24,6 +24,7 @@
     <meta property="og:image:alt" content="Clover the rabbit over letter tiles spelling BURROW, with the words Burrow: the rarer the word, the deeper Clover digs" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#cfeaff" />
+    <link rel="canonical" href="https://critterdaily.com/burrow/" />
     <link rel="icon" href="icon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -114,6 +115,17 @@
         <button id="back-today" class="link" type="button" hidden>Back to today's Burrow</button>
       </section>
     </main>
+
+    <section class="about" aria-labelledby="about-title">
+        <h2 id="about-title">How to play Burrow, the daily word game</h2>
+        <p>Each day has seven letters, the same for everyone, and you have one minute. Make as many words of four letters or more as you can, using each letter once per word. Every word digs Clover the rabbit's burrow deeper, and the rarer the word, the deeper it digs: how rare comes from how often a word turns up in English. A word that uses all seven letters digs 10 meters more.</p>
+        <h3>Is Burrow like Spelling Bee?</h3>
+        <p>Both are about finding words in a few letters. In Burrow the clock is running, no letter is required, and a rare word is worth more than a common one, however long.</p>
+        <h3>Which words count?</h3>
+        <p>Words from ENABLE, the public-domain list many word games use, that turn up in real English, without rude ones. Names and abbreviations don't count.</p>
+        <h3>Is it free?</h3>
+        <p>Yes, every day, with nothing to sign up for. Practice rounds with other letters are unlimited.</p>
+    </section>
 
     <footer class="foot">
       <p>Words from <a href="https://github.com/dolph/dictionary" target="_blank" rel="noopener">ENABLE</a> (public domain); how rare each is from <a href="https://github.com/rspeer/wordfreq" target="_blank" rel="noopener">wordfreq</a> (CC BY-SA 4.0); rude words left out using <a href="https://github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words" target="_blank" rel="noopener">LDNOOBW's list</a>.</p>

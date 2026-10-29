@@ -11,8 +11,8 @@
         if (cd.motion === "less") document.documentElement.dataset.motion = "less";
       } catch (e) {}
     </script>
-    <title>Critter Daily: five little games, new every day</title>
-    <meta name="description" content="Five free daily games with storybook critters: Deep Cut, a science and history game about the Wikipedia pages nobody reads; Mother Tongue, a language family-tree puzzle; Ten Numbers, an estimation game; Burrow, a word game where rarer words dig deeper; and Crisscross, a mini crossword." />
+    <title>Critter Daily: five free daily puzzle games</title>
+    <meta name="description" content="Five free daily puzzle games: a mini crossword, a seven-letter word game, guess the language, estimation trivia and Wikipedia trivia. New every midnight." />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Critter Daily" />
     <meta property="og:title" content="Critter Daily: five little games, new every day" />
@@ -24,6 +24,7 @@
     <meta property="og:image:alt" content="Digby the mole, Pip the parrot, Nutmeg the squirrel, Clover the rabbit and Webster the spider, with the words Critter Daily: five little games, new every day" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#cfeaff" />
+    <link rel="canonical" href="https://critterdaily.com/" />
     <link rel="icon" href="icon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -33,6 +34,7 @@
     <script async src="https://cloud.umami.is/script.js" data-website-id="7d7d7ec1-534b-40e2-9401-3c07793fd5ec" data-domains="critterdaily.com,www.critterdaily.com"></script>
     <!-- Google Analytics, asking first in the EU, the UK and Switzerland (analytics.js); also only on critterdaily.com. -->
     <script defer src="analytics.js"></script>
+      <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "Critter Daily", "url": "https://critterdaily.com/"}</script>
   </head>
   <body>
     <header class="hero">
@@ -165,6 +167,17 @@
         <span class="play">Play</span>
       </a>
     </main>
+
+    <section class="about" aria-labelledby="about-title">
+        <h2 id="about-title">Free daily puzzle games</h2>
+        <p>Critter Daily is five little puzzle games, new every midnight and the same for everyone, like Wordle. They're free, with nothing to sign up for, and they work on phones and computers.</p>
+        <h3>Which games are there?</h3>
+        <p><a href="deep-cut/">Deep Cut</a>, a Wikipedia trivia game where the most obscure answer wins. <a href="crisscross/">Crisscross</a>, a 5x5 mini crossword against the clock. <a href="mother-tongue/">Mother Tongue</a>, a guess-the-language game on the world's language family tree. <a href="ten-numbers/">Ten Numbers</a>, estimation trivia with numbers for answers. And <a href="burrow/">Burrow</a>, a word game: seven letters, one minute.</p>
+        <h3>When do new puzzles come out?</h3>
+        <p>At midnight where you are. Every game also has practice rounds, as many as you like, that don't count toward your stats.</p>
+        <h3>Do I need an account?</h3>
+        <p>No. Your results, streaks and stats stay on your device.</p>
+    </section>
 
     <footer class="foot">
       <p>Puzzles are built from <a href="https://www.wikidata.org/" target="_blank" rel="noopener">Wikidata</a> and Wikipedia page views (public domain), <a href="https://glottolog.org" target="_blank" rel="noopener">Glottolog</a> (CC BY 4.0), and words from ENABLE (public domain) with <a href="https://github.com/rspeer/wordfreq" target="_blank" rel="noopener">wordfreq</a> (CC BY-SA 4.0).</p>
