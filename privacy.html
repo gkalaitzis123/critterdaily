@@ -18,14 +18,16 @@
     <link rel="stylesheet" href="style.css" />
     <!-- Counts visits and games, without cookies or knowing who you are; only on critterdaily.com, so local copies and tests count nothing. -->
     <script async src="https://cloud.umami.is/script.js" data-website-id="7d7d7ec1-534b-40e2-9401-3c07793fd5ec" data-domains="critterdaily.com,www.critterdaily.com"></script>
+    <!-- Google Analytics, asking first in the EU, the UK and Switzerland (analytics.js); also only on critterdaily.com. -->
+    <script defer src="analytics.js"></script>
   </head>
   <body>
     <main class="page">
       <p><a href="./">← Critter Daily</a></p>
       <h1>Privacy</h1>
       <section>
-        <h2>No accounts, no cookies</h2>
-        <p>Critter Daily's games don't ask who you are and don't use cookies. Your progress stays on your device; all that leaves it are the anonymous counts, scores and Deep Cut answers below.</p>
+        <h2>No accounts, and cookies only to count visits</h2>
+        <p>Critter Daily's games don't ask who you are. Your progress stays on your device; what leaves it are the anonymous counts, scores and Deep Cut answers below. The only cookies are Google Analytics', to count visits, and in the EU, the UK and Switzerland only if you say yes.</p>
       </section>
       <section>
         <h2>What stays on your device</h2>
@@ -44,11 +46,15 @@
         <p>We count visits with Cloudflare Web Analytics and Umami, neither of which uses cookies or follows you from site to site. They note which pages are viewed, the site that linked here, the kind of browser and device, the country and how fast the pages load, and for the games, when one is started, finished or shared, with its score. When you finish a day's game, they also note on how many days you've played it and how many in a row, and the home page notes whether you've played before: just those numbers, counted on your device, so we can see how many players come back. None of it identifies you. See <a href="https://www.cloudflare.com/web-analytics/" target="_blank" rel="noopener">Cloudflare Web Analytics</a> and <a href="https://umami.is/privacy" target="_blank" rel="noopener">Umami's privacy policy</a>.</p>
       </section>
       <section>
+        <h2>Google Analytics</h2>
+        <p>We also count visits with Google Analytics, because advertisers judge a site by it, and ads may one day help keep the games free. It uses cookies to tell one visit from the next, and tells Google the pages you view, the site that linked here, your browser and device, and roughly where you are (Google doesn't give us your address). Ad cookies are off. In the EU, the UK and Switzerland we ask first, and it sets no cookies unless you say yes; elsewhere it's on unless you turn it off. Turn it on or off any time with <strong>Count my visits</strong> in Settings (the sliders button on every page). See <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener">how Google uses information from sites that use its services</a>.</p>
+      </section>
+      <section>
         <h2>How everyone did</h2>
         <p>When you finish a day's game, its score goes to Critter Daily's own small database on Cloudflare, so the results can show how everyone did that day. So that each connection counts once a day, the score is kept with a code scrambled from your connection's address, a secret and the date, which can't be turned back into the address or matched from one day to the next. Practice rounds aren't sent.</p>
         <p>Deep Cut also sends, for each prompt of a day's game, the answer that counted (if any) and the guesses that weren't on the list, kept with the same scrambled code and nothing else about you. They show how many players named each answer, and the guesses several players try that aren't on a list tell us what to add. Practice rounds aren't sent either.</p>
       </section>
-      <p class="muted">Last updated October 27, 2026.</p>
+      <p class="muted">Last updated October 28, 2026.</p>
     </main>
     <script type="module" src="settings.js"></script>
   </body>

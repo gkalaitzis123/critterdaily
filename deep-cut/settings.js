@@ -40,6 +40,7 @@ addEventListener("storage", (e) => e.key === KEY && applySettings()); // changed
 
 /** A settings sheet, opened by `button`. Uses the page's .sheet and .primary styles. */
 export function settingsButton(button) {
+  const analytics = window.critterAnalytics; // only on critterdaily.com (analytics.js)
   const sheet = document.createElement("dialog");
   sheet.className = "sheet settings-sheet";
   sheet.setAttribute("aria-labelledby", "settings-title");
@@ -51,10 +52,15 @@ export function settingsButton(button) {
         .join("")}</div>
     </fieldset>
     <label class="setting toggle"><input type="checkbox" name="motion" /><span>Less motion</span><span class="toggle-note">Fewer bounces and wiggles</span></label>
+    ${analytics ? '<label class="setting toggle"><input type="checkbox" name="analytics" /><span>Count my visits</span><span class="toggle-note">With Google Analytics, which uses cookies. <a href="/privacy">More</a></span></label>' : ""}
     <p class="setting-note">These apply to all the games on this device.</p>
     <form method="dialog"><button class="primary">Done</button></form>`;
   document.body.append(sheet);
-  sheet.addEventListener("change", () => {
+  sheet.addEventListener("change", (e) => {
+    if (e.target.name === "analytics") {
+      analytics.set(e.target.checked);
+      return;
+    }
     const theme = sheet.querySelector('[name="theme"]:checked')?.value ?? "system";
     const settings = { ...readSettings(), theme, motion: sheet.querySelector('[name="motion"]').checked ? "less" : undefined };
     writeSettings(settings);
@@ -64,6 +70,7 @@ export function settingsButton(button) {
     const settings = readSettings();
     for (const radio of sheet.querySelectorAll('[name="theme"]')) radio.checked = radio.value === (settings.theme ?? "system");
     sheet.querySelector('[name="motion"]').checked = settings.motion === "less";
+    if (analytics) sheet.querySelector('[name="analytics"]').checked = analytics.counting();
     sheet.showModal();
   });
 }

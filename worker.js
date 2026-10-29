@@ -13,6 +13,10 @@
 // The reveal asks how many players named each answer (running totals again,
 // one prompt at a time), and /api/misses lists the guesses several players
 // tried that aren't on a list, so the lists can be fixed.
+//
+// And /api/where tells analytics.js whether this visitor is where cookies
+// need a yes first (the EU and the rest of the EEA, the UK, Switzerland), by
+// Cloudflare's guess at the country; it keeps nothing.
 
 const DAY_ONE = Date.UTC(2026, 9, 17); // the first games' #1
 // The highest score each game can send (Burrow's: every word of its deepest
@@ -26,6 +30,8 @@ const MAX_ANSWER = 120;
 const MAX_GUESS = 60;
 const MAX_MISSES = 12;
 const MISSED_BY = 2; // players who tried a guess before /api/misses shows it
+// Where analytics cookies need a yes first (shared/analytics.js has the same list).
+export const ASK = new Set("AT BE BG HR CY CZ DK EE FI FR DE GR HU IE IT LV LT LU MT NL PL PT RO SK SI ES SE IS LI NO GB CH".split(" "));
 
 let ready; // the tables and the secret, made on first use
 
@@ -72,6 +78,11 @@ export const dayNow = (now = Date.now()) => Math.floor((now - DAY_ONE) / 8640000
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    if (url.pathname === "/api/where") {
+      // Unknown, ask: better a question than a cookie without one.
+      const country = request.cf?.country ?? request.headers.get("cf-ipcountry") ?? "";
+      return json({ ask: !country || country === "XX" || ASK.has(country) });
+    }
     if (!["/api/scores", "/api/plays", "/api/misses"].includes(url.pathname)) return env.ASSETS ? env.ASSETS.fetch(request) : json({ error: "not found" }, 404);
     let salt;
     try {
