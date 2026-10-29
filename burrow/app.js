@@ -9,13 +9,15 @@ import { averageOf, beatShare, count, howEveryoneDid, sendScore } from "./everyo
 const $ = (sel) => document.querySelector(sel);
 
 /**
- * Counts a moment of play in Critter Daily's stats (Umami, which uses no
- * cookies and knows nothing about who you are). Umami only runs on
- * critterdaily.com, so local copies and tests count nothing.
+ * Counts a moment of play in Critter Daily's stats: a Google Analytics event
+ * (game_start, game_finish or game_share). analytics.js only runs it on
+ * critterdaily.com, and in the EU, the UK and Switzerland it counts nothing
+ * without a yes, so local copies and tests count nothing. (Umami counts
+ * page views only.)
  */
 const track = (event, data) => {
   try {
-    window.umami?.track(event, data);
+    window.gtag?.("event", `game_${event}`, data);
   } catch {
     // Stats are never worth breaking a game for.
   }

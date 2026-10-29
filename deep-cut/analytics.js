@@ -20,6 +20,7 @@
   function gtag() {
     window.dataLayer.push(arguments);
   }
+  window.gtag = gtag; // the games' stats (game_start, game_finish, game_share) and the home page's home_visit
   const ads = { ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied" };
   gtag("consent", "default", { ...ads, analytics_storage: "denied", region: ASK });
   gtag("consent", "default", { ...ads, analytics_storage: "granted" });

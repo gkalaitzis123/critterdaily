@@ -186,10 +186,9 @@
       }
       // Whether this device has played before, and how many of the games: so the
       // site's stats can count return visits without knowing who anyone is.
-      // Umami loads on its own time (and only on critterdaily.com), so wait a little for it.
+      // A Google Analytics event (analytics.js, only on critterdaily.com).
       const played = Object.keys(summary).length;
-      const visit = (tries = 20) => (window.umami ? window.umami.track("visit", { returning: played > 0, games: played }) : tries && setTimeout(() => visit(tries - 1), 250));
-      visit();
+      window.gtag?.("event", "home_visit", { returning: played > 0, games: played });
     </script>
   </body>
 </html>
