@@ -226,11 +226,12 @@ function wire() {
     } else if (e.key === "Escape") hideSuggestions();
   });
   input.addEventListener("blur", () => setTimeout(hideSuggestions, 150));
-  $("#suggestions").addEventListener("pointerdown", (e) => {
+  // A tap picks a language, but a finger scrolling the list doesn't: phones
+  // send pointerdown as soon as a finger lands, and click only for a tap.
+  $("#suggestions").addEventListener("mousedown", (e) => e.preventDefault()); // keep the box focused
+  $("#suggestions").addEventListener("click", (e) => {
     const li = e.target.closest("[role=option]");
-    if (!li) return;
-    e.preventDefault();
-    guess(byId.get(li.dataset.id));
+    if (li) guess(byId.get(li.dataset.id));
   });
   $("#guess-form").addEventListener("submit", (e) => {
     e.preventDefault();
