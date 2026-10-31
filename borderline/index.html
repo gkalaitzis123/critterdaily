@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <script>
+      // Light or dark, and less motion, before the page draws (settings.js keeps them up to date).
+      try {
+        var cd = JSON.parse(localStorage.getItem("critter-daily-settings")) || {};
+        document.documentElement.dataset.theme = cd.theme === "light" || cd.theme === "dark" ? cd.theme : matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        if (cd.motion === "less") document.documentElement.dataset.motion = "less";
+      } catch (e) {}
+    </script>
+    <title>Borderline: a daily history map game</title>
+    <meta name="description" content="Three a day: guess the country, empire or kingdom from its land on a map of its time. Each guess shows how far off you are in place and time. Free, daily." />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Critter Daily" />
+    <meta property="og:title" content="Borderline: the daily history map game" />
+    <meta property="og:description" content="The year and the land are given. Whose was it? Any country, empire or kingdom, from 3400 BCE to today." />
+    <meta property="og:url" content="https://critterdaily.com/borderline/" />
+    <meta property="og:image" content="https://critterdaily.com/borderline/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Homer the homing pigeon in a flying helmet over a folded map, with the words Borderline: whose land was this?" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#cfeaff" />
+    <link rel="canonical" href="https://critterdaily.com/borderline/" />
+    <link rel="icon" href="icon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;700;800&display=swap" />
+    <link rel="stylesheet" href="style.css" />
+    <!-- Counts visits and games, without cookies or knowing who you are; only on critterdaily.com, so local copies and tests count nothing. -->
+    <script async src="https://cloud.umami.is/script.js" data-website-id="7d7d7ec1-534b-40e2-9401-3c07793fd5ec" data-domains="critterdaily.com,www.critterdaily.com"></script>
+    <!-- Google Analytics, asking first in the EU, the UK and Switzerland (analytics.js); also only on critterdaily.com. -->
+    <script defer src="analytics.js"></script>
+  </head>
+  <body>
+    <script src="nav.js" data-game="borderline"></script>
+    <header class="top">
+      <button id="help-button" class="icon-button" type="button" aria-label="How to play">?</button>
+      <div class="wordmark">
+        <h1>Borderline</h1>
+        <p id="day-label" class="day-label"></p>
+      </div>
+      <div class="top-end">
+        <button id="stats-button" class="icon-button" type="button" aria-label="Your stats">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V11M12 20V4M19 20v-6" /></svg>
+        </button>
+        <button id="settings-button" class="icon-button" type="button" aria-label="Settings">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" /><circle cx="15" cy="7" r="2.4" /><circle cx="9" cy="17" r="2.4" /></svg>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <p id="loading" class="muted">Homer is flying in with the map…</p>
+
+      <section id="done" class="done card" hidden>
+        <div id="scene" class="scene"></div>
+        <p id="done-label" class="kicker"></p>
+        <h2 id="done-title" class="done-title"></h2>
+        <p id="done-note" class="done-note"></p>
+        <ol id="day-list" class="day-list" aria-label="The three mysteries"></ol>
+        <p id="everyone" class="everyone" hidden></p>
+        <div id="tier" class="tier-list" aria-label="Tiers"></div>
+        <button id="share" class="primary" type="button">Share your result</button>
+        <p id="share-note" class="feedback ok" role="status"></p>
+        <div class="cd-next"></div>
+        <p class="next-in">Next mystery in <strong id="countdown"></strong></p>
+        <button id="practice" class="secondary" type="button">Practice with three random places</button>
+        <button id="back-today" class="link" type="button" hidden>Back to today's mystery</button>
+      </section>
+
+      <section id="game" hidden>
+        <div class="seeds-row">
+          <div id="seeds" class="seeds"></div>
+          <p id="counter" class="counter"></p>
+        </div>
+        <p class="when"><span id="year" class="year"></span><span id="when-ask" class="ask">Whose land was this?</span></p>
+
+        <section class="map-card card" aria-label="The mystery's land">
+          <div id="map" class="map" role="img" aria-label="The shape of the mystery's land"></div>
+          <svg id="trail" class="trail" viewBox="0 0 320 46" aria-hidden="true"></svg>
+          <p id="map-note" class="map-note"></p>
+        </section>
+
+        <section id="round-end" class="round-end card" aria-live="polite" hidden>
+          <p id="round-end-label" class="kicker"></p>
+          <h2 id="round-end-title" class="round-end-title"></h2>
+          <p id="round-end-note" class="done-note"></p>
+          <p class="wiki"><a id="round-end-wiki" target="_blank" rel="noopener">Read about it on Wikipedia</a></p>
+          <button id="next-round" class="primary" type="button">Next mystery</button>
+        </section>
+
+        <form id="guess-form" class="guess" autocomplete="off">
+          <div class="combo">
+            <input id="guess" type="text" spellcheck="false" placeholder="Type a place" aria-label="Type or pick a place" role="combobox" aria-expanded="false" aria-controls="suggestions" aria-autocomplete="list" />
+            <button id="browse" class="browse" type="button" tabindex="-1" aria-label="Show the best-known places" aria-controls="suggestions">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            </button>
+            <ul id="suggestions" class="suggestions" role="listbox" aria-label="Places" hidden></ul>
+          </div>
+          <button class="primary" type="submit">Guess</button>
+        </form>
+        <div id="feedback-card" class="feedback-card" hidden>
+          <svg id="compass" class="compass" viewBox="-22 -22 44 44" aria-hidden="true">
+            <circle r="20" fill="#eaf4ff" stroke="#2e2a3b" stroke-width="2" />
+            <g id="needle"><path d="M0 -16 L6 0 L-6 0 Z" fill="#ff6f61" /><path d="M0 16 L6 0 L-6 0 Z" fill="#9aa6b2" /></g>
+            <circle r="2.5" fill="#2e2a3b" />
+          </svg>
+          <p id="feedback" class="feedback" role="status" aria-live="polite"></p>
+        </div>
+
+        <section id="hints" class="hints card" aria-live="polite"></section>
+
+        <section id="guesses-section" aria-labelledby="guesses-title" hidden>
+          <h2 id="guesses-title" class="section-title">Your guesses, closest first</h2>
+          <ol id="guesses" class="guesses"></ol>
+        </section>
+
+        <button id="give-up" class="link" type="button">Give up and reveal it</button>
+        <div id="give-up-confirm" class="confirm card" role="group" aria-labelledby="give-up-question" hidden>
+          <p id="give-up-question">Reveal the answer? That ends this game.</p>
+          <div class="confirm-buttons">
+            <button id="give-up-yes" class="secondary" type="button">Yes, reveal it</button>
+            <button id="give-up-no" class="link" type="button">Keep guessing</button>
+          </div>
+        </div>
+        <button id="practice-start" class="link" type="button">Practice with three random places (unlimited)</button>
+        <button id="back-today-game" class="link" type="button" hidden>Back to today's mystery</button>
+      </section>
+    </main>
+
+    <details class="about">
+      <summary>About Borderline</summary>
+      <h2>How to play Borderline, the daily history map game</h2>
+      <p>Each day there are three mystery places, the same for everyone and easiest first: countries, empires, kingdoms or other states, each at one moment in history. You see the year, and the land shaded on a map of that year, and you have 6 guesses for each. Guess any place from any time: each guess shows how far away the mystery is from it and in which direction, and whether your guess existed in that year, or how many years too early or too late it was. Homer the homing pigeon flies toward the mystery as you get closer.</p>
+      <h3>Are there hints?</h3>
+      <p>Yes. After 2 wrong guesses you learn which of today's countries the land is in, after 3 the map names the other states of that year, and after 4 you get the first letter of its name.</p>
+      <h3>Where do the borders come from?</h3>
+      <p>From Cliopatria, the Seshat Global History Databank's open atlas of the world's states from 3400 BCE to today (CC BY 4.0). Borders long ago are uncertain, and the atlas shows one version of them.</p>
+    </details>
+
+    <footer class="foot">
+      <p>Borders from <a href="https://github.com/Seshat-Global-History-Databank/cliopatria" target="_blank" rel="noopener">Cliopatria</a> by the <a href="https://seshatdatabank.info/" target="_blank" rel="noopener">Seshat Global History Databank</a> (CC BY 4.0). Other names and how well known each place is from <a href="https://www.wikidata.org/" target="_blank" rel="noopener">Wikidata</a> and Wikipedia.</p>
+      <p class="more"><a href="../">More games from Critter Daily</a> · <a href="../privacy.html">Privacy</a></p>
+    </footer>
+
+    <dialog id="help" class="sheet">
+      <div class="sheet-head">
+        <svg class="sheet-homer" viewBox="-44 -44 88 88" aria-hidden="true" data-homer></svg>
+        <h2 tabindex="-1" autofocus>How to play</h2>
+      </div>
+      <ul>
+        <li>Everyone gets the same three mysteries each day, easiest first: a country, empire or kingdom at one moment in history. You see the year, and its land shaded on a map of that year.</li>
+        <li>Guess any place from any time: type it, or tap the box to scroll through the best known. Each guess shows how far away the mystery is, and which way.</li>
+        <li>It also shows whether your guess existed in that year, or how many years too early or too late it was.</li>
+        <li>After 2, 3 and 4 wrong guesses you get a hint: which of today's countries the land is in, the names of the other states that year, and the first letter of its name.</li>
+        <li>You have 6 guesses for each. Find all three in as few as you can for the best title, from Wanderer to Master Cartographer.</li>
+        <li>Want more? Practice with three random places as often as you like. Practice games don't count toward your stats.</li>
+      </ul>
+      <form method="dialog"><button class="primary">Got it</button></form>
+    </dialog>
+
+    <dialog id="stats" class="sheet">
+      <h2 tabindex="-1" autofocus>Your record</h2>
+      <div id="stats-grid" class="stats-grid"></div>
+      <h3 class="stats-sub">How your days went</h3>
+      <div id="stats-tiers"></div>
+      <h3 class="stats-sub">The last five weeks</h3>
+      <div id="stats-calendar"></div>
+      <form method="dialog"><button class="primary">Close</button></form>
+    </dialog>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

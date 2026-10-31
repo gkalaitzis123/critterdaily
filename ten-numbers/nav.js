@@ -16,6 +16,7 @@
     { id: "ten-numbers", name: "Ten Numbers", key: "tennumbers-v1", done: (h, saved) => `${saved.outOf === 1000 ? h : h * 10} points` },
     { id: "burrow", name: "Burrow", key: "burrow-v1", done: (h) => `${h} m deep`, late: 1 }, // its #1 was a day after the others
     { id: "crisscross", name: "Crisscross", key: "crisscross-v1", done: (h) => `solved in ${Math.floor(h.time / 60)}:${String(h.time % 60).padStart(2, "0")}`, late: 10 }, // its #1 was ten days after the others'
+    { id: "borderline", name: "Borderline", key: "borderline-v1", done: (h) => `${h.found} of 3 found`, late: 13 }, // its #1 was 13 days after the others'
   ];
   const script = document.currentScript;
   const here = script.dataset.game;
@@ -59,7 +60,7 @@
       .cd-row small { color: var(--muted); font-size: 14px; font-weight: 700; }
       .cd-row .cd-go { flex: none; padding: 6px 16px 8px; border-radius: 999px; background: var(--sun); box-shadow: 0 3px 0 var(--sun-edge); color: var(--on-sun); font: 700 15px var(--display); }
       .cd-row.played .cd-go { background: var(--track); box-shadow: none; color: var(--ink-2); }
-      /* Five games' buttons and the way home, on one line on a phone. */
+      /* Six games' buttons and the way home, on one line on a phone. */
       @media (max-width: 440px) {
         .cd-nav { gap: 8px; padding: 10px 10px 2px; }
         .cd-home { gap: 6px; padding: 4px 12px 4px 4px; font-size: 15px; }
@@ -67,6 +68,11 @@
         .cd-games { gap: 4px; }
         .cd-game { width: 35px; height: 35px; border-radius: 11px; }
         .cd-game img { width: 27px; height: 27px; border-radius: 8px; }
+      }
+      @media (max-width: 370px) {
+        .cd-games { gap: 3px; }
+        .cd-game { width: 33px; height: 33px; }
+        .cd-game img { width: 25px; height: 25px; }
       }
       @media (max-width: 350px) {
         .cd-home { padding-right: 4px; }
