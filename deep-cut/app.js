@@ -1,7 +1,7 @@
 // Deep Cut in the browser: today's prompts, the timer, saving progress on
 // this device, Digby's dig back through Earth's history, the results and the
 // stats. The rules live in game.js.
-import { PERIODS, PROMPTS_PER_DAY, SECONDS_PER_PROMPT, compact, dayNumber, match, nearest, normalize, periodFor, periodsFor, promptsFor, shareText, stats } from "./game.js";
+import { PERIODS, PROMPTS_PER_DAY, SECONDS_PER_PROMPT, compact, dayNumber, fromFull, joinParts, match, nearest, normalize, partsFor, periodFor, periodsFor, promptsFor, shareText, stats } from "./game.js";
 import { settingsButton } from "./settings.js";
 import { calendar, habit, tierBars } from "./stats-view.js";
 import { averageOf, beatShare, count, howEveryoneAnswered, howEveryoneDid, sendPlay, sendScore } from "./everyone.js";
@@ -80,6 +80,46 @@ function category(id) {
     loading.catch(() => categories.delete(id)); // try again next time
   }
   return categories.get(id);
+}
+
+// Each list's full list: every other right answer, the less-read ones. It's
+// split by first letter (data/more/<id>/<letter>.json; data/more/index.json
+// says which letters a list has), and only the parts a guess could be in are
+// loaded, as it's typed, so they're there in time. Without them the list
+// still plays.
+let index = null;
+function fullIndex() {
+  index ??= fetch("data/more/index.json")
+    .then((res) => (res.ok ? res.json() : {}))
+    .catch(() => {
+      index = null; // try again next time
+      return {};
+    });
+  return index;
+}
+const parts = new Map(); // "id/letter" -> its rows, loading
+function fullPart(id, part) {
+  const key = `${id}/${part}`;
+  if (!parts.has(key)) {
+    const loading = fetch(`data/more/${key}.json`)
+      .then((res) => (res.ok ? res.json() : []))
+      .catch(() => {
+        parts.delete(key); // try again next time
+        return [];
+      });
+    parts.set(key, loading);
+  }
+  return parts.get(key);
+}
+/** The parts of a list's full list a guess could be in, loading. */
+async function partsLoading(id, text) {
+  const [list, has] = await Promise.all([category(id), fullIndex()]);
+  return { list, loading: partsFor(text, list).filter((p) => has[id]?.includes(p)).map((p) => fullPart(id, p)) };
+}
+/** The answers on a list's full list a guess could be. */
+async function fullFor(id, text) {
+  const { list, loading } = await partsLoading(id, text);
+  return joinParts((await Promise.all(loading)).flat()).map((row) => fromFull(row, list));
 }
 
 // ---------------------------------------------------------------------------
@@ -326,6 +366,7 @@ function wire() {
   // A near miss asks "Did you mean ...?": tap an answer, or press Enter again
   // to take the first. Typing something else drops the question.
   input.addEventListener("input", () => {
+    if (run?.ids && !run.locked) partsLoading(run.ids[run.index], input.value).catch(() => {}); // the full list's parts, ready by the time the guess is in
     if (offered && normalize(input.value) !== offered.typed) {
       offered = null;
       $("#feedback").textContent = "";
@@ -402,11 +443,20 @@ function take(answer) {
 
 async function guess(text) {
   if (!text.trim() || run.locked) return;
-  const c = await category(run.ids[run.index]);
-  const found = match(text, c.answers, c);
+  const id = run.ids[run.index];
+  const c = await category(id);
+  // The list first, as written; then the full list (an exact name there beats
+  // a typo of one on the list); then the list with typos forgiven.
+  let found = match(text, c.answers, { ...c, typos: false });
+  let full = [];
   if (!found) {
-    // Close but not close enough to count on its own: ask.
-    const near = nearest(text, c.answers, c);
+    full = await fullFor(id, text);
+    if (run.locked || run.ids[run.index] !== id) return; // the time ran out meanwhile
+    found = match(text, full, { ...c, typos: false }) ?? match(text, c.answers, c);
+  }
+  if (!found) {
+    // Close but not close enough to count on its own: ask (a typo of a name on the full list too).
+    const near = nearest(text, [...c.answers, ...full], c);
     offered = near.length ? { typed: normalize(text), answers: near } : null;
     const fixes = near.map((a, i) => `<button type="button" class="fix" data-i="${i}">${esc(a.name)}</button>`);
     const list = fixes.length > 1 ? `${fixes.slice(0, -1).join(", ")} or ${fixes.at(-1)}` : fixes[0];

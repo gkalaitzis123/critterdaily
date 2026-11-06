@@ -152,23 +152,85 @@ function typos(guess, name, room, most) {
   return total;
 }
 
-/** A guess, and the guess without words the category leaves off ("pope gregory", "gregory"). */
-const formsOf = (g, strip) => [g, ...strip.flatMap((w) => [g.startsWith(`${w} `) ? g.slice(w.length + 1) : null, g.endsWith(` ${w}`) ? g.slice(0, -w.length - 1) : null]).filter(Boolean)];
+// Numbers in words, for the names that spell them out: normalize leaves a
+// number that doesn't follow a word as it is ("7 falls" is Seven Falls, "100
+// years war" the Hundred Years' War).
+const NUMBER_WORDS = "zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty".split(" ");
+const TENS = { 30: "thirty", 40: "forty", 50: "fifty", 60: "sixty", 70: "seventy", 80: "eighty", 90: "ninety", 100: "hundred", 1000: "thousand" };
+const spelled = (g) => {
+  const words = g.replace(/(?<=^| )\d+(?= |$)/g, (n) => NUMBER_WORDS[Number(n)] ?? TENS[Number(n)] ?? n);
+  return words === g ? null : words;
+};
+
+/** A guess, and the guess without words the category leaves off ("pope gregory", "gregory"); each with its numbers in words too ("7 falls", "seven falls"). */
+const formsOf = (g, strip) => {
+  const forms = [g, ...strip.flatMap((w) => [g.startsWith(`${w} `) ? g.slice(w.length + 1) : null, g.endsWith(` ${w}`) ? g.slice(0, -w.length - 1) : null]).filter(Boolean)];
+  return [...forms, ...forms.map(spelled).filter(Boolean)];
+};
+
+// Titles players put before a name ("King Louis XIV", "President Abraham
+// Lincoln"): left off when what follows is a whole name of two words or more,
+// so "Queen Victoria" never turns into Victoria, the Seychelles' capital.
+const TITLES = new Set("king queen emperor empress pope saint sir lord lady dame president general admiral captain dr doctor prince princess tsar czar tsarina sultan pharaoh chief professor".split(" "));
+const untitled = (g) => {
+  const words = g.split(" ");
+  return words.length >= 3 && TITLES.has(words[0]) ? words.slice(1).join(" ") : null;
+};
 
 /**
- * Find the answer a guess means. Exact matches on any alias win; otherwise the
- * closest alias within the typo allowance (word by word, two at most), if only
- * one answer is that close.
+ * A word's plain form, for words said more than one way: plurals ("lilies",
+ * "lily") and the -ism, -ist and -ic(al) of a movement ("neoclassical",
+ * "neoclassicism"; "impressionists", "impressionism"). Short words stay as
+ * they are.
+ */
+export function stem(word) {
+  let w = word;
+  for (let i = 0; i < 2 && w.length >= 5; i++) {
+    const before = w;
+    w = w.replace(/(isms|ists|ism|ist|ical|ic)$/, "") || before;
+    if (w === before) w = w.replace(/ies$/, "y").replace(/(ch|sh|x|ss)es$/, "$1").replace(/(?<![su])s$/, "");
+    if (w === before) break;
+  }
+  return w;
+}
+const stems = (text) => text.split(" ").map(stem).join(" ");
+// Each answer's names in plain form (see stem).
+const STEMS = new WeakMap();
+const stemsOf = (a) => {
+  let s = STEMS.get(a);
+  if (!s) STEMS.set(a, (s = new Set(a.aliases.map(stems))));
+  return s;
+};
+
+/**
+ * Find the answer a guess means. Exact matches on any alias win (also without
+ * a title before a name, "King Louis XIV"); then the same words in another
+ * form ("Neoclassical" for Neoclassicism), if only one answer has them;
+ * otherwise the closest alias within the typo allowance (word by word, two at
+ * most), if only one answer is that close.
  * answers: [{ name, aliases: [normalized], ... }]. A category can also give
  * `strip`, words players add that the aliases leave off ("pope" in "Pope
  * Gregory"), and `not`, real names a typo away from an answer that must not
- * count as it ("rhone" isn't the Rhine). Returns the answer or null.
+ * count as it ("rhone" isn't the Rhine). With `typos: false`, only exact
+ * matches and other forms count (for a full list, where thousands of rarely
+ * read names would make a typo too easy to count as one). An answer's `also`
+ * names (Wikipedia's redirects to its article: "Beetlejuice", "Bombay") count
+ * only typed as they are. Returns the answer or null.
  */
-export function match(guess, answers, { strip = [], not = [] } = {}) {
+export function match(guess, answers, { strip = [], not = [], typos: typosToo = true } = {}) {
   const g = normalize(guess);
   if (!g || not.includes(g)) return null;
   const forms = formsOf(g, strip);
-  for (const form of forms) for (const a of answers) if (a.aliases.includes(form)) return a;
+  const exact = [...forms, ...forms.map(untitled).filter(Boolean)];
+  for (const form of exact) for (const a of answers) if (a.aliases.includes(form) || a.also?.includes(form)) return a;
+  // The same letters with the words run together or split apart ("golden doodle", "Goldendoodle").
+  const joined = new Set(exact.map((f) => f.replace(/ /g, "")));
+  const together = answers.filter((a) => namesOf(a).some((n) => joined.has(n.letters)));
+  if (together.length === 1) return together[0];
+  const plain = new Set(exact.map(stems));
+  const same = answers.filter((a) => [...plain].some((p) => stemsOf(a).has(p)));
+  if (same.length === 1) return same[0];
+  if (!typosToo) return null;
   let best = null;
   let bestDistance = Infinity;
   let tied = false;
@@ -191,8 +253,59 @@ export function match(guess, answers, { strip = [], not = [] } = {}) {
   return best && !tied ? best : null;
 }
 
+/**
+ * Which part of a full list a name is in: its first letter, or "0" for a
+ * digit. A full list can run to thousands of answers, so it's split this way
+ * and a guess loads only the parts it could be in (partsFor).
+ */
+export const partOf = (name) => (/^[a-z]/.test(name) ? name[0] : "0");
+
+/**
+ * The parts of a full list a guess could be found in: where its forms start.
+ * match's other forms (run together, plural) start with the same letter, and
+ * nearest offers a full list's answers only for a typo or a name cut short
+ * (mostly the same first letter too), so each answer is in its names' parts.
+ */
+export function partsFor(guess, { strip = [] } = {}) {
+  const g = normalize(guess);
+  if (!g) return [];
+  const forms = formsOf(g, strip);
+  return [...new Set([...forms, ...forms.map(untitled).filter(Boolean)].map(partOf))];
+}
+
+/**
+ * A full list ([[name, wiki, views, [names]]]) split into its parts: each
+ * answer in the part of each of its names, with the names that start there.
+ * Map of part to rows, in the list's order.
+ */
+export function splitParts(rows) {
+  const parts = new Map();
+  for (const [name, wiki, views, names] of rows) {
+    const into = new Map();
+    for (const n of names) into.set(partOf(n), [...(into.get(partOf(n)) ?? []), n]);
+    for (const [part, own] of into) parts.set(part, [...(parts.get(part) ?? []), [name, wiki, views, own]]);
+  }
+  return parts;
+}
+
+/** Rows from parts of a full list, each answer once: one in several parts has the names that start there in each. */
+export function joinParts(rows) {
+  const byWiki = new Map();
+  for (const [name, wiki, views, names] of rows) {
+    if (byWiki.has(wiki)) byWiki.get(wiki)[3].push(...names);
+    else byWiki.set(wiki, [name, wiki, views, [...names]]);
+  }
+  return [...byWiki.values()];
+}
+
 // Little words a name can do without ("Ivan Terrible" is close to Ivan the Terrible).
 const LITTLE = new Set(["the", "of", "and", "a", "an"]);
+
+/** A name's first and last words, but for little ones (Impression, Sunrise: "impression", "sunrise"). */
+export function endsOf(name) {
+  const own = normalize(name).split(" ").filter((w) => w && !LITTLE.has(w));
+  return [own[0], own.at(-1)].filter(Boolean);
+}
 
 /**
  * The answers a guess was probably reaching for, when it's too far off to
@@ -216,13 +329,18 @@ export function nearest(guess, answers, { strip = [], not = [] } = {}, limit = 3
     // letters, if few answers have them all. Not from a name with a place
     // after it ("Amman, Jordan"), or a country would find its capital.
     const words = form.words.filter((w) => !LITTLE.has(w));
-    const fits = words.map((w, i) => (x) => x === w || (w.length >= 5 && distance(w, x, 1) <= 1) || (i === words.length - 1 && w.length >= 3 && x.startsWith(w)));
+    const fits = words.map((w, i) => (x) => x === w || (w.length >= 5 && distance(w, x, 1) <= 1) || (i === words.length - 1 && w.length >= 3 && x.startsWith(w)) || (w.length >= 4 && stem(x) === stem(w)));
     const byWords = words.some((w) => w.length >= 4);
     const covers = (name) => {
       if (name.placed || !fits.every((fit) => name.words.some(fit))) return false;
       const covered = name.words.filter((x) => fits.some((fit) => fit(x))).join("");
       return covered.length >= 0.5 * name.letters.length;
     };
+    // One telling word can be enough to ask about, if it starts or ends the
+    // answer's own name ("Sunrise" for Impression, Sunrise; "Buzz" for Buzz
+    // Aldrin): never a word in the middle of some other name it goes by, or
+    // "John" would bring up everyone christened John.
+    const telling = words.length === 1 && words[0].length >= 4 ? fits[0] : null;
     const hits = [];
     for (const a of answers) {
       let hit = false;
@@ -234,7 +352,10 @@ export function nearest(guess, answers, { strip = [], not = [] } = {}, limit = 3
         else if (form.text.length >= 4 && form.text.length < name.text.length && form.text.length >= 0.6 * name.text.length && distance(form.text, name.text.slice(0, form.text.length), 1) <= 1) offer(a, 4);
         hit ||= byWords && covers(name);
       }
-      if (hit) hits.push(a);
+      hit ||= Boolean(telling && form.keys === "" && endsOf(a.name).some(telling));
+      // Not an answer from a full list: thousands of rarely read names share
+      // too many words ("raphael" would bring up Antonietta Raphaël).
+      if (hit && !a.full) hits.push(a);
     }
     if (hits.length <= limit) for (const a of hits) offer(a, 5);
   }
@@ -283,6 +404,49 @@ export function rarity(views) {
     oneIn: n,
     depth: high > low ? Math.max(1, Math.min(MAX_DEPTH, Math.round(1 + ((MAX_DEPTH - 1) * (logs[i] - low)) / (high - low)))) : 1,
   }));
+}
+
+/**
+ * How deep an answer from a list's full list digs (see more.mjs), on the
+ * list's own scale: a list's depths fall on a straight line against how rare
+ * its answers are (rarity: ten times rarer, the same distance deeper), so the
+ * line through its answers places another, and it stops at 1 and MAX_DEPTH
+ * as theirs do. answers: the list's [{ oneIn, depth }].
+ */
+export function depthFor(oneIn, answers) {
+  if (oneIn <= Math.min(...answers.map((a) => a.oneIn))) return 1; // read as much as the most read
+  const points = answers.filter((a) => a.depth > 1 && a.depth < MAX_DEPTH).map((a) => [Math.log10(a.oneIn), a.depth]);
+  let slope;
+  let at;
+  if (points.length >= 2) {
+    // The best straight line through them (least squares).
+    const n = points.length;
+    const mx = points.reduce((s, [x]) => s + x, 0) / n;
+    const my = points.reduce((s, [, y]) => s + y, 0) / n;
+    const sxy = points.reduce((s, [x, y]) => s + (x - mx) * (y - my), 0);
+    const sxx = points.reduce((s, [x]) => s + (x - mx) ** 2, 0);
+    slope = sxx ? sxy / sxx : 0;
+    at = my - slope * mx;
+  } else {
+    // Too few in between: from the most read (1 m) to the rarest (MAX_DEPTH).
+    const logs = answers.map((a) => Math.log10(a.oneIn));
+    const low = Math.min(...logs);
+    const deep = answers.filter((a) => a.depth >= MAX_DEPTH).map((a) => Math.log10(a.oneIn));
+    const high = deep.length ? Math.min(...deep) : Math.max(...logs);
+    slope = high > low ? (MAX_DEPTH - 1) / (high - low) : 0;
+    at = 1 - slope * low;
+  }
+  return slope > 0 ? Math.max(1, Math.min(MAX_DEPTH, Math.round(at + slope * Math.log10(Math.max(1, oneIn))))) : MAX_DEPTH;
+}
+
+/**
+ * An answer from a list's full list ([name, wiki, views, aliases], views
+ * being 60 days' reads), made like the list's own: how many read it a day,
+ * its share of the list's readers ("1 in N") and its depth.
+ */
+export function fromFull([name, wiki, views, aliases], list) {
+  const oneIn = Math.max(1, Math.round((list.readers * 60) / Math.max(views, 1)));
+  return { name, wiki, perDay: Math.max(1, Math.round(views / 60)), oneIn, depth: depthFor(oneIn, list.answers), aliases, full: true };
 }
 
 /** "1 in 2,769"-style numbers, short: 40, 610, 2.8k, 60k, 1.2M. */

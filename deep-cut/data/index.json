@@ -7,7 +7,7 @@
  {
   "id": "alloys",
   "prompt": "Name an alloy",
-  "answers": 178
+  "answers": 179
  },
  {
   "id": "americas",
@@ -52,7 +52,7 @@
  {
   "id": "art-movements",
   "prompt": "Name an art movement",
-  "answers": 213
+  "answers": 215
  },
  {
   "id": "arthurian",
@@ -262,7 +262,7 @@
  {
   "id": "cities-canada",
   "prompt": "Name a city in Canada",
-  "answers": 289
+  "answers": 290
  },
  {
   "id": "cities-china",
@@ -282,7 +282,7 @@
  {
   "id": "cities-india",
   "prompt": "Name a city in India",
-  "answers": 301
+  "answers": 310
  },
  {
   "id": "cities-italy",
@@ -377,7 +377,7 @@
  {
   "id": "dances",
   "prompt": "Name a dance",
-  "answers": 400
+  "answers": 422
  },
  {
   "id": "declaration-signers",
@@ -387,7 +387,7 @@
  {
   "id": "deer",
   "prompt": "Name a deer",
-  "answers": 70
+  "answers": 71
  },
  {
   "id": "deserts",
@@ -407,7 +407,7 @@
  {
   "id": "diseases",
   "prompt": "Name an infectious disease",
-  "answers": 188
+  "answers": 189
  },
  {
   "id": "dog-breeds",
@@ -492,7 +492,7 @@
  {
   "id": "french-monarchs",
   "prompt": "Name a king or emperor of France",
-  "answers": 90
+  "answers": 92
  },
  {
   "id": "frogs",
@@ -552,7 +552,7 @@
  {
   "id": "horned-armored-dinosaurs",
   "prompt": "Name a horned or armored dinosaur",
-  "answers": 190
+  "answers": 191
  },
  {
   "id": "horse-breeds",
@@ -642,7 +642,7 @@
  {
   "id": "languages",
   "prompt": "Name a language",
-  "answers": 300
+  "answers": 307
  },
  {
   "id": "lizards",
@@ -777,7 +777,7 @@
  {
   "id": "novelists",
   "prompt": "Name a novelist",
-  "answers": 400
+  "answers": 403
  },
  {
   "id": "oceania",
@@ -792,7 +792,7 @@
  {
   "id": "organs",
   "prompt": "Name an organ of the human body",
-  "answers": 79
+  "answers": 80
  },
  {
   "id": "owls",
@@ -847,7 +847,7 @@
  {
   "id": "palaces",
   "prompt": "Name a palace",
-  "answers": 300
+  "answers": 311
  },
  {
   "id": "pandemics",
@@ -902,7 +902,7 @@
  {
   "id": "poets",
   "prompt": "Name a poet",
-  "answers": 300
+  "answers": 307
  },
  {
   "id": "popes",
@@ -1122,7 +1122,7 @@
  {
   "id": "surrealists",
   "prompt": "Name a Surrealist artist",
-  "answers": 138
+  "answers": 139
  },
  {
   "id": "terriers",
@@ -1207,7 +1207,7 @@
  {
   "id": "volcanoes",
   "prompt": "Name a volcano",
-  "answers": 500
+  "answers": 533
  },
  {
   "id": "wars",
