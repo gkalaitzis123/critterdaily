@@ -343,6 +343,13 @@ function showResults(justFinished) {
       ? `<p>You found the seven-letter word: ${gotSeven.map((s) => `${w(s)} (${metersOf(s, puzzle)} m)`).join(", ")}!</p>`
       : `<p>The seven-letter word${all.length > 1 ? "s were" : " was"} ${all.map(w).join(" or ")}.</p>`,
     rarest ? `<p>Your rarest ${gotSeven.length ? "other " : ""}find: ${w(rarest)}, ${metersOf(rarest, puzzle)} m.</p>` : found.length ? "" : "<p>No words this time. The letters will be different tomorrow.</p>",
+    // Every word you found, the deepest first.
+    found.length
+      ? `<p>Your words:</p><ul class="found" aria-label="Your words">${[...found]
+          .sort((a, b) => metersOf(b, puzzle) - metersOf(a, puzzle) || a.localeCompare(b))
+          .map((x) => `<li class="${x.length === 7 ? "seven" : ""}">${esc(x.toUpperCase())}<b>${metersOf(x, puzzle)} m</b></li>`)
+          .join("")}</ul>`
+      : "",
     lost.length ? `<p class="muted small">Deep ones you missed: ${lost.map((m) => `${w(m.word)} ${m.meters} m`).join(" · ")}</p>` : "",
   ].join("");
   $("#tier-ladder").innerHTML = TIERS.map((t, i) => {

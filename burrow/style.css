@@ -1077,6 +1077,25 @@ main {
   margin-bottom: 0;
 }
 
+/* Every word found, under the results: the play screen's chips, on the card. */
+.finds .found {
+  margin: 0 0 10px;
+}
+
+.finds .found:last-child {
+  margin-bottom: 0;
+}
+
+.finds .found li {
+  background: var(--track);
+  box-shadow: none;
+  font-size: 14px;
+}
+
+.finds .found li.seven {
+  background: var(--sun);
+}
+
 .finds .w {
   font-family: var(--display);
   font-weight: 600;
