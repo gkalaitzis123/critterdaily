@@ -344,12 +344,18 @@ export function nearest(guess, answers, { strip = [], not = [] } = {}, limit = 3
     const hits = [];
     for (const a of answers) {
       let hit = false;
+      // A full list's thousands of rarely read names are close to too many
+      // single words ("nile" to the Neile, "zinc" to Zinag, "plankton" to
+      // Planktothuria): for one, only a slip of a letter in seven or more, in
+      // the answer's own name (not "sumeria" for Sumatia, once Sumetia).
+      const strict = a.full && words.length === 1;
+      const own = strict ? normalize(a.name) : null;
       for (const name of namesOf(a)) {
-        if (name.keys !== form.keys) continue;
-        const d = typos(form, name, nearRoom, most);
+        if (name.keys !== form.keys || (strict && name.text !== own)) continue;
+        const d = typos(form, name, nearRoom, strict ? (letters >= 7 ? 1 : 0) : most);
         if (d !== Infinity) offer(a, d);
         // Stopped typing partway: most of the name, nearly right.
-        else if (form.text.length >= 4 && form.text.length < name.text.length && form.text.length >= 0.6 * name.text.length && distance(form.text, name.text.slice(0, form.text.length), 1) <= 1) offer(a, 4);
+        else if (!strict && form.text.length >= 4 && form.text.length < name.text.length && form.text.length >= 0.6 * name.text.length && distance(form.text, name.text.slice(0, form.text.length), 1) <= 1) offer(a, 4);
         hit ||= byWords && covers(name);
       }
       hit ||= Boolean(telling && form.keys === "" && endsOf(a.name).some(telling));
