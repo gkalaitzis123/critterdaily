@@ -2,9 +2,16 @@
 // asks for one. Ad networks like Mediavine judge a site's visits by Google
 // Analytics, so the games can count on ads to stay free. It counts visits
 // with cookies: in the EU (and the rest of the EEA), the UK and Switzerland
-// it sets none until the visitor says yes in the little banner this shows;
-// elsewhere it counts without asking. Ad cookies stay off everywhere. Anyone
-// can change their answer in Settings (settings.js uses window.critterAnalytics).
+// it sets none until the visitor says yes; elsewhere it counts without
+// asking. Ad cookies stay off everywhere. Anyone can change their answer in
+// Settings (settings.js uses window.critterAnalytics).
+//
+// Where a yes comes first it's asked once, not twice: Google's consent
+// message (AdSense's, which asks about ads there) asks about counting visits
+// too, as the site's own purposes, and its answer, read through the IAB's
+// TCF API (__tcfapi), decides. The little banner this shows asks only when
+// Google's message doesn't come: before AdSense shows ads, or when an ad
+// blocker stops it.
 // Only on critterdaily.com, so local copies and tests count nothing.
 //
 // A plain script in every page's <head>:   <script defer src="analytics.js"></script>
@@ -41,6 +48,7 @@
   document.head.append(tag);
 
   let mustAsk = null; // whether this visitor is where a yes comes first, once the Worker has said
+  let google = null; // what Google's consent message last said (its TCF data), where it asks
   const set = (yes) => {
     answer = yes ? "yes" : "no";
     try {
@@ -51,8 +59,44 @@
     gtag("consent", "update", { analytics_storage: yes ? "granted" : "denied" });
     document.querySelector(".cd-consent")?.remove();
   };
-  /** For the Settings sheet: whether visits are counted now, and a way to change it. */
-  window.critterAnalytics = { counting: () => (answer ? answer === "yes" : mustAsk === false), set };
+
+  // Google's answer for the site's own purposes (1, keep information on the
+  // device; 8, measure content; 9, audience statistics), or, if its message
+  // doesn't list them, for the same purposes in general.
+  const counted = (tc) => {
+    const own = Object.keys(tc.publisher?.consents ?? {}).length ? tc.publisher.consents : (tc.purpose?.consents ?? {});
+    return Boolean(own[1] && (own[8] || own[9]));
+  };
+  const listen = () => {
+    if (typeof window.__tcfapi !== "function") return false;
+    window.__tcfapi("addEventListener", 2, (tc, ok) => {
+      if (!ok || !tc?.gdprApplies) return;
+      google = tc;
+      document.querySelector(".cd-consent")?.remove(); // one question: Google's
+      if (tc.eventStatus === "tcloaded" || tc.eventStatus === "useractioncomplete") {
+        gtag("consent", "update", { analytics_storage: counted(tc) ? "granted" : "denied" });
+      }
+    });
+    return true;
+  };
+  // Google's message comes with the ads script, a moment after the page: the
+  // banner waits WAIT for it, and gives way if it comes later still.
+  const WAIT = 2500;
+  const since = Date.now();
+  if (!listen()) {
+    const poll = setInterval(() => {
+      if (listen() || Date.now() - since > 15000) clearInterval(poll);
+    }, 250);
+  }
+
+  /** For the Settings sheet: whether visits are counted now, and ways to change it. */
+  window.critterAnalytics = {
+    counting: () => (google ? counted(google) : answer ? answer === "yes" : mustAsk === false),
+    set,
+    // Where Google's message asks, a change goes through it too.
+    google: () => Boolean(google && window.googlefc?.showRevocationMessage),
+    choices: () => window.googlefc?.showRevocationMessage?.(),
+  };
 
   const banner = () => {
     document.head.insertAdjacentHTML(
@@ -78,12 +122,16 @@
     document.querySelector(".cd-consent .cd-no").addEventListener("click", () => set(false));
   };
 
-  // Ask only where the law wants a yes first, and only once.
+  // Ask only where the law wants a yes first, only once, and only if Google's message doesn't.
   fetch("/api/where", { cache: "no-store" })
     .then((res) => res.json())
     .then(({ ask }) => {
       mustAsk = Boolean(ask);
-      if (mustAsk && !answer) banner();
+      if (mustAsk && !answer) {
+        setTimeout(() => {
+          if (!google && !answer) banner();
+        }, Math.max(0, WAIT - (Date.now() - since)));
+      }
     })
     .catch(() => {
       // No answer: Google's own default for the region stands, and no banner.

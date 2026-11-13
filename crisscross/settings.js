@@ -52,10 +52,17 @@ export function settingsButton(button) {
         .join("")}</div>
     </fieldset>
     <label class="setting toggle"><input type="checkbox" name="motion" /><span>Less motion</span><span class="toggle-note">Fewer bounces and wiggles</span></label>
-    ${analytics ? '<label class="setting toggle"><input type="checkbox" name="analytics" /><span>Count my visits</span><span class="toggle-note">With Google Analytics, which uses cookies. <a href="/privacy">More</a></span></label>' : ""}
+    ${analytics ? '<label class="setting toggle analytics-toggle"><input type="checkbox" name="analytics" /><span>Count my visits</span><span class="toggle-note">With Google Analytics, which uses cookies. <a href="/privacy">More</a></span></label>' : ""}
+    ${analytics ? `<p class="setting-note analytics-choices" style="display: none">Counting visits and ads: <a href="#" class="choices-link">change your choices</a> in Google's message.</p>` : ""}
     <p class="setting-note">These apply to all the games on this device.</p>
     <form method="dialog"><button class="primary">Done</button></form>`;
   document.body.append(sheet);
+  // Where Google's consent message asks (the EU, the UK, Switzerland), it's where the answer changes.
+  sheet.querySelector(".choices-link")?.addEventListener("click", (e) => {
+    e.preventDefault();
+    sheet.close();
+    analytics.choices();
+  });
   sheet.addEventListener("change", (e) => {
     if (e.target.name === "analytics") {
       analytics.set(e.target.checked);
@@ -70,7 +77,12 @@ export function settingsButton(button) {
     const settings = readSettings();
     for (const radio of sheet.querySelectorAll('[name="theme"]')) radio.checked = radio.value === (settings.theme ?? "system");
     sheet.querySelector('[name="motion"]').checked = settings.motion === "less";
-    if (analytics) sheet.querySelector('[name="analytics"]').checked = analytics.counting();
+    if (analytics) {
+      const google = analytics.google?.() ?? false;
+      sheet.querySelector(".analytics-toggle").style.display = google ? "none" : "";
+      sheet.querySelector(".analytics-choices").style.display = google ? "" : "none";
+      sheet.querySelector('[name="analytics"]').checked = analytics.counting();
+    }
     sheet.showModal();
   });
 }
