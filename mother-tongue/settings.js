@@ -54,6 +54,7 @@ export function settingsButton(button) {
     <label class="setting toggle"><input type="checkbox" name="motion" /><span>Less motion</span><span class="toggle-note">Fewer bounces and wiggles</span></label>
     ${analytics ? '<label class="setting toggle analytics-toggle"><input type="checkbox" name="analytics" /><span>Count my visits</span><span class="toggle-note">With Google Analytics, which uses cookies. <a href="/privacy">More</a></span></label>' : ""}
     ${analytics ? `<p class="setting-note analytics-choices" style="display: none">Counting visits and ads: <a href="#" class="choices-link">change your choices</a> in Google's message.</p>` : ""}
+    <button type="button" class="cd-install cd-install-wide" data-install hidden>Add Critter Daily to your home screen</button>
     <p class="setting-note">These apply to all the games on this device.</p>
     <form method="dialog"><button class="primary">Done</button></form>`;
   document.body.append(sheet);
@@ -77,6 +78,7 @@ export function settingsButton(button) {
     const settings = readSettings();
     for (const radio of sheet.querySelectorAll('[name="theme"]')) radio.checked = radio.value === (settings.theme ?? "system");
     sheet.querySelector('[name="motion"]').checked = settings.motion === "less";
+    window.critterInstall?.refresh(); // the Add to home screen button (install.js), if there's a way
     if (analytics) {
       const google = analytics.google?.() ?? false;
       sheet.querySelector(".analytics-toggle").style.display = google ? "none" : "";

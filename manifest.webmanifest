@@ -1,0 +1,25 @@
+{
+  "id": "/",
+  "name": "Critter Daily",
+  "short_name": "Critter Daily",
+  "description": "Six little games, new every midnight: a mini crossword, a word game, guess the language, a history map game, estimation trivia and Wikipedia trivia.",
+  "start_url": "/?source=app",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#cfeaff",
+  "theme_color": "#cfeaff",
+  "categories": ["games", "entertainment", "education"],
+  "icons": [
+    { "src": "/app-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/app-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/app-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Deep Cut", "url": "/deep-cut/?source=app" },
+    { "name": "Mother Tongue", "url": "/mother-tongue/?source=app" },
+    { "name": "Ten Numbers", "url": "/ten-numbers/?source=app" },
+    { "name": "Burrow", "url": "/burrow/?source=app" },
+    { "name": "Crisscross", "url": "/crisscross/?source=app" },
+    { "name": "Borderline", "url": "/borderline/?source=app" }
+  ]
+}
