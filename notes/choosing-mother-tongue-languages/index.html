@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      // Light or dark, and less motion, before the page draws (settings.js keeps them up to date).
+      try {
+        var cd = JSON.parse(localStorage.getItem("critter-daily-settings")) || {};
+        document.documentElement.dataset.theme = cd.theme === "light" || cd.theme === "dark" ? cd.theme : matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        if (cd.motion === "less") document.documentElement.dataset.motion = "less";
+      } catch (e) {}
+    </script>
+    <title>Why Limburgish was too hard: how Mother Tongue picks its languages | Critter Daily</title>
+    <meta name="description" content="There are about 7,000 languages, but a daily guessing game can only use the ones players can find. How Mother Tongue chooses its mystery languages, and what play-testing changed." />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Critter Daily" />
+    <meta property="og:title" content="Why Limburgish was too hard: how Mother Tongue picks its languages" />
+    <meta property="og:description" content="There are about 7,000 languages, but a daily guessing game can only use the ones players can find. How Mother Tongue chooses its mystery languages, and what play-testing changed." />
+    <meta property="og:url" content="https://critterdaily.com/notes/choosing-mother-tongue-languages/" />
+    <meta name="theme-color" content="#cfeaff" />
+    <link rel="canonical" href="https://critterdaily.com/notes/choosing-mother-tongue-languages/" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Critter Daily" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;700;800&display=swap" />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/guide.css" />
+    <!-- Counts visits and games, without cookies or knowing who you are; only on critterdaily.com, so local copies and tests count nothing. -->
+    <script async src="https://cloud.umami.is/script.js" data-website-id="7d7d7ec1-534b-40e2-9401-3c07793fd5ec" data-domains="critterdaily.com,www.critterdaily.com"></script>
+    <!-- Google Analytics, asking first in the EU, the UK and Switzerland (analytics.js); also only on critterdaily.com. -->
+    <script defer src="/analytics.js"></script>
+    <!-- The app on the home screen: the offline helper and the Add to home screen button. -->
+    <script defer src="/install.js"></script>
+    <!-- Google AdSense: ads, once Google approves the site (see the privacy page). -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7797883251489593" crossorigin="anonymous"></script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","headline":"Why Limburgish was too hard: how Mother Tongue picks its languages","description":"There are about 7,000 languages, but a daily guessing game can only use the ones players can find. How Mother Tongue chooses its mystery languages, and what play-testing changed.","datePublished":"2026-11-16","dateModified":"2026-11-16","author":{"@type":"Organization","name":"Critter Daily","url":"https://critterdaily.com/","logo":"https://critterdaily.com/app-512.png"},"publisher":{"@type":"Organization","name":"Critter Daily","url":"https://critterdaily.com/","logo":"https://critterdaily.com/app-512.png"},"mainEntityOfPage":"https://critterdaily.com/notes/choosing-mother-tongue-languages/","about":{"@type":"VideoGame","name":"Mother Tongue","url":"https://critterdaily.com/mother-tongue/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Critter Daily","item":"https://critterdaily.com/"},{"@type":"ListItem","position":2,"name":"Notes","item":"https://critterdaily.com/notes/"},{"@type":"ListItem","position":3,"name":"Why Limburgish was too hard: how Mother Tongue picks its languages","item":"https://critterdaily.com/notes/choosing-mother-tongue-languages/"}]}]}</script>
+  </head>
+  <body>
+    <main class="page">
+      <p><a href="/notes/">← Notes</a></p>
+      <h1>Why Limburgish was too hard: how Mother Tongue picks its languages</h1>
+      <p class="note-meta">November 16, 2026 · 3 minute read · about <a href="/mother-tongue/">Mother Tongue</a></p>
+      <article class="guide">
+<p class="guide-lede">Mother Tongue knows 7,054 languages, and you can guess any of them. But only 175 can be the mystery. Here's why, and how they were chosen.</p>
+<h2>Every language can be a guess</h2>
+<p>The game's family tree comes from Glottolog, the scholarly catalog of the world's languages. It places each language on a tree of families and branches, and says where it's spoken. Mother Tongue matches each one to Wikidata for its English name, its other names, its speaker count and its name for itself, and to Wikipedia for how well known it is. That's how Pip knows that Portuguese and Spanish are both West Iberian, and where each is spoken.</p>
+<p>Glottolog's tree is detailed: the paths above the game's languages pass through 4,615 branches. Mother Tongue shows a branch by name when it has its own English Wikipedia article, which 1,243 of them do. The rest, Glottolog's finest subdivisions, count silently toward how close a guess is.</p>
+<h2>Only some can be the mystery</h2>
+<p>A mystery has to be findable. You find it by guessing languages you know, reading which branch they share with it, and narrowing down. If the answer is a language almost nobody has heard of, even a perfect run down the tree ends in a list of names you've never seen.</p>
+<p>So the mysteries are chosen by how well known they are, measured by how many people read each language's Wikipedia article. A mystery also has to be a living language in a real family, with a place on the map and at least two named branches above it, so there's a tree to climb.</p>
+<h2>What play-testing changed</h2>
+<p>The first schedule, in October 2026, drew on the 365 best-known languages: four well-known ones a week and three deeper cuts. The deeper cuts went too deep. When Limburgish came up, a regional language of the Netherlands, Belgium and Germany that was then about the 225th best known, nobody found it.</p>
+<p>So the pool shrank to the 175 best known. Now, six days a week, the mystery is one of the 150 best known, and on Fridays it's a deeper cut from the next 25. In the first round the better-known languages came earlier, so the first weeks were the gentlest, and the ten languages nearly everyone guesses first, like English and Spanish, were kept out of the first month: a win on the first guess isn't much of a puzzle.</p>
+<h2>A new order every round</h2>
+<p>With 175 languages, a round takes about six months. When the first ends, on April 10, 2027, the languages come round again in a new order, none sooner than 120 days after it was last the mystery, and never two days running from the same family.</p>
+<h2>What the mysteries look like</h2>
+<p>Most of the world's languages belong to a few huge families. In Glottolog's tree, Atlantic–Congo, which includes the Bantu languages, has 1,186, and Austronesian has 1,128. The best-known languages lean heavily the other way: 99 of the 176 languages in this year's schedule are Indo-European. Austronesian has 14, Afroasiatic 12, Turkic and Atlantic–Congo 9 each and Sino-Tibetan 8, and families like Japonic, Kartvelian (Georgian's family) and Na-Dene have one each.</p>
+<p>So if you're stuck, play the odds: a guess from the right big family usually gets you onto the tree, and from there the branch names do the work.</p>
+        <p><a class="note-play" href="/mother-tongue/">Play today's Mother Tongue →</a></p>
+      </article>
+      <section class="guide">
+        <h2>More notes</h2>
+        <ul>
+          <li><a href="/notes/language-families/">A beginner&#x27;s map of the world&#x27;s language families</a></li>
+          <li><a href="/notes/how-deep-cut-measures-obscurity/">How Deep Cut decides what&#x27;s obscure</a></li>
+          <li><a href="/notes/least-read-answers/">The least-read answers in Deep Cut</a></li>
+        </ul>
+        <p><a href="/notes/">All the notes</a></p>
+      </section>
+    </main>
+    <script type="module" src="/settings.js"></script>
+  </body>
+</html>

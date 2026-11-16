@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      // Light or dark, and less motion, before the page draws (settings.js keeps them up to date).
+      try {
+        var cd = JSON.parse(localStorage.getItem("critter-daily-settings")) || {};
+        document.documentElement.dataset.theme = cd.theme === "light" || cd.theme === "dark" ? cd.theme : matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        if (cd.motion === "less") document.documentElement.dataset.motion = "less";
+      } catch (e) {}
+    </script>
+    <title>Notes: how Critter Daily&#x27;s puzzles work | Critter Daily</title>
+    <meta name="description" content="How Critter Daily&#x27;s six daily puzzle games are made, where their answers come from, and how to get better at them." />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Critter Daily" />
+    <meta property="og:title" content="Notes: how Critter Daily&#x27;s puzzles work" />
+    <meta property="og:description" content="How Critter Daily&#x27;s six daily puzzle games are made, where their answers come from, and how to get better at them." />
+    <meta property="og:url" content="https://critterdaily.com/notes/" />
+    <meta name="theme-color" content="#cfeaff" />
+    <link rel="canonical" href="https://critterdaily.com/notes/" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Critter Daily" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;700;800&display=swap" />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/guide.css" />
+    <!-- Counts visits and games, without cookies or knowing who you are; only on critterdaily.com, so local copies and tests count nothing. -->
+    <script async src="https://cloud.umami.is/script.js" data-website-id="7d7d7ec1-534b-40e2-9401-3c07793fd5ec" data-domains="critterdaily.com,www.critterdaily.com"></script>
+    <!-- Google Analytics, asking first in the EU, the UK and Switzerland (analytics.js); also only on critterdaily.com. -->
+    <script defer src="/analytics.js"></script>
+    <!-- The app on the home screen: the offline helper and the Add to home screen button. -->
+    <script defer src="/install.js"></script>
+    <!-- Google AdSense: ads, once Google approves the site (see the privacy page). -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7797883251489593" crossorigin="anonymous"></script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"CollectionPage","name":"Notes","url":"https://critterdaily.com/notes/","isPartOf":{"@type":"WebSite","name":"Critter Daily","url":"https://critterdaily.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Critter Daily","item":"https://critterdaily.com/"},{"@type":"ListItem","position":2,"name":"Notes","item":"https://critterdaily.com/notes/"}]}]}</script>
+  </head>
+  <body>
+    <main class="page">
+      <p><a href="/">← Critter Daily</a></p>
+      <h1>Notes</h1>
+      <p class="note-meta">How Critter Daily's puzzles are made, and how to get better at them.</p>
+      <section class="guide">
+        <h2><a href="/deep-cut/">Deep Cut</a></h2>
+        <ul class="notes-list">
+          <li><a href="/notes/how-deep-cut-measures-obscurity/">How Deep Cut decides what&#x27;s obscure</a><p>Deep Cut rewards the right answers nobody else thinks of. Here&#x27;s how it uses Wikipedia&#x27;s page views to measure how obscure an answer is, and why every prompt can dig just as deep.</p></li>
+          <li><a href="/notes/least-read-answers/">The least-read answers in Deep Cut</a><p>Who&#x27;s the least-read Roman emperor? The least-read US state? A tour of the bottom of Deep Cut&#x27;s lists, using Wikipedia&#x27;s page views.</p></li>
+        </ul>
+      </section>
+      <section class="guide">
+        <h2><a href="/mother-tongue/">Mother Tongue</a></h2>
+        <ul class="notes-list">
+          <li><a href="/notes/choosing-mother-tongue-languages/">Why Limburgish was too hard: how Mother Tongue picks its languages</a><p>There are about 7,000 languages, but a daily guessing game can only use the ones players can find. How Mother Tongue chooses its mystery languages, and what play-testing changed.</p></li>
+          <li><a href="/notes/language-families/">A beginner&#x27;s map of the world&#x27;s language families</a><p>Indo-European, Sino-Tibetan, Afroasiatic, Atlantic–Congo, Austronesian: a short guide to the big language families, with the surprises that trip up Mother Tongue players.</p></li>
+        </ul>
+      </section>
+      <section class="guide">
+        <h2><a href="/ten-numbers/">Ten Numbers</a></h2>
+        <ul class="notes-list">
+          <li><a href="/notes/estimation-tricks/">Estimation tricks for Ten Numbers</a><p>You don&#x27;t need to know how many people live in France to score well in Ten Numbers. Five estimating habits, with the real points they earn.</p></li>
+          <li><a href="/notes/checking-ten-numbers/">How Ten Numbers checks its answers</a><p>Every Ten Numbers answer comes from Wikidata or Wikipedia. In November 2026 we checked them all against their articles and took out 101. Here&#x27;s what we found.</p></li>
+        </ul>
+      </section>
+      <section class="guide">
+        <h2><a href="/burrow/">Burrow</a></h2>
+        <ul class="notes-list">
+          <li><a href="/notes/how-burrow-scores-words/">Rare words, deep burrows: how Burrow scores words</a><p>In Burrow, &#x27;tenon&#x27; digs almost four times as deep as &#x27;note&#x27;. How word frequency becomes depth, and how to find the words that dig deepest.</p></li>
+        </ul>
+      </section>
+      <section class="guide">
+        <h2><a href="/crisscross/">Crisscross</a></h2>
+        <ul class="notes-list">
+          <li><a href="/notes/one-word-two-clues/">One word, two clues: how Crisscross is written</a><p>Every word in Crisscross has two clues, one plain and one playful, so a word that comes back comes back new. A look at how a five-by-five crossword is made.</p></li>
+        </ul>
+      </section>
+      <section class="guide">
+        <h2><a href="/borderline/">Borderline</a></h2>
+        <ul class="notes-list">
+          <li><a href="/notes/borderline-maps/">5,000 years of borders: where Borderline&#x27;s maps come from</a><p>Borderline&#x27;s maps come from Cliopatria, an open atlas of the world&#x27;s states from 3400 BCE to today. How a historical atlas becomes a daily puzzle, and which places made the cut.</p></li>
+          <li><a href="/notes/surprising-maps/">Six surprising maps from Borderline</a><p>Spain ruling much of Italy, England holding half of France, Brunei twelve times its size: six maps from Borderline that look nothing like the places you know.</p></li>
+        </ul>
+      </section>
+    </main>
+    <script type="module" src="/settings.js"></script>
+  </body>
+</html>

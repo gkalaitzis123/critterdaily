@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      // Light or dark, and less motion, before the page draws (settings.js keeps them up to date).
+      try {
+        var cd = JSON.parse(localStorage.getItem("critter-daily-settings")) || {};
+        document.documentElement.dataset.theme = cd.theme === "light" || cd.theme === "dark" ? cd.theme : matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        if (cd.motion === "less") document.documentElement.dataset.motion = "less";
+      } catch (e) {}
+    </script>
+    <title>Rare words, deep burrows: how Burrow scores words | Critter Daily</title>
+    <meta name="description" content="In Burrow, &#x27;tenon&#x27; digs almost four times as deep as &#x27;note&#x27;. How word frequency becomes depth, and how to find the words that dig deepest." />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Critter Daily" />
+    <meta property="og:title" content="Rare words, deep burrows: how Burrow scores words" />
+    <meta property="og:description" content="In Burrow, &#x27;tenon&#x27; digs almost four times as deep as &#x27;note&#x27;. How word frequency becomes depth, and how to find the words that dig deepest." />
+    <meta property="og:url" content="https://critterdaily.com/notes/how-burrow-scores-words/" />
+    <meta name="theme-color" content="#cfeaff" />
+    <link rel="canonical" href="https://critterdaily.com/notes/how-burrow-scores-words/" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Critter Daily" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;700;800&display=swap" />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/guide.css" />
+    <!-- Counts visits and games, without cookies or knowing who you are; only on critterdaily.com, so local copies and tests count nothing. -->
+    <script async src="https://cloud.umami.is/script.js" data-website-id="7d7d7ec1-534b-40e2-9401-3c07793fd5ec" data-domains="critterdaily.com,www.critterdaily.com"></script>
+    <!-- Google Analytics, asking first in the EU, the UK and Switzerland (analytics.js); also only on critterdaily.com. -->
+    <script defer src="/analytics.js"></script>
+    <!-- The app on the home screen: the offline helper and the Add to home screen button. -->
+    <script defer src="/install.js"></script>
+    <!-- Google AdSense: ads, once Google approves the site (see the privacy page). -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7797883251489593" crossorigin="anonymous"></script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","headline":"Rare words, deep burrows: how Burrow scores words","description":"In Burrow, 'tenon' digs almost four times as deep as 'note'. How word frequency becomes depth, and how to find the words that dig deepest.","datePublished":"2026-11-16","dateModified":"2026-11-16","author":{"@type":"Organization","name":"Critter Daily","url":"https://critterdaily.com/","logo":"https://critterdaily.com/app-512.png"},"publisher":{"@type":"Organization","name":"Critter Daily","url":"https://critterdaily.com/","logo":"https://critterdaily.com/app-512.png"},"mainEntityOfPage":"https://critterdaily.com/notes/how-burrow-scores-words/","about":{"@type":"VideoGame","name":"Burrow","url":"https://critterdaily.com/burrow/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Critter Daily","item":"https://critterdaily.com/"},{"@type":"ListItem","position":2,"name":"Notes","item":"https://critterdaily.com/notes/"},{"@type":"ListItem","position":3,"name":"Rare words, deep burrows: how Burrow scores words","item":"https://critterdaily.com/notes/how-burrow-scores-words/"}]}]}</script>
+  </head>
+  <body>
+    <main class="page">
+      <p><a href="/notes/">← Notes</a></p>
+      <h1>Rare words, deep burrows: how Burrow scores words</h1>
+      <p class="note-meta">November 16, 2026 · 2 minute read · about <a href="/burrow/">Burrow</a></p>
+      <article class="guide">
+<p class="guide-lede">Burrow gives you seven letters and a minute. Every word you make digs Clover the rabbit's burrow deeper, but words aren't all worth the same: rare words dig deeper than common ones. Here's exactly how.</p>
+<h2>Measuring how rare a word is</h2>
+<p>Burrow's words come from ENABLE, a public-domain word list many word games use, and are kept only if they turn up in real English. How often each one turns up comes from wordfreq, a research project that counts words across books, news, film subtitles, websites and more. It gives each word a Zipf frequency: about 7 for the most common words in English and around 1 or 2 for very rare ones. "Note" scores a little over 5; "tenon", a joint in woodworking, a little over 2.</p>
+<h2>From rarity to meters</h2>
+<p>A word digs one meter for every third of a point it falls below 6.5, so from 1 meter for the commonest words to 14 for the rarest. Each letter past four adds 2 meters, and a word that uses all seven letters adds 10 more. So "note" digs 4 meters and "tenon" 15, and a rare seven-letter word reaches 30, the deepest a single word can go.</p>
+<h2>An example day</h2>
+<p>On Burrow's first day, the letters were P, P, U, S, O, R and E, and there were 56 words to find. "Sure", one of the most common words in English, dug 2 meters, and "rose" and "user" 5 each. The seven-letter word was "purpose", worth 21 meters on its own: a common word, but long, and using every letter. "Poseur" dug 18, and "sprue", a channel in a casting mold, 15.</p>
+<h2>The deepest words</h2>
+<p>Across the year's 365 days there are 19,646 words to find, about 54 a day, and every day has at least one seven-letter word; some have four. The deepest words of all are rare seven-letter ones, which reach the 30-meter limit: "scleral", "abridge", "treadle", "scalene" and "maunder" among them. On a good day, one of those is worth as much as several common words put together.</p>
+<h2>How to dig deeper</h2>
+<ul>
+<li><strong>Find the seven-letter word.</strong> It's worth at least 17 meters, 10 for using every letter, 6 for its length and at least 1 for its rarity, and every day has one.</li>
+<li><strong>Prefer odd words to many words.</strong> A minute isn't long, and a rare five-letter word like "tenon", at 15 meters, is worth three or four common ones.</li>
+<li><strong>Think of trades and hobbies.</strong> Words from woodworking, sewing, sailing or science are often on the list and rarely in everyday speech, and that's exactly what digs.</li>
+<li><strong>Shuffle when you stall.</strong> A new order shows new pairs of letters, and new words with them.</li>
+</ul>
+<h2>What doesn't count</h2>
+<p>Names and abbreviations aren't in the word list, and rude and offensive words are taken out, using a public list of them and a few more found by hand. If you ever meet a word in Burrow that shouldn't be there, please write to <a href="mailto:rjenkins1445@gmail.com">rjenkins1445@gmail.com</a>.</p>
+        <p><a class="note-play" href="/burrow/">Play today's Burrow →</a></p>
+      </article>
+      <section class="guide">
+        <h2>More notes</h2>
+        <ul>
+          <li><a href="/notes/how-deep-cut-measures-obscurity/">How Deep Cut decides what&#x27;s obscure</a></li>
+          <li><a href="/notes/least-read-answers/">The least-read answers in Deep Cut</a></li>
+        </ul>
+        <p><a href="/notes/">All the notes</a></p>
+      </section>
+    </main>
+    <script type="module" src="/settings.js"></script>
+  </body>
+</html>

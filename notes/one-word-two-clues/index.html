@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      // Light or dark, and less motion, before the page draws (settings.js keeps them up to date).
+      try {
+        var cd = JSON.parse(localStorage.getItem("critter-daily-settings")) || {};
+        document.documentElement.dataset.theme = cd.theme === "light" || cd.theme === "dark" ? cd.theme : matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        if (cd.motion === "less") document.documentElement.dataset.motion = "less";
+      } catch (e) {}
+    </script>
+    <title>One word, two clues: how Crisscross is written | Critter Daily</title>
+    <meta name="description" content="Every word in Crisscross has two clues, one plain and one playful, so a word that comes back comes back new. A look at how a five-by-five crossword is made." />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Critter Daily" />
+    <meta property="og:title" content="One word, two clues: how Crisscross is written" />
+    <meta property="og:description" content="Every word in Crisscross has two clues, one plain and one playful, so a word that comes back comes back new. A look at how a five-by-five crossword is made." />
+    <meta property="og:url" content="https://critterdaily.com/notes/one-word-two-clues/" />
+    <meta name="theme-color" content="#cfeaff" />
+    <link rel="canonical" href="https://critterdaily.com/notes/one-word-two-clues/" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Critter Daily" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;700;800&display=swap" />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/guide.css" />
+    <!-- Counts visits and games, without cookies or knowing who you are; only on critterdaily.com, so local copies and tests count nothing. -->
+    <script async src="https://cloud.umami.is/script.js" data-website-id="7d7d7ec1-534b-40e2-9401-3c07793fd5ec" data-domains="critterdaily.com,www.critterdaily.com"></script>
+    <!-- Google Analytics, asking first in the EU, the UK and Switzerland (analytics.js); also only on critterdaily.com. -->
+    <script defer src="/analytics.js"></script>
+    <!-- The app on the home screen: the offline helper and the Add to home screen button. -->
+    <script defer src="/install.js"></script>
+    <!-- Google AdSense: ads, once Google approves the site (see the privacy page). -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7797883251489593" crossorigin="anonymous"></script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","headline":"One word, two clues: how Crisscross is written","description":"Every word in Crisscross has two clues, one plain and one playful, so a word that comes back comes back new. A look at how a five-by-five crossword is made.","datePublished":"2026-11-16","dateModified":"2026-11-16","author":{"@type":"Organization","name":"Critter Daily","url":"https://critterdaily.com/","logo":"https://critterdaily.com/app-512.png"},"publisher":{"@type":"Organization","name":"Critter Daily","url":"https://critterdaily.com/","logo":"https://critterdaily.com/app-512.png"},"mainEntityOfPage":"https://critterdaily.com/notes/one-word-two-clues/","about":{"@type":"VideoGame","name":"Crisscross","url":"https://critterdaily.com/crisscross/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Critter Daily","item":"https://critterdaily.com/"},{"@type":"ListItem","position":2,"name":"Notes","item":"https://critterdaily.com/notes/"},{"@type":"ListItem","position":3,"name":"One word, two clues: how Crisscross is written","item":"https://critterdaily.com/notes/one-word-two-clues/"}]}]}</script>
+  </head>
+  <body>
+    <main class="page">
+      <p><a href="/notes/">← Notes</a></p>
+      <h1>One word, two clues: how Crisscross is written</h1>
+      <p class="note-meta">November 16, 2026 · 2 minute read · about <a href="/crisscross/">Crisscross</a></p>
+      <article class="guide">
+<p class="guide-lede">Crisscross is a small crossword: a five-by-five grid, ten words, usually one to three minutes. Small doesn't mean simple to make. Here's how the puzzles are put together, and why the same word can feel different the second time you meet it.</p>
+<h2>Filling the grid</h2>
+<p>A five-by-five grid has 25 squares. Crisscross usually blacks out a few in the corners, which leaves ten words, five across and five down, with nearly every white square in two of them. That's the hard part: every letter has to work in two words at once. The words come from ENABLE, a public-domain word list, chosen with wordfreq, which measures how common each word is, so the grid is filled with words you know rather than the odd abbreviations crosswords sometimes lean on.</p>
+<h2>Two clues for every word</h2>
+<p>Every word in Crisscross has two clues written for it, a plain one and a playful one. Over this year's puzzles, 1,324 different words appear, and many come back. When one does, it usually comes with its other clue, so a word you've seen doesn't feel like a repeat. A few pairs from this year:</p>
+<ul>
+<li>CLAY: "Potter's material" and "Surface at the French Open"</li>
+<li>EAGLE: "Bald ___ (U.S. symbol)" and "Two under par, on the links"</li>
+<li>DELAY: "Put off" and "Dreaded word on a flight board"</li>
+<li>DEER: "Bambi, for one" and "Like a ___ in the headlights"</li>
+<li>BOARD: "Get on, as a plane" and "Bored? Try a ___ game"</li>
+<li>ANGER: "Fury" and "Red emotion in Pixar's Inside Out"</li>
+</ul>
+<h2>Reading a clue</h2>
+<p>Crossword clues follow a few habits that are worth knowing:</p>
+<ul>
+<li><strong>The clue matches the answer's form.</strong> "Finished" is ENDED, not END, and a plural clue wants a plural answer.</li>
+<li><strong>"E.g." or "say" means an example.</strong> "Square footage, e.g." is AREA: square footage is one kind of area.</li>
+<li><strong>A blank is a fill-in.</strong> "All you ___ is love (Beatles)" is NEED.</li>
+<li><strong>A comma adds a setting.</strong> "Two under par, on the links" means in golf, so it's EAGLE.</li>
+<li><strong>A question mark means play.</strong> "Bored? Try a ___ game" sounds like one word and means another.</li>
+</ul>
+<h2>Racing the clock</h2>
+<p>Crisscross times you from Start to the last right letter, and your time earns a title, from Hatchling to Silk Sprinter, for 45 seconds or less. The fastest solvers don't read every clue first: they start with the surest one, then use each new letter as a free hint for the word crossing it. Check and Reveal are there when you're stuck, at 10 seconds each.</p>
+        <p><a class="note-play" href="/crisscross/">Play today's Crisscross →</a></p>
+      </article>
+      <section class="guide">
+        <h2>More notes</h2>
+        <ul>
+          <li><a href="/notes/how-deep-cut-measures-obscurity/">How Deep Cut decides what&#x27;s obscure</a></li>
+          <li><a href="/notes/least-read-answers/">The least-read answers in Deep Cut</a></li>
+        </ul>
+        <p><a href="/notes/">All the notes</a></p>
+      </section>
+    </main>
+    <script type="module" src="/settings.js"></script>
+  </body>
+</html>

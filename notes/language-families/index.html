@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      // Light or dark, and less motion, before the page draws (settings.js keeps them up to date).
+      try {
+        var cd = JSON.parse(localStorage.getItem("critter-daily-settings")) || {};
+        document.documentElement.dataset.theme = cd.theme === "light" || cd.theme === "dark" ? cd.theme : matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        if (cd.motion === "less") document.documentElement.dataset.motion = "less";
+      } catch (e) {}
+    </script>
+    <title>A beginner&#x27;s map of the world&#x27;s language families | Critter Daily</title>
+    <meta name="description" content="Indo-European, Sino-Tibetan, Afroasiatic, Atlantic–Congo, Austronesian: a short guide to the big language families, with the surprises that trip up Mother Tongue players." />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Critter Daily" />
+    <meta property="og:title" content="A beginner&#x27;s map of the world&#x27;s language families" />
+    <meta property="og:description" content="Indo-European, Sino-Tibetan, Afroasiatic, Atlantic–Congo, Austronesian: a short guide to the big language families, with the surprises that trip up Mother Tongue players." />
+    <meta property="og:url" content="https://critterdaily.com/notes/language-families/" />
+    <meta name="theme-color" content="#cfeaff" />
+    <link rel="canonical" href="https://critterdaily.com/notes/language-families/" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Critter Daily" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;700;800&display=swap" />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/guide.css" />
+    <!-- Counts visits and games, without cookies or knowing who you are; only on critterdaily.com, so local copies and tests count nothing. -->
+    <script async src="https://cloud.umami.is/script.js" data-website-id="7d7d7ec1-534b-40e2-9401-3c07793fd5ec" data-domains="critterdaily.com,www.critterdaily.com"></script>
+    <!-- Google Analytics, asking first in the EU, the UK and Switzerland (analytics.js); also only on critterdaily.com. -->
+    <script defer src="/analytics.js"></script>
+    <!-- The app on the home screen: the offline helper and the Add to home screen button. -->
+    <script defer src="/install.js"></script>
+    <!-- Google AdSense: ads, once Google approves the site (see the privacy page). -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7797883251489593" crossorigin="anonymous"></script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","headline":"A beginner's map of the world's language families","description":"Indo-European, Sino-Tibetan, Afroasiatic, Atlantic–Congo, Austronesian: a short guide to the big language families, with the surprises that trip up Mother Tongue players.","datePublished":"2026-11-16","dateModified":"2026-11-16","author":{"@type":"Organization","name":"Critter Daily","url":"https://critterdaily.com/","logo":"https://critterdaily.com/app-512.png"},"publisher":{"@type":"Organization","name":"Critter Daily","url":"https://critterdaily.com/","logo":"https://critterdaily.com/app-512.png"},"mainEntityOfPage":"https://critterdaily.com/notes/language-families/","about":{"@type":"VideoGame","name":"Mother Tongue","url":"https://critterdaily.com/mother-tongue/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Critter Daily","item":"https://critterdaily.com/"},{"@type":"ListItem","position":2,"name":"Notes","item":"https://critterdaily.com/notes/"},{"@type":"ListItem","position":3,"name":"A beginner's map of the world's language families","item":"https://critterdaily.com/notes/language-families/"}]}]}</script>
+  </head>
+  <body>
+    <main class="page">
+      <p><a href="/notes/">← Notes</a></p>
+      <h1>A beginner&#x27;s map of the world&#x27;s language families</h1>
+      <p class="note-meta">November 16, 2026 · 3 minute read · about <a href="/mother-tongue/">Mother Tongue</a></p>
+      <article class="guide">
+<p class="guide-lede">Linguists group languages into families: languages descended from a common ancestor, as Spanish, Italian and French are from Latin. Mother Tongue is built on one of those family trees, Glottolog's. You don't need to know it to play, but a rough map helps. Here are the families you'll meet most often, and a few surprises. The numbers are how many languages each has in the game.</p>
+<h2>Indo-European (548 languages)</h2>
+<p>The family of most of Europe and much of South Asia: the Romance languages (Spanish, Portuguese, French, Italian, Romanian), the Germanic ones (English, German, Dutch, the Scandinavian languages), the Slavic ones (Russian, Polish, Czech), the Celtic ones (Irish, Welsh), Greek, Armenian, Albanian, Persian and the Indo-Aryan languages of India and Pakistan, like Hindi, Bengali and Punjabi. In Mother Tongue, guessing English or Hindi when the answer is Spanish only tells you "Indo-European"; guessing Italian gets you much closer.</p>
+<h2>Sino-Tibetan (425)</h2>
+<p>Mandarin, Cantonese and the other Chinese languages, plus Tibetan, Burmese and hundreds of languages of the Himalayas and Southeast Asia. The Chinese languages form a branch of their own, so guessing Mandarin when the answer is Burmese gets you only as far as Sino-Tibetan.</p>
+<h2>Afroasiatic (365)</h2>
+<p>North Africa, the Horn of Africa and the Middle East: Arabic, Hebrew and Amharic (all Semitic), Hausa, Somali and the Berber languages. One surprise: Maltese, written in the Latin alphabet and full of Italian words, is a Semitic language descended from Arabic. In Glottolog's tree it sits on the Arabic branch.</p>
+<h2>Atlantic–Congo (1,186)</h2>
+<p>The biggest family in the tree, covering most of Africa south of the Sahara. It includes the Bantu languages, like Kiswahili, Zulu, Xhosa, Shona and Kinyarwanda, and West African languages like Yoruba, Igbo and Wolof. You may know it as part of Niger–Congo, the larger grouping many books use; Glottolog names the core it's confident of.</p>
+<h2>Austronesian (1,128)</h2>
+<p>A family spread across half the globe, from Madagascar to Easter Island: Indonesian and Malay, Javanese, Tagalog and the other languages of the Philippines, Malagasy, Māori, Hawaiian and Samoan. If the compass points to the middle of an ocean, start here.</p>
+<h2>Turkic, Uralic and Dravidian</h2>
+<p>Turkish, Azerbaijani, Uzbek, Kazakh and Uyghur are Turkic, and closely related to one another. Hungarian, Finnish and Estonian are Uralic, a family unrelated to their Indo-European neighbors; in Mother Tongue, Hungarian's only named branch is "Uralic" itself. Dravidian covers Tamil, Telugu, Kannada and Malayalam in southern India, which aren't related to Hindi.</p>
+<h2>Languages on their own</h2>
+<p>Some languages have no known relatives. Basque, spoken on both sides of the border between Spain and France, is the famous one: an isolate, thought to be older in the region than the Indo-European languages around it. In Glottolog's tree, Japanese and Korean each head a small family of their own: Japonic, with the Ryukyuan languages of Okinawa, and Koreanic, with the language of Jeju island. A guess that shares nothing with the mystery still gives you its distance and direction, and for a language on its own that's the best clue there is.</p>
+<h2>A strategy in five guesses</h2>
+<p>Open with one language from each of the big families: say English, Mandarin Chinese, Arabic, Kiswahili and Indonesian. Whichever lands on a named branch tells you the family, and the compass tells you where to look. From there, type a branch's name, like Bantu or Turkic, and Mother Tongue lists the languages in it.</p>
+        <p><a class="note-play" href="/mother-tongue/">Play today's Mother Tongue →</a></p>
+      </article>
+      <section class="guide">
+        <h2>More notes</h2>
+        <ul>
+          <li><a href="/notes/choosing-mother-tongue-languages/">Why Limburgish was too hard: how Mother Tongue picks its languages</a></li>
+          <li><a href="/notes/how-deep-cut-measures-obscurity/">How Deep Cut decides what&#x27;s obscure</a></li>
+          <li><a href="/notes/least-read-answers/">The least-read answers in Deep Cut</a></li>
+        </ul>
+        <p><a href="/notes/">All the notes</a></p>
+      </section>
+    </main>
+    <script type="module" src="/settings.js"></script>
+  </body>
+</html>

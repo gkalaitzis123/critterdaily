@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      // Light or dark, and less motion, before the page draws (settings.js keeps them up to date).
+      try {
+        var cd = JSON.parse(localStorage.getItem("critter-daily-settings")) || {};
+        document.documentElement.dataset.theme = cd.theme === "light" || cd.theme === "dark" ? cd.theme : matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        if (cd.motion === "less") document.documentElement.dataset.motion = "less";
+      } catch (e) {}
+    </script>
+    <title>Estimation tricks for Ten Numbers | Critter Daily</title>
+    <meta name="description" content="You don&#x27;t need to know how many people live in France to score well in Ten Numbers. Five estimating habits, with the real points they earn." />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Critter Daily" />
+    <meta property="og:title" content="Estimation tricks for Ten Numbers" />
+    <meta property="og:description" content="You don&#x27;t need to know how many people live in France to score well in Ten Numbers. Five estimating habits, with the real points they earn." />
+    <meta property="og:url" content="https://critterdaily.com/notes/estimation-tricks/" />
+    <meta name="theme-color" content="#cfeaff" />
+    <link rel="canonical" href="https://critterdaily.com/notes/estimation-tricks/" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Critter Daily" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;700;800&display=swap" />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/guide.css" />
+    <!-- Counts visits and games, without cookies or knowing who you are; only on critterdaily.com, so local copies and tests count nothing. -->
+    <script async src="https://cloud.umami.is/script.js" data-website-id="7d7d7ec1-534b-40e2-9401-3c07793fd5ec" data-domains="critterdaily.com,www.critterdaily.com"></script>
+    <!-- Google Analytics, asking first in the EU, the UK and Switzerland (analytics.js); also only on critterdaily.com. -->
+    <script defer src="/analytics.js"></script>
+    <!-- The app on the home screen: the offline helper and the Add to home screen button. -->
+    <script defer src="/install.js"></script>
+    <!-- Google AdSense: ads, once Google approves the site (see the privacy page). -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7797883251489593" crossorigin="anonymous"></script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","headline":"Estimation tricks for Ten Numbers","description":"You don't need to know how many people live in France to score well in Ten Numbers. Five estimating habits, with the real points they earn.","datePublished":"2026-11-16","dateModified":"2026-11-16","author":{"@type":"Organization","name":"Critter Daily","url":"https://critterdaily.com/","logo":"https://critterdaily.com/app-512.png"},"publisher":{"@type":"Organization","name":"Critter Daily","url":"https://critterdaily.com/","logo":"https://critterdaily.com/app-512.png"},"mainEntityOfPage":"https://critterdaily.com/notes/estimation-tricks/","about":{"@type":"VideoGame","name":"Ten Numbers","url":"https://critterdaily.com/ten-numbers/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Critter Daily","item":"https://critterdaily.com/"},{"@type":"ListItem","position":2,"name":"Notes","item":"https://critterdaily.com/notes/"},{"@type":"ListItem","position":3,"name":"Estimation tricks for Ten Numbers","item":"https://critterdaily.com/notes/estimation-tricks/"}]}]}</script>
+  </head>
+  <body>
+    <main class="page">
+      <p><a href="/notes/">← Notes</a></p>
+      <h1>Estimation tricks for Ten Numbers</h1>
+      <p class="note-meta">November 16, 2026 · 2 minute read · about <a href="/ten-numbers/">Ten Numbers</a></p>
+      <article class="guide">
+<p class="guide-lede">Ten Numbers asks questions nobody knows the exact answer to: how many people live in a country, how far apart two cities are, what year a battle was fought. It's a game of estimating, and estimating is a skill you can get better at. Here are five habits, with the points they'd earn under the game's real scoring.</p>
+<h2>1. Get the size right first</h2>
+<p>For counts like populations, Ten Numbers measures how far off you are as a ratio. France has about 68.6 million people: guessing 60 million earns 95 points and 80 million earns 94. Even half or double does fine: 34 million earns 65 and 137 million earns 66. But ten times off, 680 million, earns only 15. Before you worry about the digits, decide: thousands, millions or billions?</p>
+<h2>2. Anchor on something you know</h2>
+<p>If you know one number nearby, build from it. If you know France has about 68 million people, its smaller neighbors must have a fraction of that, and a city, even a capital, a fraction of its country. Most people know a few numbers well: their own country's population, their city's, the height of a famous building. Each one is a ruler you can hold other numbers against.</p>
+<h2>3. Turn distances into flight times</h2>
+<p>An airliner covers roughly 800 to 900 kilometers an hour. A flight from London to New York takes about seven or eight hours, so the distance is something like 5,600 to 6,400 kilometers. The answer, as the crow flies, is 5,570: guessing 6,000 earns 94 points, and 5,000 earns 91. Flights take longer than the straight line, so shave a little off.</p>
+<h2>4. Place a year between two you're sure of</h2>
+<p>A year gets room that grows with its age: a few years either side for something recent, and up to 80 for ancient history. For the Battle of Hastings, 1066, guessing 1086 earns 84 points and 1116 earns 57, while a century early, 966, earns 27. If you can place an event before or after something you know, like a war, an invention or a famous reign, you can usually get within a few decades.</p>
+<h2>5. Never skip</h2>
+<p>Points fall smoothly the further off you are but never quite reach zero, and astronomical numbers get extra room. For the number of ants on Earth, about 20 quadrillion, a guess ten times too high or too low still earns 76 points. A skip earns nothing, so a rough guess always beats no guess.</p>
+<h2>Why the scoring works this way</h2>
+<p>Ten Numbers' points follow a smooth curve, fitted to real players' first days so that a typical day scores about 450 out of 1,000. A curve that fell off a cliff would only reward people who happen to know a number; this one rewards getting close, which is the skill. After each guess, the number line shows the green band that would have earned 70 points or more, so you can see how much room each kind of question gives.</p>
+        <p><a class="note-play" href="/ten-numbers/">Play today's Ten Numbers →</a></p>
+      </article>
+      <section class="guide">
+        <h2>More notes</h2>
+        <ul>
+          <li><a href="/notes/checking-ten-numbers/">How Ten Numbers checks its answers</a></li>
+          <li><a href="/notes/how-deep-cut-measures-obscurity/">How Deep Cut decides what&#x27;s obscure</a></li>
+          <li><a href="/notes/least-read-answers/">The least-read answers in Deep Cut</a></li>
+        </ul>
+        <p><a href="/notes/">All the notes</a></p>
+      </section>
+    </main>
+    <script type="module" src="/settings.js"></script>
+  </body>
+</html>

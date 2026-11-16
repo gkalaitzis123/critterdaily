@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      // Light or dark, and less motion, before the page draws (settings.js keeps them up to date).
+      try {
+        var cd = JSON.parse(localStorage.getItem("critter-daily-settings")) || {};
+        document.documentElement.dataset.theme = cd.theme === "light" || cd.theme === "dark" ? cd.theme : matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        if (cd.motion === "less") document.documentElement.dataset.motion = "less";
+      } catch (e) {}
+    </script>
+    <title>How Ten Numbers checks its answers | Critter Daily</title>
+    <meta name="description" content="Every Ten Numbers answer comes from Wikidata or Wikipedia. In November 2026 we checked them all against their articles and took out 101. Here&#x27;s what we found." />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Critter Daily" />
+    <meta property="og:title" content="How Ten Numbers checks its answers" />
+    <meta property="og:description" content="Every Ten Numbers answer comes from Wikidata or Wikipedia. In November 2026 we checked them all against their articles and took out 101. Here&#x27;s what we found." />
+    <meta property="og:url" content="https://critterdaily.com/notes/checking-ten-numbers/" />
+    <meta name="theme-color" content="#cfeaff" />
+    <link rel="canonical" href="https://critterdaily.com/notes/checking-ten-numbers/" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Critter Daily" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;700;800&display=swap" />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/guide.css" />
+    <!-- Counts visits and games, without cookies or knowing who you are; only on critterdaily.com, so local copies and tests count nothing. -->
+    <script async src="https://cloud.umami.is/script.js" data-website-id="7d7d7ec1-534b-40e2-9401-3c07793fd5ec" data-domains="critterdaily.com,www.critterdaily.com"></script>
+    <!-- Google Analytics, asking first in the EU, the UK and Switzerland (analytics.js); also only on critterdaily.com. -->
+    <script defer src="/analytics.js"></script>
+    <!-- The app on the home screen: the offline helper and the Add to home screen button. -->
+    <script defer src="/install.js"></script>
+    <!-- Google AdSense: ads, once Google approves the site (see the privacy page). -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7797883251489593" crossorigin="anonymous"></script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","headline":"How Ten Numbers checks its answers","description":"Every Ten Numbers answer comes from Wikidata or Wikipedia. In November 2026 we checked them all against their articles and took out 101. Here's what we found.","datePublished":"2026-11-16","dateModified":"2026-11-16","author":{"@type":"Organization","name":"Critter Daily","url":"https://critterdaily.com/","logo":"https://critterdaily.com/app-512.png"},"publisher":{"@type":"Organization","name":"Critter Daily","url":"https://critterdaily.com/","logo":"https://critterdaily.com/app-512.png"},"mainEntityOfPage":"https://critterdaily.com/notes/checking-ten-numbers/","about":{"@type":"VideoGame","name":"Ten Numbers","url":"https://critterdaily.com/ten-numbers/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Critter Daily","item":"https://critterdaily.com/"},{"@type":"ListItem","position":2,"name":"Notes","item":"https://critterdaily.com/notes/"},{"@type":"ListItem","position":3,"name":"How Ten Numbers checks its answers","item":"https://critterdaily.com/notes/checking-ten-numbers/"}]}]}</script>
+  </head>
+  <body>
+    <main class="page">
+      <p><a href="/notes/">← Notes</a></p>
+      <h1>How Ten Numbers checks its answers</h1>
+      <p class="note-meta">November 16, 2026 · 3 minute read · about <a href="/ten-numbers/">Ten Numbers</a></p>
+      <article class="guide">
+<p class="guide-lede">Ten Numbers has 1,515 questions, and every answer is a number you could look up. That's a promise worth keeping, so in November 2026 every answer was checked against its Wikipedia article. Most matched. 101 didn't, and they're gone. Here's how the questions are made, and what the check turned up.</p>
+<h2>Where the questions come from</h2>
+<p>Most questions are generated from Wikidata, the free database behind Wikipedia: the populations of countries and cities, the running times and release years of famous films, when famous people were born and died, how many episodes TV series ran. Only well-known things make questions: a subject's English Wikipedia article has to be read by many people every day, so you're asked about famous people, films and places rather than obscure ones. The rest are hand-picked facts, like how many keys a piano has, and each is kept only if its number can be found in its Wikipedia article.</p>
+<h2>What the check found</h2>
+<p>Each answer from Wikidata was compared with the infobox of its Wikipedia article, the summary box at the top right. Where they disagreed, the question was left out. The problems fell into a few kinds:</p>
+<ul>
+<li><strong>Cities that weren't the city.</strong> "How many people live within the city limits of Beirut?" Wikidata said 2.4 million, a figure for the wider area; the city itself has about 433,000. Santo Domingo, Mumbai, Bengaluru and Hyderabad had the same problem.</li>
+<li><strong>Numbers out of date.</strong> Wikidata's counts for some countries were years old: Nigeria, the United Arab Emirates and Turkmenistan were all more than 10% behind their articles. Cape Town's count, 3.8 million, was well short of the 4.8 million found by the 2022 census.</li>
+<li><strong>The album, not the single.</strong> Wikidata dates "Billie Jean" to 1982, when the album Thriller came out, but the song was released as a single in January 1983, and that's the date its article gives. "Smooth Criminal", "Comfortably Numb" and a few more were the same.</li>
+<li><strong>The brand, not the company.</strong> Lamborghini began by making tractors in 1948, but the car company was founded in 1963. British Airways traces its history to 1919, but the airline itself was formed in 1974.</li>
+<li><strong>The wrong version of the film.</strong> Some running times were for a short version: The Godfather Part II was listed at 165 minutes instead of 200.</li>
+<li><strong>Counts that moved on.</strong> The Last Ship was listed with 46 episodes; it ended with 56.</li>
+<li><strong>Things nobody can pin down.</strong> Charlemagne's age at death depends on a birth year historians still debate: 742, 747 or 748. Wikipedia now gives the Nile's length as 7,088 kilometers, against the traditional 6,650. Afghanistan's and Eritrea's populations are given only as ranges.</li>
+</ul>
+<h2>What stayed</h2>
+<p>Most answers matched exactly: birth and death years, the years US states joined the Union, the years TV series began, the episode counts of series that have ended, and all 120 distances between cities, which are worked out from the coordinates on the cities' Wikipedia articles. Where an article lists two dates, like KFC's founding (1930 for the Sanders Court &amp; Café, 1952 for the first franchise), the answer is the first one listed.</p>
+<h2>Why it matters</h2>
+<p>An estimation game is forgiving: guess a population within 15% and you still earn 94 points. But a wrong answer isn't a near miss, it's a broken promise, and players who look it up deserve to find the same number. That's why each answer links to its article. If you find one that doesn't match, please write to <a href="mailto:rjenkins1445@gmail.com">rjenkins1445@gmail.com</a>.</p>
+        <p><a class="note-play" href="/ten-numbers/">Play today's Ten Numbers →</a></p>
+      </article>
+      <section class="guide">
+        <h2>More notes</h2>
+        <ul>
+          <li><a href="/notes/estimation-tricks/">Estimation tricks for Ten Numbers</a></li>
+          <li><a href="/notes/how-deep-cut-measures-obscurity/">How Deep Cut decides what&#x27;s obscure</a></li>
+          <li><a href="/notes/least-read-answers/">The least-read answers in Deep Cut</a></li>
+        </ul>
+        <p><a href="/notes/">All the notes</a></p>
+      </section>
+    </main>
+    <script type="module" src="/settings.js"></script>
+  </body>
+</html>
