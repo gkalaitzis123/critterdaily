@@ -1,0 +1,53 @@
+/* The guide under each game (how to play, scoring, tips, where the puzzles
+   come from, questions) and the short "What is Critter Daily?" on the home
+   page: reading text in a card, in the look of the privacy and About pages.
+   It uses each page's own colors, so it follows light and dark. */
+.guide {
+  box-sizing: border-box;
+  width: min(560px, calc(100% - 32px));
+  margin: 8px auto 22px;
+  padding: 18px 20px 12px;
+  border-radius: 20px;
+  background: var(--card);
+  box-shadow: 0 4px 0 var(--card-edge);
+  text-align: left;
+}
+
+.guide h2 {
+  margin: 0 0 8px;
+  font: 600 21px/1.25 var(--display);
+  color: var(--ink);
+}
+
+.guide h3 {
+  margin: 18px 0 6px;
+  font: 600 17px/1.3 var(--display);
+  color: var(--ink);
+}
+
+.guide p,
+.guide li {
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.guide p {
+  margin: 0 0 10px;
+}
+
+.guide .guide-lede {
+  font-size: 16px;
+}
+
+.guide ul {
+  margin: 0 0 10px;
+  padding-left: 20px;
+}
+
+.guide li + li {
+  margin-top: 5px;
+}
+
+.guide a {
+  color: var(--link);
+}

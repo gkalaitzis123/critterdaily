@@ -33,6 +33,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;700;800&display=swap" />
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="guide.css" />
     <!-- Counts visits and games, without cookies or knowing who you are; only on critterdaily.com, so local copies and tests count nothing. -->
     <script async src="https://cloud.umami.is/script.js" data-website-id="7d7d7ec1-534b-40e2-9401-3c07793fd5ec" data-domains="critterdaily.com,www.critterdaily.com"></script>
     <!-- Google Analytics, asking first in the EU, the UK and Switzerland (analytics.js); also only on critterdaily.com. -->
@@ -134,23 +135,37 @@
       </section>
     </main>
 
-    <details class="about">
-        <summary>About Crisscross</summary>
-        <h2>How to play Crisscross, the free daily mini crossword</h2>
-        <p>Each day has a 5x5 crossword with about ten clues, the same for everyone. Tap a square and type, and tap it again to switch between across and down; on a computer, the arrow keys move and Tab goes to the next clue. The clock starts when you press Start and stops when every square is right.</p>
-        <h3>Is it like the NYT Mini?</h3>
-        <p>It's the same idea: a small crossword you can finish over coffee, but free. Every word has two clues written for it, one plain and one playful, so a word that comes back usually comes back with a new clue.</p>
-        <h3>How long does it take?</h3>
-        <p>Usually one to three minutes. Your time earns a title, from Hatchling (over three minutes) to Silk Sprinter (45 seconds or less).</p>
-        <h3>What if I'm stuck?</h3>
-        <p>Check marks the letters that are wrong, and Reveal fills in the square you're on. Each adds 10 seconds to your time.</p>
-        <h3>Is it free?</h3>
-        <p>Yes, a new one every midnight, with nothing to sign up for. Practice puzzles are unlimited and don't count toward your stats.</p>
-    </details>
+    <section class="guide" id="how-to-play" aria-labelledby="guide-title">
+      <h2 id="guide-title">How to play Crisscross</h2>
+      <p class="guide-lede">Crisscross is a free daily mini crossword: a 5x5 grid with about ten clues, the same for everyone, and a clock to beat. Most people finish in one to three minutes.</p>
+      <h3>The rules</h3>
+      <ul>
+        <li>Press Start and the clock begins. It stops when every square is right, and it pauses while you're away from the page.</li>
+        <li>Tap a square to choose it, and tap it again to switch between across and down. The clue you're on shows under the grid; ‹ and › go to the clue before and after.</li>
+        <li>On a computer, type with your keyboard: the arrow keys move, Tab and Enter go to the next clue, and Space switches direction.</li>
+        <li>Stuck? Check marks the letters that are wrong, and Reveal fills in the square you're on. Each adds 10 seconds to your time.</li>
+      </ul>
+      <h3>Your title</h3>
+      <p>The quicker you finish, the finer Webster the spider's web: Silk Sprinter for 45 seconds or less, Master Weaver for 75 seconds, Web Weaver for two minutes, Thread Spinner for three and Hatchling for anything longer. Every spider starts small.</p>
+      <h3>Tips</h3>
+      <ul>
+        <li>Start with the clue you're surest of, then work its crossings: every letter you place is a free hint for a word going the other way.</li>
+        <li>In a 5x5 grid, the first and last letters are shared by two words, so a corner can unlock a whole side.</li>
+        <li>Read the clue's form: a plural clue usually means a plural answer, and a clue in the past tense an answer in the past tense.</li>
+        <li>Save Check for when you're truly stuck. Ten seconds is a lot when the whole puzzle takes a minute.</li>
+      </ul>
+      <h3>How the puzzles are made</h3>
+      <p>The grids are filled with everyday English words from ENABLE, the public-domain word list, chosen with wordfreq so you'll know them. Every word has two clues written for it, one plain and one playful, so when a word comes back it usually comes with a new clue.</p>
+      <h3>Questions</h3>
+      <p><strong>Is it like the NYT Mini?</strong> It's the same idea, a small crossword you can finish over coffee, but free, with nothing to sign up for.</p>
+      <p><strong>When is there a new one?</strong> Every midnight, your time. Everyone gets the same puzzle on the same date, so you can compare with friends.</p>
+      <p><strong>Can I play more?</strong> Practice puzzles are unlimited and don't count toward your stats.</p>
+      <p><strong>Where are my stats kept?</strong> In your own browser, on your device. There's no account: your streak and history stay with you, and clearing the site's data erases them.</p>
+    </section>
 
     <footer class="foot">
       <p>Clues written for Crisscross. Words from <a href="https://github.com/dolph/dictionary" target="_blank" rel="noopener">ENABLE</a> (public domain), chosen with <a href="https://github.com/rspeer/wordfreq" target="_blank" rel="noopener">wordfreq</a> (CC BY-SA 4.0); rude words left out using <a href="https://github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words" target="_blank" rel="noopener">LDNOOBW's list</a>.</p>
-      <p class="more"><a href="../">More games from Critter Daily</a> · <a href="../privacy.html">Privacy</a></p>
+      <p class="more"><a href="../">More games from Critter Daily</a> · <a href="../about">About</a> · <a href="../privacy.html">Privacy</a></p>
     </footer>
 
     <dialog id="help" class="sheet">

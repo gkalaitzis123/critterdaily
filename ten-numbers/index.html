@@ -33,6 +33,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;700;800&display=swap" />
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="guide.css" />
     <!-- Counts visits and games, without cookies or knowing who you are; only on critterdaily.com, so local copies and tests count nothing. -->
     <script async src="https://cloud.umami.is/script.js" data-website-id="7d7d7ec1-534b-40e2-9401-3c07793fd5ec" data-domains="critterdaily.com,www.critterdaily.com"></script>
     <!-- Google Analytics, asking first in the EU, the UK and Switzerland (analytics.js); also only on critterdaily.com. -->
@@ -148,21 +149,44 @@
       </section>
     </main>
 
-    <details class="about">
-        <summary>About Ten Numbers</summary>
-        <h2>How to play Ten Numbers, the daily estimation game</h2>
-        <p>Each day has ten trivia questions with a number for an answer, the same for everyone: how many people live somewhere, how tall a landmark is, how far apart two cities are, what year something happened. The closer your guess, the more points, up to 100 a question and 1,000 a day, and Nutmeg the squirrel gets an acorn for every 10.</p>
-        <h3>Do I need to know the exact answer?</h3>
-        <p>No, it's about estimating. How close counts as close depends on the question: a recent year has to be near the mark, a country's population only roughly right.</p>
-        <h3>Can I use miles and feet?</h3>
-        <p>Yes. Lengths and areas can be typed in metric or US units.</p>
-        <h3>Is it free?</h3>
-        <p>Yes, every day, with nothing to sign up for. Practice rounds are unlimited and don't count toward your stats.</p>
-    </details>
+    <section class="guide" id="how-to-play" aria-labelledby="guide-title">
+      <h2 id="guide-title">How to play Ten Numbers</h2>
+      <p class="guide-lede">Ten Numbers is a daily estimation game: ten trivia questions a day, each with a number for an answer, the same for everyone. Nobody needs to know the exact answer. Get close and you still score, and Nutmeg the squirrel gets an acorn for her jar for every 10 points.</p>
+      <h3>The rules</h3>
+      <ul>
+        <li>A day mixes ten kinds of question: how many people live somewhere, how old a famous person was when they died, how tall a landmark is, how far apart two cities are, how many episodes a TV show ran, everyday counts like the keys on a piano, the year something happened and more. At most five are years.</li>
+        <li>Type a guess however you like: 15,000 or 15k, 2.5 million, 1.4bn, 500 BC. Under the box, the game reads back what it understood.</li>
+        <li>Lengths, speeds and weights can be answered in metric or US units. Pick under the box, and the game remembers.</li>
+        <li>No idea? You can skip a question, but a guess almost always earns something.</li>
+      </ul>
+      <h3>How points work</h3>
+      <p>A spot-on guess earns 100 points, and points fall smoothly the further off you are, without quite reaching zero. How close counts as close depends on the question:</p>
+      <ul>
+        <li>A film's running time needs to be within a few minutes.</li>
+        <li>A population gets plenty of room: 15% off still earns 94 points, and twice the real number earns 66.</li>
+        <li>A year needs to be within a few years if it's recent, and gets more room the longer ago it was, up to 80 years for ancient history.</li>
+        <li>Astronomical numbers get extra room: for the 20 quadrillion ants on Earth, ten times off still earns 76 points.</li>
+      </ul>
+      <p>After each guess, a number line shows the answer, your guess and the green band that earns 70 points or more. A day is out of 1,000, and your total earns a title: Nut Nibbler, Acorn Gatherer (250 and up), Stash Keeper (450), Hoard Master (600) or Squirrel Sage (750, about one day in fifty).</p>
+      <h3>Tips</h3>
+      <ul>
+        <li>Anchor on something you know. If France has about 68 million people, a smaller European country is a fraction of that.</li>
+        <li>For populations and counts, the size matters more than the digits: thousands, millions or billions?</li>
+        <li>For distances, think in flight time: an airliner covers roughly 800 to 900 kilometers an hour.</li>
+        <li>For years, place it against something you're sure of: before or after a war, a famous invention, the year you were born.</li>
+        <li>Guess rather than skip. Even a rough guess usually earns points; a skip earns none.</li>
+      </ul>
+      <h3>Where the numbers come from</h3>
+      <p>Most questions come from Wikidata, the free database behind Wikipedia, and are about things many people read about every day: famous people, films, countries and cities rather than obscure ones. The rest are hand-picked facts, like how many keys a piano has, each confirmed in its Wikipedia article. In November 2026 every answer was checked against its article, and those that didn't match were left out. Each answer links to its article, so you can read more.</p>
+      <h3>Questions</h3>
+      <p><strong>Is it free?</strong> Yes, every day, with nothing to sign up for. Practice rounds use random questions, as many as you like, and don't count toward your stats.</p>
+      <p><strong>When is there a new one?</strong> Every midnight, your time. Everyone gets the same questions on the same date, so you can compare with friends.</p>
+      <p><strong>Where are my stats kept?</strong> In your own browser, on your device. There's no account: your streak and history stay with you, and clearing the site's data erases them.</p>
+    </section>
 
     <footer class="foot">
       <p>Numbers from <a href="https://www.wikidata.org/" target="_blank" rel="noopener">Wikidata</a> and <a href="https://en.wikipedia.org/" target="_blank" rel="noopener">Wikipedia</a>. Each answer links to its article.</p>
-      <p class="more"><a href="../">More games from Critter Daily</a> · <a href="../privacy.html">Privacy</a></p>
+      <p class="more"><a href="../">More games from Critter Daily</a> · <a href="../about">About</a> · <a href="../privacy.html">Privacy</a></p>
     </footer>
 
     <dialog id="help" class="sheet">

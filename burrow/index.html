@@ -33,6 +33,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;700;800&display=swap" />
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="guide.css" />
     <!-- Counts visits and games, without cookies or knowing who you are; only on critterdaily.com, so local copies and tests count nothing. -->
     <script async src="https://cloud.umami.is/script.js" data-website-id="7d7d7ec1-534b-40e2-9401-3c07793fd5ec" data-domains="critterdaily.com,www.critterdaily.com"></script>
     <!-- Google Analytics, asking first in the EU, the UK and Switzerland (analytics.js); also only on critterdaily.com. -->
@@ -125,21 +126,38 @@
       </section>
     </main>
 
-    <details class="about">
-        <summary>About Burrow</summary>
-        <h2>How to play Burrow, the daily word game</h2>
-        <p>Each day has seven letters, the same for everyone, and you have one minute. Make as many words of four letters or more as you can, using each letter once per word. Every word digs Clover the rabbit's burrow deeper, and the rarer the word, the deeper it digs: how rare comes from how often a word turns up in English. A word that uses all seven letters digs 10 meters more.</p>
-        <h3>Is Burrow like Spelling Bee?</h3>
-        <p>Both are about finding words in a few letters. In Burrow the clock is running, no letter is required, and a rare word is worth more than a common one, however long.</p>
-        <h3>Which words count?</h3>
-        <p>Words from ENABLE, the public-domain list many word games use, that turn up in real English, without rude ones. Names and abbreviations don't count.</p>
-        <h3>Is it free?</h3>
-        <p>Yes, every day, with nothing to sign up for. Practice rounds with other letters are unlimited.</p>
-    </details>
+    <section class="guide" id="how-to-play" aria-labelledby="guide-title">
+      <h2 id="guide-title">How to play Burrow</h2>
+      <p class="guide-lede">Burrow is a fast daily word game: seven letters, one minute, and as many words as you can make. Every word digs Clover the rabbit's burrow deeper, and the rarer the word, the deeper it digs.</p>
+      <h3>The rules</h3>
+      <ul>
+        <li>Everyone gets the same seven letters each day, and the clock starts when you press Start.</li>
+        <li>Make words of 4 to 7 letters, using each letter at most once in a word. Tap the letters or type them, then press Enter. Tap a letter again to put it back.</li>
+        <li>Stuck? Shuffle the letters to see them in a new order.</li>
+        <li>Names, abbreviations and rude words don't count.</li>
+      </ul>
+      <h3>How words are scored</h3>
+      <p>Each word digs by how rare it is in everyday English: a common word like <em>note</em> digs 4 meters, an unusual one like <em>tenon</em> 15. Longer words dig a little more, and a word that uses all seven letters digs 10 meters extra. How deep you get earns a layer: Topsoil, Root Cellar (30 m), Clay Seam (60 m), Bedrock (100 m) or, deepest of all, the Glowworm Cave (150 m).</p>
+      <h3>Tips</h3>
+      <ul>
+        <li>Look for the seven-letter word early. It's worth the most, and it often hides behind a common ending like -ING, -ER or -ED.</li>
+        <li>Rare beats many. One unusual word can dig deeper than three everyday ones, so try the odd words you half remember.</li>
+        <li>Work in families: when you find a word, try its plural, its past tense or a longer form.</li>
+        <li>Shuffle when you stall. A new order often shows a word you've been staring past.</li>
+      </ul>
+      <h3>Is Burrow like Spelling Bee?</h3>
+      <p>Both are about finding words in a handful of letters. In Burrow the clock is running, no letter is required, and a rare word is worth more than a common one, however long.</p>
+      <h3>Where the words come from</h3>
+      <p>Words come from ENABLE, the public-domain word list many word games use, keeping only words that turn up in real English. How rare each word is comes from wordfreq (CC BY-SA 4.0), which counts how often words appear across books, news, subtitles and the web. Rude words are left out using a public list.</p>
+      <h3>Questions</h3>
+      <p><strong>Is it free?</strong> Yes, every day, with nothing to sign up for. Practice rounds with other letters are unlimited and don't count toward your stats.</p>
+      <p><strong>When is there a new one?</strong> Every midnight, your time. Everyone gets the same letters on the same date, so you can compare with friends.</p>
+      <p><strong>Where are my stats kept?</strong> In your own browser, on your device. There's no account: your streak and history stay with you, and clearing the site's data erases them.</p>
+    </section>
 
     <footer class="foot">
       <p>Words from <a href="https://github.com/dolph/dictionary" target="_blank" rel="noopener">ENABLE</a> (public domain); how rare each is from <a href="https://github.com/rspeer/wordfreq" target="_blank" rel="noopener">wordfreq</a> (CC BY-SA 4.0); rude words left out using <a href="https://github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words" target="_blank" rel="noopener">LDNOOBW's list</a>.</p>
-      <p class="more"><a href="../">More games from Critter Daily</a> · <a href="../privacy.html">Privacy</a></p>
+      <p class="more"><a href="../">More games from Critter Daily</a> · <a href="../about">About</a> · <a href="../privacy.html">Privacy</a></p>
     </footer>
 
     <dialog id="help" class="sheet">

@@ -33,6 +33,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;700;800&display=swap" />
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="guide.css" />
     <!-- Counts visits and games, without cookies or knowing who you are; only on critterdaily.com, so local copies and tests count nothing. -->
     <script async src="https://cloud.umami.is/script.js" data-website-id="7d7d7ec1-534b-40e2-9401-3c07793fd5ec" data-domains="critterdaily.com,www.critterdaily.com"></script>
     <!-- Google Analytics, asking first in the EU, the UK and Switzerland (analytics.js); also only on critterdaily.com. -->
@@ -186,10 +187,15 @@
       </a>
     </main>
 
+    <section class="guide" aria-labelledby="what-title">
+      <h2 id="what-title">What is Critter Daily?</h2>
+      <p>Six free puzzle games, new every midnight: trivia in Deep Cut and Ten Numbers, words in Burrow and Crisscross, languages in Mother Tongue and maps from history in Borderline. Each takes a few minutes, and everyone gets the same puzzles on the same date, so you can compare with friends. There's nothing to sign up for, and your streaks stay on your device.</p>
+      <p>New here? Each game has a short guide under it, and the <a href="about">About page</a> explains how the puzzles are made.</p>
+    </section>
 
     <footer class="foot">
       <p>Puzzles are built from <a href="https://www.wikidata.org/" target="_blank" rel="noopener">Wikidata</a> and Wikipedia page views (public domain), <a href="https://glottolog.org" target="_blank" rel="noopener">Glottolog</a> (CC BY 4.0), and words from ENABLE (public domain) with <a href="https://github.com/rspeer/wordfreq" target="_blank" rel="noopener">wordfreq</a> (CC BY-SA 4.0); and borders from <a href="https://github.com/Seshat-Global-History-Databank/cliopatria" target="_blank" rel="noopener">Cliopatria</a>, by the Seshat Global History Databank (CC BY 4.0).</p>
-      <p><a href="privacy.html">Privacy</a> · <a href="privacy.html#contact">Contact</a></p>
+      <p><a href="about">About</a> · <a href="privacy.html">Privacy</a> · <a href="about#contact">Contact</a></p>
     </footer>
     <script type="module">
       import { settingsButton } from "./settings.js";

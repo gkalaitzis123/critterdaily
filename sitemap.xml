@@ -2,12 +2,13 @@
 <!-- The pages search engines should know about (robots.txt points here).
      A new game gets a line. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://critterdaily.com/</loc><lastmod>2026-11-15</lastmod></url>
-  <url><loc>https://critterdaily.com/deep-cut/</loc><lastmod>2026-11-15</lastmod></url>
-  <url><loc>https://critterdaily.com/mother-tongue/</loc><lastmod>2026-11-15</lastmod></url>
-  <url><loc>https://critterdaily.com/ten-numbers/</loc><lastmod>2026-11-15</lastmod></url>
-  <url><loc>https://critterdaily.com/burrow/</loc><lastmod>2026-11-15</lastmod></url>
-  <url><loc>https://critterdaily.com/crisscross/</loc><lastmod>2026-11-15</lastmod></url>
-  <url><loc>https://critterdaily.com/borderline/</loc><lastmod>2026-11-15</lastmod></url>
+  <url><loc>https://critterdaily.com/</loc><lastmod>2026-11-16</lastmod></url>
+  <url><loc>https://critterdaily.com/deep-cut/</loc><lastmod>2026-11-16</lastmod></url>
+  <url><loc>https://critterdaily.com/mother-tongue/</loc><lastmod>2026-11-16</lastmod></url>
+  <url><loc>https://critterdaily.com/ten-numbers/</loc><lastmod>2026-11-16</lastmod></url>
+  <url><loc>https://critterdaily.com/burrow/</loc><lastmod>2026-11-16</lastmod></url>
+  <url><loc>https://critterdaily.com/crisscross/</loc><lastmod>2026-11-16</lastmod></url>
+  <url><loc>https://critterdaily.com/borderline/</loc><lastmod>2026-11-16</lastmod></url>
+  <url><loc>https://critterdaily.com/about</loc><lastmod>2026-11-16</lastmod></url>
   <url><loc>https://critterdaily.com/privacy</loc><lastmod>2026-11-15</lastmod></url>
 </urlset>

@@ -33,6 +33,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;700;800&display=swap" />
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="guide.css" />
     <!-- Counts visits and games, without cookies or knowing who you are; only on critterdaily.com, so local copies and tests count nothing. -->
     <script async src="https://cloud.umami.is/script.js" data-website-id="7d7d7ec1-534b-40e2-9401-3c07793fd5ec" data-domains="critterdaily.com,www.critterdaily.com"></script>
     <!-- Google Analytics, asking first in the EU, the UK and Switzerland (analytics.js); also only on critterdaily.com. -->
@@ -151,21 +152,36 @@
       </section>
     </main>
 
-    <details class="about">
-        <summary>About Deep Cut, the daily trivia game</summary>
-        <h2>How to play Deep Cut, the daily Wikipedia trivia game</h2>
-        <p>Deep Cut is a free daily trivia game from Critter Daily. Each day has eight prompts, the same for everyone, like "Name a Roman emperor", with 30 seconds for each. Any answer that fits counts, but the fewer people read its Wikipedia page, the deeper Digby the mole digs, back through Earth's history from the Holocene to the Cambrian.</p>
-        <h3>How is an answer's rarity measured?</h3>
-        <p>By Wikipedia page views: an answer's share of everyone reading the articles on that prompt's list. An answer read by 1 in 2,769 of them digs far deeper than one everybody reads, and every ten times rarer digs another 10 meters.</p>
-        <h3>What counts as an answer?</h3>
-        <p>Anything on the prompt's list, built from Wikipedia and Wikidata. Accents, punctuation and a leading "the" don't matter, and common other names count too.</p>
-        <h3>Is it free?</h3>
-        <p>Yes, every day, with nothing to sign up for. Practice rounds use other prompts and don't count toward your stats.</p>
-    </details>
+    <section class="guide" id="how-to-play" aria-labelledby="guide-title">
+      <h2 id="guide-title">How to play Deep Cut</h2>
+      <p class="guide-lede">Deep Cut is a free daily trivia game from Critter Daily with a twist: every right answer counts, but the less famous your answer, the more it's worth. Each day has eight prompts, the same for everyone, and Digby the mole digs deeper with every obscure answer you find.</p>
+      <h3>The rules</h3>
+      <ul>
+        <li>Each prompt asks you to name one thing from a list, like "Name a Roman emperor", "Name a cheese" or "Name a bone in the human body".</li>
+        <li>You have 30 seconds a prompt. Type any answer that fits. Wrong guesses cost nothing but time, and your first right answer is locked in.</li>
+        <li>Spelling needn't be perfect. Small typos count, and if you're close, Digby asks "Did you mean…?" Accents, punctuation and a leading "the" don't matter, and common other names count too.</li>
+      </ul>
+      <h3>How an answer is scored</h3>
+      <p>Deep Cut measures how obscure an answer is with Wikipedia. For each prompt it adds up how many people read the article of every answer on the list over the last 60 days, then works out your answer's share. Augustus is read by about 1 in 11 of everyone reading about Roman emperors; Trebonianus Gallus by about 1 in 240.</p>
+      <p>The most-read answer on a list digs 1 meter and the rarest digs 50, with everything between spaced by how many times rarer it is, so every prompt can go just as deep. Your meters add up over the eight prompts, and Digby digs back through Earth's history: the Holocene, the Pleistocene (60 m), the Cretaceous (80 m), the Jurassic (100 m), the Permian (125 m) and, deepest of all, the Cambrian (150 m).</p>
+      <h3>Tips for digging deep</h3>
+      <ul>
+        <li>Skip the first answer that comes to mind. Everyone else thinks of it too, so it's usually the most-read one on the list. Go for the second or third thing you know.</li>
+        <li>Think small and specific: a regional cheese instead of cheddar, a short-lived emperor instead of Augustus, a little bone of the wrist instead of the femur.</li>
+        <li>Things in the news are read a lot. Older and quieter answers dig deeper.</li>
+        <li>Keep a safe answer in reserve. If your deep cut isn't on the list, you still have time for a sure one, and any right answer digs at least a meter.</li>
+      </ul>
+      <h3>Where the lists come from</h3>
+      <p>Each prompt's list is built from Wikidata, the free database behind Wikipedia, and every answer on it has its own English Wikipedia article. How rare an answer is comes from Wikipedia's public page-view counts. Both are public domain, so after you play you can look up the answers you didn't know.</p>
+      <h3>Questions</h3>
+      <p><strong>Is it free?</strong> Yes, every day, with nothing to sign up for. Practice rounds use other prompts, as many as you like, and don't count toward your stats.</p>
+      <p><strong>When is there a new one?</strong> Every midnight, your time. Everyone gets the same prompts on the same date, so you can compare with friends.</p>
+      <p><strong>Where are my stats kept?</strong> In your own browser, on your device. There's no account: your streak and history stay with you, and clearing the site's data erases them.</p>
+    </section>
 
     <footer class="foot">
       <p>Answers from <a href="https://www.wikidata.org/" target="_blank" rel="noopener">Wikidata</a>; how rare they are from <a href="https://en.wikipedia.org/wiki/Wikipedia:Pageview_statistics" target="_blank" rel="noopener">Wikipedia page views</a>. Both public domain.</p>
-      <p class="more"><a href="../">More games from Critter Daily</a> · <a href="../privacy.html">Privacy</a></p>
+      <p class="more"><a href="../">More games from Critter Daily</a> · <a href="../about">About</a> · <a href="../privacy.html">Privacy</a></p>
     </footer>
 
     <dialog id="help" class="sheet">

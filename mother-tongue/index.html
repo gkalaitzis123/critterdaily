@@ -33,6 +33,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;700;800&display=swap" />
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="guide.css" />
     <!-- Counts visits and games, without cookies or knowing who you are; only on critterdaily.com, so local copies and tests count nothing. -->
     <script async src="https://cloud.umami.is/script.js" data-website-id="7d7d7ec1-534b-40e2-9401-3c07793fd5ec" data-domains="critterdaily.com,www.critterdaily.com"></script>
     <!-- Google Analytics, asking first in the EU, the UK and Switzerland (analytics.js); also only on critterdaily.com. -->
@@ -134,21 +135,38 @@
       </section>
     </main>
 
-    <details class="about">
-        <summary>About Mother Tongue</summary>
-        <h2>How to play Mother Tongue, the daily guess-the-language game</h2>
-        <p>Each day there's one mystery language, the same for everyone, and you have 20 guesses. Guess any language: each guess shows the deepest branch of the family tree it shares with the mystery one (guess Spanish when it's Portuguese, and you learn they're both West Iberian), and how far away and in which direction the mystery language is spoken. Pip the parrot climbs the tree as you get closer.</p>
-        <h3>Are there hints?</h3>
-        <p>Yes. After 5 guesses you learn how many people speak it, after 10 the countries where it's spoken, and after 15 its first letter.</p>
-        <h3>Do I need to know linguistics?</h3>
-        <p>Not at all. Start with any language you know, and each guess tells you which branch to try next.</p>
-        <h3>Where does the family tree come from?</h3>
-        <p>From Glottolog, the scholarly catalog of the world's languages (CC BY 4.0).</p>
-    </details>
+    <section class="guide" id="how-to-play" aria-labelledby="guide-title">
+      <h2 id="guide-title">How to play Mother Tongue</h2>
+      <p class="guide-lede">Mother Tongue is a daily language-guessing game. There's one mystery language a day, the same for everyone, waiting in an egg at the top of the world's language family tree. You have 20 guesses to find it, and every guess, even a wild one, tells you where to look next.</p>
+      <h3>The rules</h3>
+      <ul>
+        <li>Guess any language: type its name, or tap the box to scroll through the 600 best known. Typing searches all 7,000.</li>
+        <li>Each guess shows the deepest branch of the family tree it shares with the mystery. Guess Spanish when the answer is Portuguese, and you learn they're both West Iberian; guess Hindi, and you only learn they're both Indo-European.</li>
+        <li>Each guess also shows how far away the mystery language is spoken, and in which direction, even when the two aren't related at all.</li>
+        <li>Pip the parrot hops down to the deepest branch you've found, and the egg cracks as you get closer.</li>
+        <li>Hints come after 5 guesses (how many people speak it), after 10 (the countries where it's spoken) and after 15 (its first letter).</li>
+      </ul>
+      <h3>Scoring</h3>
+      <p>The fewer guesses you need, the finer your feather: Golden Feather for 1 to 4 guesses, Songbird for 5 to 8, Chatterbox for 9 to 12 and Fledgling for 13 to 20. Find the language and the egg hatches, and the chick says the language's name for itself. Run out of guesses and it stays in the egg until tomorrow.</p>
+      <h3>Tips</h3>
+      <ul>
+        <li>Open with languages from big, unrelated families, like English, Mandarin Chinese, Arabic, Kiswahili and Indonesian. One of them usually lands on the right branch.</li>
+        <li>Use the compass. The distance and direction narrow things down fast, even before you've found the family.</li>
+        <li>Once you're on a branch, type its name, like Bantu or Turkic, to see the languages in it.</li>
+        <li>Six days a week the mystery is one of the world's 150 best-known languages. On Fridays it's a deeper cut, from the next 25.</li>
+      </ul>
+      <h3>Where the family tree comes from</h3>
+      <p>The tree, and where each language is spoken, come from Glottolog, the scholarly catalog of the world's languages (CC BY 4.0). Names, speaker counts and each language's name for itself come from Wikidata, and how well known a language is comes from Wikipedia page views. A branch is shown by name when it has its own Wikipedia article; Glottolog's finer branches still count toward how close a guess is.</p>
+      <h3>Questions</h3>
+      <p><strong>Do I need to know linguistics?</strong> Not at all. Start with any language you know, and each guess tells you which branch to try next.</p>
+      <p><strong>Is it free?</strong> Yes, every day, with nothing to sign up for. Practice games with a random language are unlimited and don't count toward your stats.</p>
+      <p><strong>When is there a new one?</strong> Every midnight, your time. Everyone gets the same language on the same date, so you can compare with friends.</p>
+      <p><strong>Where are my stats kept?</strong> In your own browser, on your device. There's no account: your streak and history stay with you, and clearing the site's data erases them.</p>
+    </section>
 
     <footer class="foot">
       <p>Family trees and places from <a href="https://glottolog.org" target="_blank" rel="noopener">Glottolog</a> (CC BY 4.0). Names, speaker counts and languages' own names from <a href="https://www.wikidata.org/" target="_blank" rel="noopener">Wikidata</a>.</p>
-      <p class="more"><a href="../">More games from Critter Daily</a> · <a href="../privacy.html">Privacy</a></p>
+      <p class="more"><a href="../">More games from Critter Daily</a> · <a href="../about">About</a> · <a href="../privacy.html">Privacy</a></p>
     </footer>
 
     <dialog id="help" class="sheet">

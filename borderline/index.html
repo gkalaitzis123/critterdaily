@@ -33,6 +33,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;700;800&display=swap" />
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="guide.css" />
     <!-- Counts visits and games, without cookies or knowing who you are; only on critterdaily.com, so local copies and tests count nothing. -->
     <script async src="https://cloud.umami.is/script.js" data-website-id="7d7d7ec1-534b-40e2-9401-3c07793fd5ec" data-domains="critterdaily.com,www.critterdaily.com"></script>
     <!-- Google Analytics, asking first in the EU, the UK and Switzerland (analytics.js); also only on critterdaily.com. -->
@@ -141,19 +142,37 @@
       </section>
     </main>
 
-    <details class="about">
-      <summary>About Borderline</summary>
-      <h2>How to play Borderline, the daily history map game</h2>
-      <p>Each day there are three mystery places, the same for everyone and easiest first: countries, empires, kingdoms or other states, each at one moment in history. You see the year, and the land shaded on a map of that year, and you have 6 guesses for each. Guess any place from any time: each guess shows how far away the mystery is from it and in which direction, and whether your guess existed in that year, or how many years too early or too late it was. Homer the homing pigeon flies toward the mystery as you get closer.</p>
-      <h3>Are there hints?</h3>
-      <p>Yes. After 2 wrong guesses you learn which of today's countries the land is in, after 3 the map names the other states of that year, and after 4 you get the first letter of its name.</p>
-      <h3>Where do the borders come from?</h3>
-      <p>From Cliopatria, the Seshat Global History Databank's open atlas of the world's states from 3400 BCE to today (CC BY 4.0). Borders long ago are uncertain, and the atlas shows one version of them.</p>
-    </details>
+    <section class="guide" id="how-to-play" aria-labelledby="guide-title">
+      <h2 id="guide-title">How to play Borderline</h2>
+      <p class="guide-lede">Borderline is a daily history map game. Each day there are three mystery places, the same for everyone and easiest first: a country, empire or kingdom at one moment in history. You see the year and the land it held, shaded on a map of that year, and you have six guesses for each.</p>
+      <h3>The rules</h3>
+      <ul>
+        <li>Guess any place from any time: type it, or tap the box to scroll through the best known.</li>
+        <li>Each guess shows how far the mystery is from your guess, and which way, and Homer the homing pigeon flies toward it.</li>
+        <li>Each guess also shows whether your guess existed in that year, or how many years too early or too late it was.</li>
+        <li>Hints come after wrong guesses: after 2 you learn which of today's countries the land is in, after 3 the map names the other states of that year, and after 4 you get the first letter of the name.</li>
+      </ul>
+      <h3>Your title</h3>
+      <p>Find all three in six guesses or fewer in all and you're a Master Cartographer; in ten or fewer, a Navigator; all three in any number, an Explorer; two of the three, a Wanderer. Find one or none and you're off the map, until tomorrow.</p>
+      <h3>Tips</h3>
+      <ul>
+        <li>Read the year first. It rules out most of the world's states before you guess.</li>
+        <li>Use your misses. The distance and direction from a wrong guess, and whether it was too early or too late, narrow things down quickly.</li>
+        <li>Guess something big nearby to get your bearings, like a well-known empire of that century.</li>
+        <li>A famous place can look very different in another century: Spain in 1670 still held much of Italy.</li>
+      </ul>
+      <h3>Where the borders come from</h3>
+      <p>The borders come from Cliopatria, the Seshat Global History Databank's open atlas of the world's states from 3400 BCE to today (CC BY 4.0). Borders long ago are uncertain, and the atlas shows one version of them. Other names, and how well known each place is, come from Wikidata and Wikipedia. Where Wikipedia gives a state's dates, it only appears in years inside them.</p>
+      <h3>Questions</h3>
+      <p><strong>Do I need to be a historian?</strong> No. The first map each day is the easiest, and the hints and the compass do a lot of the work.</p>
+      <p><strong>Is it free?</strong> Yes, every day, with nothing to sign up for. Practice with three random places is unlimited and doesn't count toward your stats.</p>
+      <p><strong>When is there a new one?</strong> Every midnight, your time. Everyone gets the same maps on the same date, so you can compare with friends.</p>
+      <p><strong>Where are my stats kept?</strong> In your own browser, on your device. There's no account: your streak and history stay with you, and clearing the site's data erases them.</p>
+    </section>
 
     <footer class="foot">
       <p>Borders from <a href="https://github.com/Seshat-Global-History-Databank/cliopatria" target="_blank" rel="noopener">Cliopatria</a> by the <a href="https://seshatdatabank.info/" target="_blank" rel="noopener">Seshat Global History Databank</a> (CC BY 4.0). Other names and how well known each place is from <a href="https://www.wikidata.org/" target="_blank" rel="noopener">Wikidata</a> and Wikipedia.</p>
-      <p class="more"><a href="../">More games from Critter Daily</a> · <a href="../privacy.html">Privacy</a></p>
+      <p class="more"><a href="../">More games from Critter Daily</a> · <a href="../about">About</a> · <a href="../privacy.html">Privacy</a></p>
     </footer>
 
     <dialog id="help" class="sheet">
