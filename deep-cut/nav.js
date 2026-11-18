@@ -20,6 +20,8 @@
   ];
   const script = document.currentScript;
   const here = script.dataset.game;
+  // Where players can leave a tip; the footers and the About page link there too.
+  const TIP = "https://ko-fi.com/critterdaily";
   const LAUNCH = Date.UTC(2026, 9, 17); // day 1, as in stats-view.js
   const today = () => {
     const now = new Date();
@@ -60,6 +62,8 @@
       .cd-row small { color: var(--muted); font-size: 14px; font-weight: 700; }
       .cd-row .cd-go { flex: none; padding: 6px 16px 8px; border-radius: 999px; background: var(--sun); box-shadow: 0 3px 0 var(--sun-edge); color: var(--on-sun); font: 700 15px var(--display); }
       .cd-row.played .cd-go { background: var(--track); box-shadow: none; color: var(--ink-2); }
+      .cd-tip { margin: 18px 0 0; text-align: center; color: var(--muted); font-size: 15px; font-weight: 700; }
+      .cd-tip a { color: var(--link); }
       /* Six games' buttons and the way home, on one line on a phone. */
       @media (max-width: 440px) {
         .cd-nav { gap: 8px; padding: 10px 10px 2px; }
@@ -97,7 +101,7 @@
     const left = others.filter((g) => g.result === null).length;
     return `<h3>${left ? "Today's other games" : "You've played everything today. See you tomorrow!"}</h3>${others
       .map((g) => `<a class="cd-row${g.result !== null ? " played" : ""}" href="../${g.id}/">${icon(g, 44)}<span class="cd-what"><strong>${g.name}</strong><small>${g.result !== null ? `Today: ${g.result}` : "Not played yet"}</small></span><span class="cd-go">${g.result !== null ? "See" : "Play"}</span></a>`)
-      .join("")}`;
+      .join("")}<p class="cd-tip">Enjoying Critter Daily? <a href="${TIP}" target="_blank" rel="noopener" data-umami-event="tip" data-umami-event-where="results">Tip the critters on Ko-fi</a></p>`;
   };
   const refresh = () => {
     document.querySelector(".cd-nav")?.insertAdjacentHTML("beforebegin", bar());
