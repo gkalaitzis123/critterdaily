@@ -14,6 +14,7 @@
   --good: #2f7d3e;
   --track: #eaf4ff;
   --sun: #ffb938;
+  --coral: #ff6f61; /* tips */
   --sun-edge: #d68a00;
   --link: #1f5f99;
   --display: Fredoka, Nunito, system-ui, sans-serif;
@@ -328,6 +329,59 @@ a {
 
 
 /* Under each game you've played: today's result and your streak */
+
+/* A card for tips under the games, like the one under a finished game (nav.js). */
+.tip-card {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: min(560px, calc(100% - 32px));
+  margin: 0 auto 22px;
+  padding: 10px 14px 10px 10px;
+  border: 2px solid var(--coral);
+  border-radius: 20px;
+  background: var(--card);
+  box-shadow: 0 4px 0 var(--card-edge);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.tip-card svg {
+  flex: none;
+}
+
+.tip-text {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 1px;
+}
+
+.tip-text strong {
+  font: 600 18px/1.3 var(--display);
+}
+
+.tip-go {
+  flex: none;
+  padding: 6px 16px;
+  border-radius: 14px;
+  background: var(--coral);
+  color: var(--on-sun);
+  box-shadow: 0 3px 0 #c9473c;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 17px;
+}
+
+.tip-card:hover .tip-go {
+  filter: brightness(1.05);
+}
+
+.tip-card:focus-visible {
+  outline: 3px solid var(--link);
+  outline-offset: 2px;
+}
 
 .game-today {
   margin-top: 4px;
