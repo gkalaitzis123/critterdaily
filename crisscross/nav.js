@@ -20,6 +20,9 @@
   ];
   const script = document.currentScript;
   const here = script.dataset.game;
+  // Links from a game's folder ("../"), or from the site's root on the pages outside them (data-root="/").
+  const root = script.dataset.root ?? "../";
+  const page = script.dataset.page; // "notes" on the Notes, to light up its button
   // Where players can leave a tip; the footers and the About page link there too.
   const TIP = "https://ko-fi.com/critterdaily";
   const LAUNCH = Date.UTC(2026, 9, 17); // day 1, as in stats-view.js
@@ -38,7 +41,7 @@
     }
   };
   // Each game's own icon; this one's is next to the page (the others' only resolve on the site).
-  const icon = (game, size) => `<img src="${game.id === here ? "" : `../${game.id}/`}icon.svg" alt="" width="${size}" height="${size}" onerror="this.style.visibility='hidden'">`;
+  const icon = (game, size) => `<img src="${game.id === here ? "" : `${root}${game.id}/`}icon.svg" alt="" width="${size}" height="${size}" onerror="this.style.visibility='hidden'">`;
 
   document.head.insertAdjacentHTML(
     "beforeend",
@@ -47,12 +50,21 @@
       .cd-nav a { text-decoration: none; color: var(--ink); }
       .cd-home { display: inline-flex; align-items: center; gap: 8px; padding: 5px 16px 5px 6px; border-radius: 999px; background: var(--card); box-shadow: 0 3px 0 var(--card-edge); font-weight: 600; font-size: 16px; white-space: nowrap; }
       .cd-home img { border-radius: 9px; }
+      .cd-left { display: flex; align-items: center; gap: 6px; }
+      .cd-notes { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 40px; padding: 0 14px 0 8px; border-radius: 999px; background: var(--card); box-shadow: 0 3px 0 var(--card-edge); font-weight: 600; font-size: 16px; white-space: nowrap; }
+      .cd-notes svg { flex: none; }
+      .cd-notes[aria-current="page"] { background: var(--sun); box-shadow: 0 3px 0 var(--sun-edge); color: var(--on-sun); }
       .cd-games { display: flex; gap: 6px; }
       .cd-game { position: relative; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 13px; background: var(--card); box-shadow: 0 3px 0 var(--card-edge); }
       .cd-game img { border-radius: 9px; }
       .cd-game[aria-current="page"] { background: var(--sun); box-shadow: 0 3px 0 var(--sun-edge); }
       .cd-game .cd-tick { position: absolute; top: -5px; right: -5px; display: grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: var(--good); color: #fff; font: 700 11px/1 Nunito, sans-serif; }
-      .cd-home:focus-visible, .cd-game:focus-visible, .cd-row:focus-visible { outline: 3px solid var(--link); outline-offset: 2px; }
+      .cd-home:focus-visible, .cd-notes:focus-visible, .cd-game:focus-visible, .cd-row:focus-visible { outline: 3px solid var(--link); outline-offset: 2px; }
+      /* Narrower screens: the Notes button is just the notebook. */
+      @media (max-width: 600px) {
+        .cd-notes { width: 40px; padding: 0; border-radius: 13px; }
+        .cd-notes-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+      }
       .cd-next { margin: 22px 0 6px; text-align: left; }
       .cd-next h3 { margin: 0 0 10px; font: 600 19px var(--display); text-align: center; color: var(--ink); }
       .cd-row { display: flex; align-items: center; gap: 12px; margin-top: 8px; padding: 10px 12px; border-radius: 16px; background: var(--card); box-shadow: 0 3px 0 var(--card-edge); color: var(--ink); text-decoration: none; }
@@ -82,14 +94,29 @@
         .cd-home { padding-right: 4px; }
         .cd-home-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
       }
+      /* Phones: the way home and the Notes as icons, so the bar keeps to one line. */
+      @media (max-width: 520px) {
+        .cd-left { gap: 4px; }
+        .cd-home { padding: 4px; }
+        .cd-home-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+      }
+      @media (max-width: 440px) {
+        .cd-notes { width: 35px; height: 35px; border-radius: 11px; }
+        .cd-notes svg { width: 24px; height: 24px; }
+      }
+      @media (max-width: 370px) {
+        .cd-notes { width: 33px; height: 33px; }
+      }
     </style>`,
   );
 
+  // A little notebook, in the critters' colors.
+  const NOTEBOOK = `<svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect x="4" y="2" width="18" height="22" rx="4" fill="#f2a900"/><rect x="7" y="5" width="12" height="16" rx="2" fill="#fff8e6"/><path d="M10 10h6M10 13.5h6M10 17h4" stroke="#6b4e3d" stroke-width="2" stroke-linecap="round"/></svg>`;
   const bar = () => `<nav class="cd-nav" aria-label="Critter Daily games">
-      <a class="cd-home" href="../"><img src="../icon.svg" alt="" width="30" height="30" onerror="this.style.visibility='hidden'"><span class="cd-home-text">All games</span></a>
+      <span class="cd-left"><a class="cd-home" href="${root}"><img src="${root}icon.svg" alt="" width="30" height="30" onerror="this.style.visibility='hidden'"><span class="cd-home-text">All games</span></a><a class="cd-notes" href="${root}notes/"${page === "notes" ? ' aria-current="page"' : ""} aria-label="Notes" title="Notes: how the games work, and what players do">${NOTEBOOK}<span class="cd-notes-text">Notes</span></a></span>
       <span class="cd-games">${GAMES.map((g) => {
         const done = result(g) !== null;
-        return `<a class="cd-game" href="../${g.id}/"${g.id === here ? ' aria-current="page"' : ""} aria-label="${g.name}${done ? ", played today" : ""}" title="${g.name}">${icon(g, 30)}${done ? '<span class="cd-tick" aria-hidden="true">✓</span>' : ""}</a>`;
+        return `<a class="cd-game" href="${root}${g.id}/"${g.id === here ? ' aria-current="page"' : ""} aria-label="${g.name}${done ? ", played today" : ""}" title="${g.name}">${icon(g, 30)}${done ? '<span class="cd-tick" aria-hidden="true">✓</span>' : ""}</a>`;
       }).join("")}</span>
     </nav>`;
   script.insertAdjacentHTML("afterend", bar());
@@ -100,7 +127,7 @@
     others.sort((a, b) => (a.result !== null) - (b.result !== null));
     const left = others.filter((g) => g.result === null).length;
     return `<h3>${left ? "Today's other games" : "You've played everything today. See you tomorrow!"}</h3>${others
-      .map((g) => `<a class="cd-row${g.result !== null ? " played" : ""}" href="../${g.id}/">${icon(g, 44)}<span class="cd-what"><strong>${g.name}</strong><small>${g.result !== null ? `Today: ${g.result}` : "Not played yet"}</small></span><span class="cd-go">${g.result !== null ? "See" : "Play"}</span></a>`)
+      .map((g) => `<a class="cd-row${g.result !== null ? " played" : ""}" href="${root}${g.id}/">${icon(g, 44)}<span class="cd-what"><strong>${g.name}</strong><small>${g.result !== null ? `Today: ${g.result}` : "Not played yet"}</small></span><span class="cd-go">${g.result !== null ? "See" : "Play"}</span></a>`)
       .join("")}<p class="cd-tip">Enjoying Critter Daily? <a href="${TIP}" target="_blank" rel="noopener" data-umami-event="tip" data-umami-event-where="results">Tip the critters on Ko-fi</a></p>`;
   };
   const refresh = () => {
