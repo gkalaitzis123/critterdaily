@@ -839,7 +839,6 @@ main {
   --block: #3e3a52; /* black squares */
   --word: #ffefc2; /* the entry the cursor is in */
   --silk: #a79fc4;
-  --dew: #8fd3ff;
   --solved: #c4ecc9;
 }
 
@@ -913,12 +912,6 @@ main {
   stroke-width: 1.8;
   stroke-linecap: round;
   stroke-linejoin: round;
-}
-
-.dew {
-  fill: var(--dew);
-  stroke: #fff;
-  stroke-width: 0.8;
 }
 
 /* The start screen's little example */

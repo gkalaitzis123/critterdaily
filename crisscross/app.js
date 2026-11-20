@@ -114,10 +114,9 @@ function webster({ wave = false, cheer = false, dangle = false } = {}) {
 
 /**
  * An orb web in a -50 -50 100 100 box: its eight spokes from the start, and
- * up to five rings, spun as far as `progress` (0 to 1) goes, with dewdrops on
- * a finished one if `dew`.
+ * up to five rings, spun as far as `progress` (0 to 1) goes.
  */
-function web(progress, { dew = false } = {}) {
+function web(progress) {
   const SPOKES = 8;
   const RINGS = 5;
   const point = (r, k) => [r * Math.cos((k * 2 * Math.PI) / SPOKES - Math.PI / 2), r * Math.sin((k * 2 * Math.PI) / SPOKES - Math.PI / 2)];
@@ -137,21 +136,7 @@ function web(progress, { dew = false } = {}) {
       thread += `${k ? "" : `M${f(x1)} ${f(y1)}`}Q${f(cx)} ${f(cy)} ${f(x2)} ${f(y2)}`;
     }
   }
-  const drops = dew
-    ? [
-        [44, 1],
-        [35, 3],
-        [26, 6],
-        [44, 5],
-        [17, 2],
-      ]
-        .map(([r, k]) => {
-          const [x, y] = point(r, k);
-          return `<circle cx="${f(x)}" cy="${f(y)}" r="2.6" class="dew"/>`;
-        })
-        .join("")
-    : "";
-  return `<path class="silk" d="${spokes}${thread}"/>${drops}`;
+  return `<path class="silk" d="${spokes}${thread}"/>`;
 }
 
 function drawCritters() {
@@ -537,7 +522,7 @@ function showResults(justFinished) {
   $("#tier-blurb").textContent = tier.blurb;
   $("#total").textContent = clock(run.time);
   $("#total-note").textContent = hintNote(run.hints);
-  $("#results-art").innerHTML = `<g class="web-back">${web(0.4 + 0.15 * tier.index, { dew: tier.index === TIERS.length - 1 })}</g><g transform="scale(0.8)">${webster({ cheer: true })}</g>`;
+  $("#results-art").innerHTML = `<g class="web-back">${web(0.4 + 0.15 * tier.index)}</g><g transform="scale(0.8)">${webster({ cheer: true })}</g>`;
   $("#solved").innerHTML = run.grid.cells
     .map((c) => (c.letter ? `<span${run.revealed.has(c.i) ? ' class="revealed"' : ""}>${c.number ? `<i>${c.number}</i>` : ""}${c.letter.toUpperCase()}</span>` : '<span class="black"></span>'))
     .join("");

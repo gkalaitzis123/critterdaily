@@ -65,6 +65,7 @@ function nutmeg({ wave = false, cheer = false } = {}) {
   const eyes = cheer
     ? '<path d="M5 -10q3-3 6 0M14 -10q3-3 6 0" stroke="#2e2a3b" fill="none" stroke-width="2" stroke-linecap="round"/>'
     : '<circle cx="7" cy="-10" r="2.6" fill="#2e2a3b"/><circle cx="17" cy="-10" r="2.6" fill="#2e2a3b"/><circle cx="7.8" cy="-11" r=".9" fill="#fff"/><circle cx="17.8" cy="-11" r=".9" fill="#fff"/>';
+  // Cheering at the end, both paws are up and empty: her acorns are all in the jar.
   const paws = cheer
     ? '<ellipse class="wave" cx="-4" cy="2" rx="4" ry="3" fill="#c9772f"/><ellipse class="wave" cx="28" cy="2" rx="4" ry="3" fill="#c9772f" style="animation-delay:.25s"/>'
     : `<ellipse cx="3" cy="14" rx="4" ry="3" fill="#c9772f"/>${wave ? '<ellipse class="wave" cx="27" cy="2" rx="4" ry="3" fill="#c9772f"/>' : '<ellipse cx="17" cy="14" rx="4" ry="3" fill="#c9772f"/>'}`;
@@ -81,7 +82,7 @@ function nutmeg({ wave = false, cheer = false } = {}) {
       <ellipse cx="12" cy="-4" rx="2.4" ry="1.8" fill="#6b3f2a"/>
       <path d="M9 -1q3 2.5 6 0" stroke="#6b3f2a" fill="none" stroke-width="1.5" stroke-linecap="round"/>
       <circle cx="3" cy="-3" r="2.6" fill="#ffb3c1"/><circle cx="21" cy="-3" r="2.6" fill="#ffb3c1"/>
-      <g transform="translate(10 15)"><ellipse cx="0" cy="3" rx="6" ry="7" fill="#c98b5b"/><path d="M-6 0Q0 -6 6 0Q0 2 -6 0Z" fill="#7a4e2e"/></g>
+      ${cheer ? "" : '<g transform="translate(10 15)"><ellipse cx="0" cy="3" rx="6" ry="7" fill="#c98b5b"/><path d="M-6 0Q0 -6 6 0Q0 2 -6 0Z" fill="#7a4e2e"/></g>'}
       ${paws}
       <ellipse cx="2" cy="33" rx="6" ry="3" fill="#c9772f"/><ellipse cx="18" cy="33" rx="6" ry="3" fill="#c9772f"/>
     </g>`;
