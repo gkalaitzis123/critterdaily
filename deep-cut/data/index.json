@@ -47,7 +47,7 @@
  {
   "id": "architects",
   "prompt": "Name an architect",
-  "answers": 300
+  "answers": 301
  },
  {
   "id": "art-movements",
@@ -72,12 +72,12 @@
  {
   "id": "astronauts-us",
   "prompt": "Name an American astronaut",
-  "answers": 400
+  "answers": 406
  },
  {
   "id": "astronauts",
   "prompt": "Name an astronaut",
-  "answers": 550
+  "answers": 555
  },
  {
   "id": "astronomers",
@@ -117,7 +117,7 @@
  {
   "id": "bible-figures",
   "prompt": "Name a person from the Bible",
-  "answers": 226
+  "answers": 228
  },
  {
   "id": "birds-of-prey",
@@ -211,13 +211,13 @@
  },
  {
   "id": "castles-britain",
-  "prompt": "Name a castle in Britain",
-  "answers": 305
+  "prompt": "Name a castle or palace in Britain",
+  "answers": 320
  },
  {
   "id": "castles",
   "prompt": "Name a castle",
-  "answers": 156
+  "answers": 158
  },
  {
   "id": "cat-breeds",
@@ -347,7 +347,7 @@
  {
   "id": "composers",
   "prompt": "Name a classical composer",
-  "answers": 530
+  "answers": 531
  },
  {
   "id": "constellations",
@@ -571,8 +571,8 @@
  },
  {
   "id": "impressionists",
-  "prompt": "Name an Impressionist painter",
-  "answers": 236
+  "prompt": "Name an Impressionist or Post-Impressionist painter",
+  "answers": 299
  },
  {
   "id": "insects",
@@ -675,11 +675,6 @@
   "answers": 418
  },
  {
-  "id": "monet",
-  "prompt": "Name a painting by Monet",
-  "answers": 69
- },
- {
   "id": "monkeys",
   "prompt": "Name a monkey",
   "answers": 385
@@ -696,8 +691,8 @@
  },
  {
   "id": "mountains-switzerland",
-  "prompt": "Name a mountain in Switzerland",
-  "answers": 300
+  "prompt": "Name a mountain in the Alps",
+  "answers": 312
  },
  {
   "id": "mountains-us",
@@ -717,7 +712,7 @@
  {
   "id": "museums",
   "prompt": "Name a museum",
-  "answers": 98
+  "answers": 99
  },
  {
   "id": "mythical-creatures",
@@ -730,11 +725,6 @@
   "answers": 227
  },
  {
-  "id": "national-parks-africa",
-  "prompt": "Name a national park in Africa",
-  "answers": 283
- },
- {
   "id": "national-parks",
   "prompt": "Name a US national park",
   "answers": 64
@@ -745,19 +735,9 @@
   "answers": 829
  },
  {
-  "id": "nebulae",
-  "prompt": "Name a nebula",
-  "answers": 253
- },
- {
   "id": "nobel-chemistry",
   "prompt": "Name a winner of the Nobel Prize in Chemistry",
   "answers": 200
- },
- {
-  "id": "nobel-literature",
-  "prompt": "Name a winner of the Nobel Prize in Literature",
-  "answers": 123
  },
  {
   "id": "nobel-peace",
@@ -786,8 +766,8 @@
  },
  {
   "id": "operas",
-  "prompt": "Name an opera",
-  "answers": 401
+  "prompt": "Name an opera or musical",
+  "answers": 501
  },
  {
   "id": "organs",
@@ -890,11 +870,6 @@
   "answers": 827
  },
  {
-  "id": "picasso",
-  "prompt": "Name a work by Picasso",
-  "answers": 82
- },
- {
   "id": "pirates",
   "prompt": "Name a real-life pirate",
   "answers": 300
@@ -933,11 +908,6 @@
   "id": "religions",
   "prompt": "Name a religion",
   "answers": 317
- },
- {
-  "id": "revolutionary-war-battles",
-  "prompt": "Name a battle of the American Revolutionary War",
-  "answers": 117
  },
  {
   "id": "revolutions",
@@ -1007,22 +977,17 @@
  {
   "id": "scientific-laws",
   "prompt": "Name something in science named after a person",
-  "answers": 468
+  "answers": 470
  },
  {
   "id": "sculptors",
   "prompt": "Name a sculptor",
-  "answers": 300
+  "answers": 301
  },
  {
   "id": "sea-invertebrates",
   "prompt": "Name a sea creature with no backbone",
   "answers": 328
- },
- {
-  "id": "sea-reptiles",
-  "prompt": "Name a prehistoric sea reptile",
-  "answers": 143
  },
  {
   "id": "seals",
@@ -1242,7 +1207,7 @@
  {
   "id": "women-astronauts",
   "prompt": "Name a woman astronaut",
-  "answers": 93
+  "answers": 96
  },
  {
   "id": "women-scientists",
@@ -1255,11 +1220,6 @@
   "answers": 352
  },
  {
-  "id": "ww1-battles",
-  "prompt": "Name a battle of World War I",
-  "answers": 200
- },
- {
   "id": "ww2-battles",
   "prompt": "Name a battle of World War II",
   "answers": 334
@@ -1267,6 +1227,6 @@
  {
   "id": "ww2-commanders",
   "prompt": "Name a World War II general or admiral",
-  "answers": 313
+  "answers": 314
  }
 ]
