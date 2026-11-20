@@ -35,14 +35,14 @@
     <script defer src="/install.js"></script>
     <!-- Google AdSense: ads, once Google approves the site (see the privacy page). -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7797883251489593" crossorigin="anonymous"></script>
-    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","headline":"How Deep Cut decides what's obscure","description":"Deep Cut rewards the right answers nobody else thinks of. Here's how it uses Wikipedia's page views to measure how obscure an answer is, and why every prompt can dig just as deep.","datePublished":"2026-11-16","dateModified":"2026-11-16","author":{"@type":"Organization","name":"Critter Daily","url":"https://critterdaily.com/","logo":"https://critterdaily.com/app-512.png"},"publisher":{"@type":"Organization","name":"Critter Daily","url":"https://critterdaily.com/","logo":"https://critterdaily.com/app-512.png"},"mainEntityOfPage":"https://critterdaily.com/notes/how-deep-cut-measures-obscurity/","about":{"@type":"VideoGame","name":"Deep Cut","url":"https://critterdaily.com/deep-cut/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Critter Daily","item":"https://critterdaily.com/"},{"@type":"ListItem","position":2,"name":"Notes","item":"https://critterdaily.com/notes/"},{"@type":"ListItem","position":3,"name":"How Deep Cut decides what's obscure","item":"https://critterdaily.com/notes/how-deep-cut-measures-obscurity/"}]}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","headline":"How Deep Cut decides what's obscure","description":"Deep Cut rewards the right answers nobody else thinks of. Here's how it uses Wikipedia's page views to measure how obscure an answer is, and why every prompt can dig just as deep.","datePublished":"2026-11-16","dateModified":"2026-11-20","author":{"@type":"Organization","name":"Critter Daily","url":"https://critterdaily.com/","logo":"https://critterdaily.com/app-512.png"},"publisher":{"@type":"Organization","name":"Critter Daily","url":"https://critterdaily.com/","logo":"https://critterdaily.com/app-512.png"},"mainEntityOfPage":"https://critterdaily.com/notes/how-deep-cut-measures-obscurity/","about":{"@type":"VideoGame","name":"Deep Cut","url":"https://critterdaily.com/deep-cut/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Critter Daily","item":"https://critterdaily.com/"},{"@type":"ListItem","position":2,"name":"Notes","item":"https://critterdaily.com/notes/"},{"@type":"ListItem","position":3,"name":"How Deep Cut decides what's obscure","item":"https://critterdaily.com/notes/how-deep-cut-measures-obscurity/"}]}]}</script>
   </head>
   <body>
     <script src="/nav.js" data-root="/" data-page="notes"></script>
     <main class="page">
       <p><a href="/notes/">← Notes</a></p>
       <h1>How Deep Cut decides what&#x27;s obscure</h1>
-      <p class="note-meta">November 16, 2026 · 3 minute read · about <a href="/deep-cut/">Deep Cut</a></p>
+      <p class="note-meta">November 16, 2026, updated November 20 · 4 minute read · about <a href="/deep-cut/">Deep Cut</a></p>
       <article class="guide">
 <p class="guide-lede">Most trivia games want one right answer. Deep Cut takes any right answer, then rewards you for picking one nobody else would. That needs a fair way to measure how obscure an answer is, and Deep Cut uses Wikipedia.</p>
 <h2>Page views as a measure of fame</h2>
@@ -50,10 +50,42 @@
 <p>Raw page views can't be compared across lists, though. The article on gold is read about 2,100 times a day, more than most Roman emperors' articles, but nobody would call gold obscure. So Deep Cut only compares an answer with the other answers to the same prompt.</p>
 <h2>Your answer's share of the readers</h2>
 <p>For each prompt, Deep Cut adds up the daily readers of every answer on its list, then works out each answer's share. Take "Name a Roman emperor". About 71,000 people a day read the articles of the 143 emperors on the list, and Augustus alone gets about 5,100 of them: roughly 1 in 14. Trebonianus Gallus, who reigned for two years in the middle of the third century, gets about 1 in 290. At the very bottom, a third-century usurper named Septimius gets about 1 in 55,000.</p>
+<figure class="note-figure">
+<p class="fig-title">Name a Roman emperor: ten of the 143 answers</p>
+<div class="table-wrap"><table class="note-table">
+<thead><tr><th>Emperor</th><th class="num">Readers a day</th><th class="num">Share</th><th class="num">Depth</th></tr></thead>
+<tbody>
+<tr><td>Augustus</td><td class="num">5,140</td><td class="num">1 in 14</td><td class="num">1 m</td></tr>
+<tr><td>Marcus Aurelius</td><td class="num">4,665</td><td class="num">1 in 15</td><td class="num">2 m</td></tr>
+<tr><td>Nero</td><td class="num">3,625</td><td class="num">1 in 20</td><td class="num">5 m</td></tr>
+<tr><td>Caligula</td><td class="num">3,241</td><td class="num">1 in 22</td><td class="num">6 m</td></tr>
+<tr><td>Constantine the Great</td><td class="num">2,870</td><td class="num">1 in 25</td><td class="num">8 m</td></tr>
+<tr><td>Hadrian</td><td class="num">1,813</td><td class="num">1 in 39</td><td class="num">13 m</td></tr>
+<tr><td>Trajan</td><td class="num">1,487</td><td class="num">1 in 48</td><td class="num">15 m</td></tr>
+<tr><td>Diocletian</td><td class="num">1,439</td><td class="num">1 in 49</td><td class="num">16 m</td></tr>
+<tr><td>Vespasian</td><td class="num">1,127</td><td class="num">1 in 63</td><td class="num">18 m</td></tr>
+<tr><td>Trebonianus Gallus</td><td class="num">245</td><td class="num">1 in 290</td><td class="num">36 m</td></tr>
+<tr><td>Septimius</td><td class="num">1</td><td class="num">1 in 54,739</td><td class="num">50 m</td></tr>
+</tbody>
+</table></div>
+<figcaption>About 71,000 people a day read the 143 emperors' Wikipedia articles, over the 60 days before the lists were built in October 2026. Each answer's share of them sets its depth.</figcaption>
+</figure>
 <p>That share is an answer's rarity. The game shows it after each prompt as "1 in" a number: the bigger the number, the deeper the cut.</p>
 <h2>From rarity to meters</h2>
 <p>Digby the mole turns rarity into depth. On every list, the most-read answer digs 1 meter and the rarest answers dig 50, and everything between is spaced by how many times rarer it is, so within a list, each time an answer is ten times rarer it digs the same distance further. That keeps the prompts fair. Some lists are full of famous names and some are mostly unknowns, but on each of them the deepest answers reach 50 meters.</p>
-<p>Your meters add up over the eight prompts, and Digby digs back through Earth's history: through the Holocene and the Pleistocene, past the Cretaceous at 80 meters and the Jurassic at 100, down to the Permian at 125 and the Cambrian at 150.</p>
+<p>Your meters add up over the eight prompts, and Digby digs back through Earth's history: through the Holocene, into the Pleistocene at 96 meters, then the Cretaceous at 128 and the Jurassic at 160, down to the Permian at 200 and the Cambrian at 240.</p>
+<figure class="note-figure">
+<p class="fig-title">How deep a day's eight answers have to go</p>
+<div class="note-strata">
+<div style="background:#c98b5b;color:#2e2a3b"><b>Holocene</b><span>0 to 95 m</span></div>
+<div style="background:#9fb7c4;color:#2e2a3b"><b>Pleistocene</b><span>96 to 127 m</span></div>
+<div style="background:#dcc58f;color:#2e2a3b"><b>Cretaceous</b><span>128 to 159 m</span></div>
+<div style="background:#a8694a;color:#ffffff"><b>Jurassic</b><span>160 to 199 m</span></div>
+<div style="background:#b9533c;color:#ffffff"><b>Permian</b><span>200 to 239 m</span></div>
+<div style="background:#5d5478;color:#ffffff"><b>Cambrian</b><span>240 m and deeper</span></div>
+</div>
+<figcaption>A day's meters add up over its eight prompts. The deepest any day can go is 400 m, eight answers at 50 m each.</figcaption>
+</figure>
 <h2>Why the obvious answer is a trap</h2>
 <p>The first answer that comes to mind is usually the one everybody thinks of, and that's usually the most-read one. Among the US states, California is read by 1 in 20 of the people reading about states, and digs 1 meter; North Dakota, at 1 in 107, digs 50. Among the chemical elements, gold is 1 in 34 and bohrium 1 in 630. The deep answers aren't trick answers. They're the second and third things you know.</p>
 <h2>What counts as an answer</h2>
@@ -72,6 +104,9 @@
         <p><a href="/notes/">All the notes</a></p>
       </section>
     </main>
+    <footer class="foot">
+      <p><a href="/about">About</a> · <a href="/notes/">Notes</a> · <a href="/privacy">Privacy</a> · <a href="/about#contact">Contact</a> · <a href="https://ko-fi.com/critterdaily" target="_blank" rel="noopener" data-umami-event="tip" data-umami-event-where="footer">Tip the critters</a></p>
+    </footer>
     <script type="module" src="/settings.js"></script>
   </body>
 </html>

@@ -92,3 +92,460 @@
 .note-play {
   font-weight: 700;
 }
+
+/* Figures in the Notes: charts, tables, maps and grids, each with a caption.
+   Charts are plain HTML, so their words stay readable on a phone and follow
+   light and dark; the two chart colors passed a color-blindness check on
+   each theme's card. */
+.note-figure {
+  margin: 16px 0 18px;
+}
+
+.note-figure figcaption {
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.note-figure .fig-title {
+  margin: 0 0 8px;
+  font: 600 16px/1.3 var(--display);
+  color: var(--ink);
+}
+
+.chart {
+  --c1: #2f6db0;
+  --c2: #d9612b;
+  --grid: #e3e9f1;
+  font-size: 13px;
+  color: var(--ink);
+}
+
+:root[data-theme="dark"] .chart {
+  --c1: #4f8fd6;
+  --c2: #de6d36;
+  --grid: #333c52;
+}
+
+.chart .legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 0 0 8px;
+  color: var(--muted);
+}
+
+.chart .key {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 6px;
+  border-radius: 2px;
+  vertical-align: -1px;
+  background: var(--c1);
+}
+
+.chart .key.s2,
+.chart .bar.s2,
+.chart .col.s2 {
+  background: var(--c2);
+}
+
+/* Rows of bars: a name, then the bar and its value. */
+.chart .rows {
+  display: grid;
+  grid-template-columns: minmax(0, max-content) minmax(0, 1fr);
+  gap: 4px 10px;
+  align-items: center;
+}
+
+.chart .rows .name {
+  max-width: 11em;
+  line-height: 1.25;
+}
+
+.chart .track {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.chart .bar {
+  flex: none;
+  height: 14px;
+  min-width: 2px;
+  border-radius: 0 4px 4px 0;
+  background: var(--c1);
+}
+
+.chart .pair {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.chart .value {
+  flex: none;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Columns: one per day or band, from a shared baseline. */
+.chart .plot {
+  position: relative;
+  height: 150px;
+  margin-left: 34px;
+  border-bottom: 1px solid var(--muted);
+}
+
+.chart .gridline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 1px solid var(--grid);
+}
+
+.chart .gridline span {
+  position: absolute;
+  right: calc(100% + 6px);
+  top: -9px;
+  color: var(--muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.chart .cols {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.chart .col {
+  flex: 1 1 0;
+  max-width: 24px;
+  margin: 0 auto;
+  border-radius: 4px 4px 0 0;
+  background: var(--c1);
+}
+
+.chart .col-labels {
+  display: flex;
+  gap: 2px;
+  margin-left: 34px;
+  padding-top: 4px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.chart .col-labels span {
+  flex: 1 1 0;
+  min-width: 0;
+  text-align: center;
+}
+
+.chart .ends {
+  display: flex;
+  justify-content: space-between;
+  margin-left: 34px;
+  padding-top: 4px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.chart svg {
+  display: block;
+  width: 100%;
+  max-width: 460px;
+  height: auto;
+  margin: 0 auto;
+  overflow: visible;
+}
+
+.chart svg text {
+  fill: var(--muted);
+  font: 11px Nunito, system-ui, sans-serif;
+}
+
+.chart svg .grid {
+  stroke: var(--grid);
+  stroke-width: 1;
+}
+
+.chart svg .axis {
+  stroke: var(--muted);
+  stroke-width: 1;
+}
+
+.chart svg .line {
+  fill: none;
+  stroke: var(--c1);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.chart svg .dot {
+  fill: var(--c1);
+  stroke: var(--card);
+  stroke-width: 2;
+}
+
+.chart svg .ink {
+  fill: var(--ink);
+  font-weight: 700;
+}
+
+/* A range from the most read to the least read, on a scale of tens. */
+.chart .span {
+  position: relative;
+  height: 16px;
+}
+
+.chart .span .reach {
+  position: absolute;
+  top: 7px;
+  height: 2px;
+  background: var(--grid);
+}
+
+.chart .span .dot {
+  position: absolute;
+  top: 3px;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  border-radius: 50%;
+  background: var(--c1);
+  box-shadow: 0 0 0 2px var(--card);
+}
+
+.chart .span .dot.s2 {
+  background: var(--c2);
+}
+
+.chart .scale {
+  position: relative;
+  height: 16px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.chart .scale span {
+  position: absolute;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+/* The numbers behind a chart, and tables of their own. */
+.note-figure details {
+  margin-top: 6px;
+  font-size: 13px;
+}
+
+.note-figure summary {
+  cursor: pointer;
+  color: var(--link);
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.note-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.note-table th,
+.note-table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--track);
+  text-align: left;
+  vertical-align: top;
+}
+
+.note-table th {
+  font-weight: 800;
+}
+
+.note-table .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Digby's layers: how deep a day's dig has to go to reach each period. */
+.note-strata {
+  display: grid;
+  gap: 2px;
+}
+
+.note-strata div {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 7px 12px;
+  border-radius: 4px;
+  color: #2e2a3b;
+  font-size: 14px;
+}
+
+.note-strata b {
+  font-family: var(--display);
+  font-weight: 600;
+}
+
+/* A map from Borderline, in the game's colors. */
+.note-map {
+  --sea: #cfe6f8;
+  --land: #f4ecd9;
+  --land-edge: #b9ab8e;
+  --mystery: #ffb938;
+  --mystery-edge: #b07a10;
+  overflow: hidden;
+  border-radius: 14px;
+  background: var(--sea);
+}
+
+:root[data-theme="dark"] .note-map {
+  --sea: #101828;
+  --land: #2a3146;
+  --land-edge: #56607e;
+}
+
+.note-map svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.note-map .land {
+  fill: var(--land);
+}
+
+.note-map .others {
+  fill: var(--land);
+  stroke: var(--land-edge);
+  stroke-linejoin: round;
+}
+
+.note-map .shape {
+  fill: var(--mystery);
+  stroke: var(--mystery-edge);
+  stroke-linejoin: round;
+}
+
+.note-map .state-label {
+  fill: var(--ink-2);
+  stroke: var(--land);
+  stroke-linejoin: round;
+  paint-order: stroke;
+  font-family: var(--display);
+  font-weight: 600;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.note-map .answer-label {
+  fill: #2e2a3b;
+  stroke: var(--mystery);
+  stroke-linejoin: round;
+  paint-order: stroke;
+  font-family: var(--display);
+  font-weight: 700;
+  text-anchor: middle;
+}
+
+/* A solved Crisscross grid. */
+.note-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2px;
+  width: min(220px, 100%);
+  margin: 0 auto;
+  padding: 2px;
+  border-radius: 8px;
+  background: var(--ink);
+}
+
+.note-grid span {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border-radius: 3px;
+  background: var(--card);
+  font: 700 20px/1 var(--display);
+  text-transform: uppercase;
+}
+
+.note-grid span.black {
+  background: var(--ink);
+}
+
+.note-grid sup {
+  position: absolute;
+  top: 3px;
+  left: 4px;
+  font: 700 10px/1 Nunito, system-ui, sans-serif;
+  color: var(--muted);
+}
+
+.note-clues {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 6px 16px;
+  margin-top: 12px;
+}
+
+.note-clues h3 {
+  margin-top: 0;
+}
+
+.note-clues ol {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.note-clues li {
+  font-size: 14px;
+}
+
+.note-clues li b {
+  display: inline-block;
+  min-width: 1.4em;
+}
+
+.note-table small {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* Several small maps side by side. */
+.note-maps {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.note-maps .note-map {
+  border-radius: 10px;
+}
+
+.note-map-year {
+  margin: 4px 0 0;
+  text-align: center;
+  font: 600 14px/1.3 var(--display);
+  color: var(--ink);
+}
